@@ -12,3 +12,5 @@
 /App/Win32/*.opensdf
 /App/Win32/Debug
 /App/Win32/Release
+
+/External
