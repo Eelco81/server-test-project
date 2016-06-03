@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="..\src\Thread.h" />
+    <ClInclude Include="..\src\Socket.h" />
+    <ClInclude Include="..\src\Network.h" />
+    <ClInclude Include="..\src\Log.h" />
+    <ClInclude Include="..\src\Files.h" />
+    <ClInclude Include="..\src\Buffer.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\Thread.cpp" />
+    <ClCompile Include="..\src\Socket.cpp" />
+    <ClCompile Include="..\src\Network.cpp" />
+    <ClCompile Include="..\src\Log.cpp" />
+    <ClCompile Include="..\src\Files.cpp" />
+    <ClCompile Include="..\src\Buffer.cpp" />
+  </ItemGroup>
+</Project>
