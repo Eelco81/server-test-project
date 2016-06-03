@@ -26,11 +26,6 @@
     <ClCompile Include="..\src\Socket.cpp" />
     <ClCompile Include="..\src\Thread.cpp" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\tinyxml\tinyxml_lib.vcxproj">
-      <Project>{c406daec-0886-4771-8dea-9d7329b46cc1}</Project>
-    </ProjectReference>
-  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{2D00251F-9E3C-4BE0-BFDF-39FD65077676}</ProjectGuid>
     <RootNamespace>Core</RootNamespace>

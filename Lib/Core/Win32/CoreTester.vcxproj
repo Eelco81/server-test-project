@@ -44,9 +44,8 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>
-      </AdditionalIncludeDirectories>
-      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <AdditionalIncludeDirectories>.\..\..\..\External\gmock\googlemock\include;.\..\..\..\External\gmock\googletest\include</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -61,6 +60,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>.\..\..\..\External\gmock\googlemock\include;.\..\..\..\External\gmock\googletest\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -76,11 +76,8 @@
     <ClCompile Include="..\src\ThreadTester.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\gmock\googlemock\msvc\2010\gmock.vcxproj">
+    <ProjectReference Include="..\..\..\External\gmock\googlemock\msvc\2010\gmock.vcxproj">
       <Project>{34681f0d-ce45-415d-b5f2-5c662dfe3bd5}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\tinyxml\tinyxml_lib.vcxproj">
-      <Project>{c406daec-0886-4771-8dea-9d7329b46cc1}</Project>
     </ProjectReference>
     <ProjectReference Include="Core.vcxproj">
       <Project>{2d00251f-9e3c-4be0-bfdf-39fd65077676}</Project>
