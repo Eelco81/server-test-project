@@ -10,29 +10,13 @@
       <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\src\Buffer.h" />
-    <ClInclude Include="..\src\Files.h" />
-    <ClInclude Include="..\src\Log.h" />
-    <ClInclude Include="..\src\Network.h" />
-    <ClInclude Include="..\src\Socket.h" />
-    <ClInclude Include="..\src\Thread.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="..\src\Buffer.cpp" />
-    <ClCompile Include="..\src\Files.cpp" />
-    <ClCompile Include="..\src\Log.cpp" />
-    <ClCompile Include="..\src\Network.cpp" />
-    <ClCompile Include="..\src\Socket.cpp" />
-    <ClCompile Include="..\src\Thread.cpp" />
-  </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{2D00251F-9E3C-4BE0-BFDF-39FD65077676}</ProjectGuid>
-    <RootNamespace>Core</RootNamespace>
+    <ProjectGuid>{8BC71E1C-4CF4-4DA9-93F4-B22050E7F18F}</ProjectGuid>
+    <RootNamespace>AppUtilsTester</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v120</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
@@ -60,8 +44,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <AdditionalIncludeDirectories>.\..\Core\src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\..\..\Core\src;.\..\..\..\External\gmock\googlemock\include;.\..\..\..\External\gmock\googletest\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -74,7 +57,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>.\..\Core\src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\..\..\Core\src;.\..\..\..\External\gmock\googlemock\include;.\..\..\..\External\gmock\googletest\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -82,6 +65,22 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\GMockMain.cpp" />
+    <ClCompile Include="..\Src\PeriodicThreadTester.cpp" />
+    <ClCompile Include="..\Src\TaskTester.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\External\gmock\googlemock\msvc\2010\gmock.vcxproj">
+      <Project>{34681f0d-ce45-415d-b5f2-5c662dfe3bd5}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Core\Win32\Core.vcxproj">
+      <Project>{2d00251f-9e3c-4be0-bfdf-39fd65077676}</Project>
+    </ProjectReference>
+    <ProjectReference Include="AppUtils.vcxproj">
+      <Project>{4552aeb7-906f-459c-a1b8-652c3538a348}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

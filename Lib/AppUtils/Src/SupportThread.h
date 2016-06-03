@@ -6,7 +6,7 @@
 
 namespace App {
 
-class SupportThread : public Core::PeriodicThread {
+class SupportThread : public PeriodicThread {
 
 public:
     SupportThread ();

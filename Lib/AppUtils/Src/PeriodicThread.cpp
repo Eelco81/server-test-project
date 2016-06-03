@@ -4,25 +4,25 @@
 
 #include <chrono>
 
-Core::PeriodicThread::PeriodicThread (const std::string& inName, unsigned inWaitTime) :
+App::PeriodicThread::PeriodicThread (const std::string& inName, unsigned inWaitTime) :
     Thread (inName),
     mWaitTime (inWaitTime),
     mRunning (false)
 {
 }
 
-Core::PeriodicThread::~PeriodicThread () {
+App::PeriodicThread::~PeriodicThread () {
 }
 
-bool Core::PeriodicThread::IsRunning () {
+bool App::PeriodicThread::IsRunning () {
     return mRunning;
 }
 
-void Core::PeriodicThread::AddTask (std::unique_ptr<Task> inTask) {
+void App::PeriodicThread::AddTask (std::unique_ptr<Task> inTask) {
     mTasks.push_back (std::move (inTask));
 }
 
-void Core::PeriodicThread::Execute () {
+void App::PeriodicThread::Execute () {
     
     mRunning = true;
 

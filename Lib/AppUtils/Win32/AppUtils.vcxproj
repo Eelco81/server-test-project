@@ -10,25 +10,9 @@
       <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\src\Buffer.h" />
-    <ClInclude Include="..\src\Files.h" />
-    <ClInclude Include="..\src\Log.h" />
-    <ClInclude Include="..\src\Network.h" />
-    <ClInclude Include="..\src\Socket.h" />
-    <ClInclude Include="..\src\Thread.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="..\src\Buffer.cpp" />
-    <ClCompile Include="..\src\Files.cpp" />
-    <ClCompile Include="..\src\Log.cpp" />
-    <ClCompile Include="..\src\Network.cpp" />
-    <ClCompile Include="..\src\Socket.cpp" />
-    <ClCompile Include="..\src\Thread.cpp" />
-  </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{2D00251F-9E3C-4BE0-BFDF-39FD65077676}</ProjectGuid>
-    <RootNamespace>Core</RootNamespace>
+    <ProjectGuid>{4552AEB7-906F-459C-A1B8-652C3538A348}</ProjectGuid>
+    <RootNamespace>AppUtils</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -60,8 +44,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <AdditionalIncludeDirectories>.\..\Core\src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\..\..\Core\src</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -74,7 +57,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>.\..\Core\src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\..\..\Core\src</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -82,6 +65,21 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Src\PeriodicThread.cpp" />
+    <ClCompile Include="..\Src\SupportThread.cpp" />
+    <ClCompile Include="..\Src\Task.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Src\PeriodicThread.h" />
+    <ClInclude Include="..\Src\SupportThread.h" />
+    <ClInclude Include="..\Src\Task.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Core\Win32\Core.vcxproj">
+      <Project>{2d00251f-9e3c-4be0-bfdf-39fd65077676}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

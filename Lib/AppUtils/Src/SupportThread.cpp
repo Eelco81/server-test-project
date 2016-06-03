@@ -5,7 +5,7 @@
 
 namespace {
 
-class LogTask : public Core::Task {
+class LogTask : public App::Task {
 public:
     LogTask () :
         Task ("FlushLog") 

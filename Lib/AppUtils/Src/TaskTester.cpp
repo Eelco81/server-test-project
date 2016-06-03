@@ -6,7 +6,7 @@
 
 namespace {
 
-    class TestTask : public Core::Task {
+    class TestTask : public App::Task {
     public:
         TestTask () : Task ("TestTask") {}
         ~TestTask () {}

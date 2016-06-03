@@ -6,7 +6,7 @@
 
 namespace {
 
-    class TestTask : public Core::Task {
+    class TestTask : public App::Task {
     public:
         TestTask (const std::string& inName) : Task (inName) {}
         ~TestTask () {}
@@ -17,13 +17,13 @@ namespace {
 
 TEST (PeriodicThreadTester, GetName) {
 
-    Core::PeriodicThread thread ("PeriodicThread", 0u);
+    App::PeriodicThread thread ("PeriodicThread", 0u);
     ASSERT_EQ ("PeriodicThread", thread.GetName ());   
 }
 
 TEST (PeriodicThreadTester, TasksInOneThread) {
 
-    Core::PeriodicThread thread ("PeriodicThread", 0u);
+    App::PeriodicThread thread ("PeriodicThread", 0u);
 
     std::unique_ptr <TestTask> task1 (new TestTask ("Task1"));
     std::unique_ptr <TestTask> task2 (new TestTask ("Task2"));
@@ -47,8 +47,8 @@ TEST (PeriodicThreadTester, TasksInOneThread) {
 
 TEST (PeriodicThreadTester, TasksInMultipleThreads) {
 
-    Core::PeriodicThread thread1 ("PeriodicThread1", 0u);
-    Core::PeriodicThread thread2 ("PeriodicThread1", 0u);
+    App::PeriodicThread thread1 ("PeriodicThread1", 0u);
+    App::PeriodicThread thread2 ("PeriodicThread1", 0u);
 
     std::unique_ptr <TestTask> task1 (new TestTask ("Task1"));
     std::unique_ptr <TestTask> task2 (new TestTask ("Task2"));

@@ -17,6 +17,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "External", "External", "{B5
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gmock", "..\..\External\gmock\googlemock\msvc\2010\gmock.vcxproj", "{34681F0D-CE45-415D-B5F2-5C662DFE3BD5}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AppUtils", "..\..\Lib\AppUtils\Win32\AppUtils.vcxproj", "{4552AEB7-906F-459C-A1B8-652C3538A348}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AppUtilsTester", "..\..\Lib\AppUtils\Win32\AppUtilsTester.vcxproj", "{8BC71E1C-4CF4-4DA9-93F4-B22050E7F18F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -39,13 +43,23 @@ Global
 		{34681F0D-CE45-415D-B5F2-5C662DFE3BD5}.Debug|Win32.Build.0 = Debug|Win32
 		{34681F0D-CE45-415D-B5F2-5C662DFE3BD5}.Release|Win32.ActiveCfg = Release|Win32
 		{34681F0D-CE45-415D-B5F2-5C662DFE3BD5}.Release|Win32.Build.0 = Release|Win32
+		{4552AEB7-906F-459C-A1B8-652C3538A348}.Debug|Win32.ActiveCfg = Debug|Win32
+		{4552AEB7-906F-459C-A1B8-652C3538A348}.Debug|Win32.Build.0 = Debug|Win32
+		{4552AEB7-906F-459C-A1B8-652C3538A348}.Release|Win32.ActiveCfg = Release|Win32
+		{4552AEB7-906F-459C-A1B8-652C3538A348}.Release|Win32.Build.0 = Release|Win32
+		{8BC71E1C-4CF4-4DA9-93F4-B22050E7F18F}.Debug|Win32.ActiveCfg = Debug|Win32
+		{8BC71E1C-4CF4-4DA9-93F4-B22050E7F18F}.Debug|Win32.Build.0 = Debug|Win32
+		{8BC71E1C-4CF4-4DA9-93F4-B22050E7F18F}.Release|Win32.ActiveCfg = Release|Win32
+		{8BC71E1C-4CF4-4DA9-93F4-B22050E7F18F}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{A8BFAD55-8008-49A8-A17A-B051B7FAFD4E} = {41B107FC-9AC5-4E2B-A7BD-0F010F288B25}
+		{8BC71E1C-4CF4-4DA9-93F4-B22050E7F18F} = {41B107FC-9AC5-4E2B-A7BD-0F010F288B25}
 		{2D00251F-9E3C-4BE0-BFDF-39FD65077676} = {13D4C167-7AF6-4F7C-82F6-DFA9EDB3B99B}
+		{4552AEB7-906F-459C-A1B8-652C3538A348} = {13D4C167-7AF6-4F7C-82F6-DFA9EDB3B99B}
 		{34681F0D-CE45-415D-B5F2-5C662DFE3BD5} = {B5200AEE-482E-4926-A155-C965F6408CF7}
 	EndGlobalSection
 EndGlobal

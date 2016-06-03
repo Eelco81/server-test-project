@@ -4,7 +4,7 @@
 
 #include <string>
 
-namespace Core {
+namespace App {
 
 class Task {
 

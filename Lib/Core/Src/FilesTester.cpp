@@ -8,7 +8,6 @@ TEST (FilesTester, ReadFile) {
 
     std::string testFile = "../test/Files/readfile.txt";
     
-
     Core::Buffer buffer (0u);
     ASSERT_TRUE (Core::Files::Read (testFile, buffer));
 

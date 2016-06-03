@@ -7,11 +7,11 @@
 
 #include "Thread.h"
 
-namespace Core {
+namespace App {
 
 class Task;
 
-class PeriodicThread : public Thread {
+class PeriodicThread : public Core::Thread {
 
 public:
     PeriodicThread () = delete;
