@@ -12,11 +12,14 @@ namespace Core {
     class Socket;
 }
 
+namespace API {
+    class Router;
+    class Request;
+}
+
 namespace TCP {
 
 class Client;
-class Router;
-class Request;
 
 class Server {
 
@@ -41,7 +44,7 @@ private:
     std::unique_ptr <Core::Thread> mCleaner;
     std::vector <std::unique_ptr <Client>> mClients;
     std::mutex mMutex;
-    std::shared_ptr <Router> mRouter;
+    std::shared_ptr <API::Router> mRouter;
 };
 
 }

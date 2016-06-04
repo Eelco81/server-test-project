@@ -8,19 +8,19 @@ namespace {
     const std::string kMessageTag ("Message");
 }
 
-Api::ErrorResponse::ErrorResponse (Codes::Responses inCode, std::string& inErrorMessage) :
+API::ErrorResponse::ErrorResponse (Codes::Responses inCode, std::string& inErrorMessage) :
     mMessage (inErrorMessage)
 {
     SetCode (inCode);
 }
 
-Api::ErrorResponse::~ErrorResponse () {
+API::ErrorResponse::~ErrorResponse () {
 }
 
-void Api::ErrorResponse::ToXml (Core::XmlNode& outNode) const {
+void API::ErrorResponse::ToXml (XmlNode& outNode) const {
     Response::ToXml (outNode);
-    Core::XmlNode bodyNode (kBodyTag);
-    Core::XmlNode errorNode (kErrorTag);
+    XmlNode bodyNode (kBodyTag);
+    XmlNode errorNode (kErrorTag);
     errorNode.SetAttribute ("Message", mMessage);
     bodyNode.AddChild (errorNode);
     outNode.AddChild (bodyNode);

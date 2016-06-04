@@ -78,6 +78,9 @@
     <ProjectReference Include="..\..\Lib\Core\Win32\Core.vcxproj">
       <Project>{2d00251f-9e3c-4be0-bfdf-39fd65077676}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\..\Lib\Router\Win32\Router.vcxproj">
+      <Project>{0cd4e1fd-dbf6-424b-bb9f-8ac588c66442}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\..\Lib\TcpServer\Win32\TcpServer.vcxproj">
       <Project>{e9aa5e42-d0d4-45eb-8dda-fcee40c58303}</Project>
     </ProjectReference>

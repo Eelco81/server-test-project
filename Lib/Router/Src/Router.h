@@ -5,7 +5,7 @@
 #include <memory>
 #include <vector>
 
-namespace Api {
+namespace API {
 
 class Request;
 class Response;

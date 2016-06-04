@@ -13,7 +13,7 @@
 #include "TcpServer.h"
 #include "TcpClient.h"
 
-TCP::Client::Client (std::shared_ptr <Router> inRouter, std::unique_ptr <Core::Socket> inSocket) :
+TCP::Client::Client (std::shared_ptr <API::Router> inRouter, std::unique_ptr <Core::Socket> inSocket) :
     Thread ("Client[" + std::to_string (inSocket->GetId ()) + "]"),
     mRouter (inRouter),
     mSocket (std::move (inSocket))
@@ -35,27 +35,26 @@ void TCP::Client::Execute () {
             std::string rawData;
             recvBuffer.ToString (rawData);
 
-            std::cout << rawData << std::endl;
-
             XmlNode requestNode;
             XmlNode responseNode;
-            Response response;
+            API::Response response;
 
             if (Xml::Parse (rawData, requestNode, error)) {
-                Request request;
+                API::Request request;
                 if (request.FromXml (requestNode, error)) {
                     mRouter->Dispatch (request, response);
                 }
                 else {
-                    response = ErrorResponse (Codes::kBadRequest, error);
+                    response = API::ErrorResponse (API::Codes::kBadRequest, error);
                 }
             }
             else {
-                response = ErrorResponse (Codes::kBadRequest, error);
+                response = API::ErrorResponse (API::Codes::kBadRequest, error);
             }
 
             response.ToXml (responseNode);
 
+            std::string outData;
             Xml::Print (responseNode, outData, error, false);
             sendBuffer.SetData (outData);
             Send (sendBuffer);

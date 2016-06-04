@@ -9,20 +9,20 @@ namespace {
     const std::string kVersionTag ("Version");
 }
 
-Api::Header::Header () {
+API::Header::Header () {
 }
 
-Api::Header::Header (const std::string& inPath, const std::string& inVersion, Codes::Methods inMethod) :
+API::Header::Header (const std::string& inPath, const std::string& inVersion, Codes::Methods inMethod) :
     mPath (inPath),
     mVersion (inVersion),
     mMethod (inMethod) 
 {
 }
 
-Api::Header::~Header () {
+API::Header::~Header () {
 }
 
-bool Api::Header::FromXml (const Core::XmlNode& inNode, std::string& outError) {
+bool API::Header::FromXml (const XmlNode& inNode, std::string& outError) {
 
     if (!inNode.GetAttribute (kPathTag, mPath)) {
         outError = "Not a valid path tag " + kPathTag;
@@ -44,7 +44,7 @@ bool Api::Header::FromXml (const Core::XmlNode& inNode, std::string& outError) {
     return true;
 }
 
-void Api::Header::ToXml (Core::XmlNode& outNode) const {
+void API::Header::ToXml (XmlNode& outNode) const {
 
     outNode.SetName (kHeaderTag);
     outNode.SetAttribute (kPathTag, mPath);

@@ -9,7 +9,7 @@ namespace Core {
     class XmlNode;
 }
 
-namespace Api {
+namespace API {
 
 class Message {
 
@@ -23,8 +23,8 @@ public:
     void SetHeader (const Header& inHeader) { mHeader = inHeader; }
 
 public:
-    virtual bool FromXml (const Core::XmlNode& inNode, std::string& inError);
-    virtual void ToXml (Core::XmlNode& outNode) const;
+    virtual bool FromXml (const XmlNode& inNode, std::string& inError);
+    virtual void ToXml (XmlNode& outNode) const;
 
 private:
     Header mHeader;

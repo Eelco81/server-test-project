@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="..\Src\Codes.h" />
+    <ClInclude Include="..\Src\EndPoint.h" />
+    <ClInclude Include="..\Src\ErrorResponse.h" />
+    <ClInclude Include="..\Src\Header.h" />
+    <ClInclude Include="..\Src\Message.h" />
+    <ClInclude Include="..\Src\Request.h" />
+    <ClInclude Include="..\Src\Response.h" />
+    <ClInclude Include="..\Src\Router.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Src\EndPoint.cpp" />
+    <ClCompile Include="..\Src\ErrorResponse.cpp" />
+    <ClCompile Include="..\Src\Header.cpp" />
+    <ClCompile Include="..\Src\Message.cpp" />
+    <ClCompile Include="..\Src\Request.cpp" />
+    <ClCompile Include="..\Src\Response.cpp" />
+    <ClCompile Include="..\Src\Router.cpp" />
+  </ItemGroup>
+</Project>

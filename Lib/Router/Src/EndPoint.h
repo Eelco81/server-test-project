@@ -5,7 +5,7 @@
 #include <string>
 #include "Codes.h"
 
-namespace Api {
+namespace API {
 
 class Request;
 class Response;

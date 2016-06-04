@@ -10,20 +10,20 @@ namespace {
     const std::string kCodeTag ("Code");
 }
 
-Api::Response::Response () :
+API::Response::Response () :
     Message (kRootTag)
 {
 }
 
-Api::Response::Response (const Message& inMessage) :
+API::Response::Response (const Message& inMessage) :
     Message (kRootTag, inMessage)
 {
 }
 
-Api::Response::~Response () {
+API::Response::~Response () {
 }
 
-void Api::Response::ToXml (Core::XmlNode& outNode) const {
+void API::Response::ToXml (XmlNode& outNode) const {
     Message::ToXml (outNode);
     outNode.SetAttribute (kCodeTag, std::to_string (mCode));
 }

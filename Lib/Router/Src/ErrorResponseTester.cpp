@@ -7,15 +7,15 @@
 
 TEST (ErrorResponseTester, PrintingXml) {
 
-    Api::ErrorResponse response (Api::Codes::kInternalServerError, std::string ("Something bad happened"));
-    response.SetHeader (Api::Header ("Path", "Version", Api::Codes::kGet));
+    API::ErrorResponse response (API::Codes::kInternalServerError, std::string ("Something bad happened"));
+    response.SetHeader (API::Header ("Path", "Version", API::Codes::kGet));
 
-    Core::XmlNode node;
+    XmlNode node;
     response.ToXml (node);
 
     std::string error;
     std::string xml;
 
-    ASSERT_TRUE (Core::Xml::Print (node, xml, error, false));
+    ASSERT_TRUE (Xml::Print (node, xml, error, false));
     ASSERT_EQ (std::string ("<Response Code=\"500\"><Header Method=\"GET\" Path=\"Path\" Version=\"Version\" /><Body><Error Message=\"Something bad happened\" /></Body></Response>"), xml);
 }

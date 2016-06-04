@@ -7,7 +7,7 @@
 #include "Message.h"
 #include "Codes.h"
 
-namespace Api {
+namespace API {
 
 class Response : public Message {
 
@@ -17,7 +17,7 @@ public:
     ~Response ();
 
 public:
-    virtual void ToXml (Core::XmlNode& outNode) const override;
+    virtual void ToXml (XmlNode& outNode) const override;
 
 public:
     Codes::Responses GetCode () const { return mCode; }

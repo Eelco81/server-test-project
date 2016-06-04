@@ -9,10 +9,10 @@ namespace {
     const std::string kBodyTag ("Body");
 }
 
-Api::Request::Request ():
+API::Request::Request ():
     Message (kRootTag)
 {
 }
 
-Api::Request::~Request () {
+API::Request::~Request () {
 }

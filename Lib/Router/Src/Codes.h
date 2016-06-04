@@ -4,7 +4,7 @@
 
 #include <string>
 
-namespace Api {
+namespace API {
 
 struct Codes {
 

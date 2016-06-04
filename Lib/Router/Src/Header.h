@@ -6,11 +6,9 @@
 
 #include "Codes.h"
 
-namespace Core {
-    class XmlNode;
-}
+class XmlNode;
 
-namespace Api {
+namespace API {
 
 struct Header {
 
@@ -23,8 +21,8 @@ struct Header {
     Codes::Methods mMethod;
     unsigned mClient;
 
-    bool FromXml (const Core::XmlNode& inNode, std::string& outError);
-    void ToXml (Core::XmlNode& inNode) const;
+    bool FromXml (const XmlNode& inNode, std::string& outError);
+    void ToXml (XmlNode& inNode) const;
 };
 
 

@@ -8,15 +8,15 @@
 TEST (RequestTester, ParsingXml) {
 
     std::string xml ("<Request><Header Path='Path' Version='Version' Method='GET' /></Request>");
-    Core::XmlNode node;
+    XmlNode node;
     std::string error;
-    ASSERT_TRUE (Core::Xml::Parse (xml, node, error));
+    ASSERT_TRUE (Xml::Parse (xml, node, error));
 
-    Api::Request request;
+    API::Request request;
     ASSERT_TRUE (request.FromXml (node, error));
 
     ASSERT_EQ (std::string ("Version"), request.GetHeader ().mVersion);
-    ASSERT_EQ (Api::Codes::kGet, request.GetHeader ().mMethod);
+    ASSERT_EQ (API::Codes::kGet, request.GetHeader ().mMethod);
     ASSERT_EQ (std::string ("Path"), request.GetHeader ().mPath);
 }
 /*
@@ -26,7 +26,7 @@ TEST (RequestTester, ParsingErrorneousXml) {
         Core::XmlNode node;
         std::string error;
         ASSERT_TRUE (Core::Xml::Parse (xml, node, error));
-        Api::Request request;
+        API::Request request;
         ASSERT_FALSE (request.FromXml (node, error));
         ASSERT_EQ (std::string ("Not a valid header found"), error);
     }
@@ -35,7 +35,7 @@ TEST (RequestTester, ParsingErrorneousXml) {
         Core::XmlNode node;
         std::string error;
         ASSERT_TRUE (Core::Xml::Parse (xml, node, error));
-        Api::Request request;
+        API::Request request;
         ASSERT_FALSE (request.FromXml (node, error));
         ASSERT_EQ (std::string ("Not a valid path tag Path"), error);
     }
@@ -44,7 +44,7 @@ TEST (RequestTester, ParsingErrorneousXml) {
         Core::XmlNode node;
         std::string error;
         ASSERT_TRUE (Core::Xml::Parse (xml, node, error));
-        Api::Request request;
+        API::Request request;
         ASSERT_FALSE (request.FromXml (node, error));
         ASSERT_EQ (std::string ("Not a valid version tag Version"), error);
     }
@@ -53,7 +53,7 @@ TEST (RequestTester, ParsingErrorneousXml) {
         Core::XmlNode node;
         std::string error;
         ASSERT_TRUE (Core::Xml::Parse (xml, node, error));
-        Api::Request request;
+        API::Request request;
         ASSERT_FALSE (request.FromXml (node, error));
         ASSERT_EQ (std::string ("Not a valid method tag Method"), error);
     }

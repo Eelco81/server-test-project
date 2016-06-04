@@ -6,7 +6,7 @@
 
 #include "Message.h"
 
-namespace Api {
+namespace API {
 
 class Request : public Message {
 public:

@@ -6,7 +6,7 @@
 #include "Response.h"
 #include "Codes.h"
 
-namespace Api {
+namespace API {
 
 class ErrorResponse : public Response {
 
@@ -18,7 +18,7 @@ public:
     const std::string& GetMessage () const { return mMessage; }
 
 public:
-    virtual void ToXml (Core::XmlNode& outNode) const override;
+    virtual void ToXml (XmlNode& outNode) const override;
 
 private:
     std::string mMessage;

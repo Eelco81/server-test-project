@@ -13,7 +13,7 @@
 
 class Core::Socket;
 
-namespace Api {
+namespace API {
     class Router;
 }
 
@@ -26,7 +26,7 @@ public:
     Client (const Client& inClient) = delete;
     Client& operator= (const Client& inClient) = delete;
 
-    Client (std::shared_ptr <Router> inRouter, std::unique_ptr <Core::Socket> inSocket);
+    Client (std::shared_ptr <API::Router> inRouter, std::unique_ptr <Core::Socket> inSocket);
     virtual ~Client ();
 
 public:
@@ -40,7 +40,7 @@ public:
     }
 
 private:
-    std::shared_ptr <Router> mRouter;
+    std::shared_ptr <API::Router> mRouter;
     std::unique_ptr <Core::Socket> mSocket;
     std::vector <std::string> mMessages;
     std::mutex mMessagesMutex;

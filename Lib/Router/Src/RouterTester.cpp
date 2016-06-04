@@ -11,39 +11,39 @@
 
 namespace {
 
-    class TestEndPoint : public Api::EndPoint {
+    class TestEndPoint : public API::EndPoint {
     public:
-        TestEndPoint () :EndPoint ("/test", Api::Codes::kGet) {}
+        TestEndPoint () :EndPoint ("/test", API::Codes::kGet) {}
         virtual ~TestEndPoint () {}
-        MOCK_METHOD2 (Execute, void (const Api::Request&, Api::Response&));
+        MOCK_METHOD2 (Execute, void (const API::Request&, API::Response&));
     };
 
-    class OtherTestEndPoint : public Api::EndPoint {
+    class OtherTestEndPoint : public API::EndPoint {
     public:
-        OtherTestEndPoint () : EndPoint ("/test/other", Api::Codes::kPost) {}
+        OtherTestEndPoint () : EndPoint ("/test/other", API::Codes::kPost) {}
         virtual ~OtherTestEndPoint () {}
-        MOCK_METHOD2 (Execute, void (const Api::Request&, Api::Response&));
+        MOCK_METHOD2 (Execute, void (const API::Request&, API::Response&));
     };
 
 }
 
 TEST (RouterTester, BasicRouting) {
 
-    Api::Request request;
-    request.SetHeader (Api::Header ("/test", "0.0.1", Api::Codes::kGet));
+    API::Request request;
+    request.SetHeader (API::Header ("/test", "0.0.1", API::Codes::kGet));
 
-    Api::Router router;
+    API::Router router;
 
     TestEndPoint* testEndPoint1 = new TestEndPoint ();
     OtherTestEndPoint* testEndPoint2 = new OtherTestEndPoint ();
 
-    router.AddEndPoint (std::unique_ptr <Api::EndPoint> (testEndPoint1));
-    router.AddEndPoint (std::unique_ptr <Api::EndPoint> (testEndPoint2));
+    router.AddEndPoint (std::unique_ptr <API::EndPoint> (testEndPoint1));
+    router.AddEndPoint (std::unique_ptr <API::EndPoint> (testEndPoint2));
 
     EXPECT_CALL (*testEndPoint1, Execute (::testing::_, ::testing::_)).Times (1);
     EXPECT_CALL (*testEndPoint2, Execute (::testing::_, ::testing::_)).Times (0);
 
-    Api::Response response;
+    API::Response response;
     router.Dispatch (request, response);
 
     ASSERT_EQ (request.GetHeader ().mPath, response.GetHeader ().mPath);
@@ -53,36 +53,36 @@ TEST (RouterTester, BasicRouting) {
 
 TEST (RouterTester, 404PathNotFound) {
 
-    Api::Request request;
-    request.SetHeader (Api::Header ("/not-existing-path", "0.0.1", Api::Codes::kGet));
+    API::Request request;
+    request.SetHeader (API::Header ("/not-existing-path", "0.0.1", API::Codes::kGet));
 
-    Api::Router router;
-    router.AddEndPoint (std::unique_ptr <Api::EndPoint> (new TestEndPoint ()));
+    API::Router router;
+    router.AddEndPoint (std::unique_ptr <API::EndPoint> (new TestEndPoint ()));
 
-    Api::Response response;
+    API::Response response;
     router.Dispatch (request, response);
 
     ASSERT_EQ (request.GetHeader ().mPath, response.GetHeader ().mPath);
     ASSERT_EQ (request.GetHeader ().mVersion, response.GetHeader ().mVersion);
     ASSERT_EQ (request.GetHeader ().mMethod, response.GetHeader ().mMethod);
 
-    ASSERT_EQ (Api::Codes::kNotFound, response.GetCode ());
+    ASSERT_EQ (API::Codes::kNotFound, response.GetCode ());
 }
 
 TEST (RouterTester, 404MethodNotFound) {
 
-    Api::Request request;
-    request.SetHeader (Api::Header ("/test", "0.0.1", Api::Codes::kDelete));
+    API::Request request;
+    request.SetHeader (API::Header ("/test", "0.0.1", API::Codes::kDelete));
 
-    Api::Router router;
-    router.AddEndPoint (std::unique_ptr <Api::EndPoint> (new TestEndPoint ()));
+    API::Router router;
+    router.AddEndPoint (std::unique_ptr <API::EndPoint> (new TestEndPoint ()));
 
-    Api::Response response;
+    API::Response response;
     router.Dispatch (request, response);
 
     ASSERT_EQ (request.GetHeader ().mPath, response.GetHeader ().mPath);
     ASSERT_EQ (request.GetHeader ().mVersion, response.GetHeader ().mVersion);
     ASSERT_EQ (request.GetHeader ().mMethod, response.GetHeader ().mMethod);
 
-    ASSERT_EQ (Api::Codes::kNotFound, response.GetCode ());
+    ASSERT_EQ (API::Codes::kNotFound, response.GetCode ());
 }

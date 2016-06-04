@@ -72,7 +72,7 @@ namespace {
 TCP::Server::Server (const std::string& inAddress, const std::string& inPort) : 
     mListener (std::make_unique <ListenThread> (*this, inAddress, inPort)),
     mCleaner (std::make_unique <CleanupThread> (*this)),
-    mRouter (std::make_shared <Router> ())
+    mRouter (std::make_shared <API::Router> ())
 {
 }
 
