@@ -2,6 +2,8 @@
 #include "Network.h"
 #include "Log.h"
 
+#include "Router.h"
+
 #include "TcpServer.h"
 #include "SupportThread.h"
 
@@ -13,7 +15,9 @@ int main (int* argc, char** argv) {
     APP::SupportThread supportThread;
     supportThread.Spawn ();
 
-    TCP::Server server ("127.0.0.1", "1234");
+    auto router = std::make_shared <API::Router> ();
+
+    TCP::Server server ("127.0.0.1", "1234", router);
     server.Start ();
 
     supportThread.Join ();

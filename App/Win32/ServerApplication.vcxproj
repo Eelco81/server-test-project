@@ -44,7 +44,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>.\..\..\Lib\Core\Src; .\..\..\Lib\AppUtils\Src; .\..\..\Lib\TcpServer\Src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\..\..\Lib\Core\Src; .\..\..\Lib\AppUtils\Src; .\..\..\Lib\TcpServer\Src;.\..\..\Lib\Router\Src</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -57,7 +57,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>.\..\..\Lib\Core\Src; .\..\..\Lib\AppUtils\Src; .\..\..\Lib\TcpServer\Src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\..\..\Lib\Core\Src; .\..\..\Lib\AppUtils\Src; .\..\..\Lib\TcpServer\Src;.\..\..\Lib\Router\Src</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>

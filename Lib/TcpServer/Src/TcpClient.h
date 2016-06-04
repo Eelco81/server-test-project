@@ -12,10 +12,7 @@
 #include <mutex>
 
 class OS::Socket;
-
-namespace API {
-    class Router;
-}
+class API::Router;
 
 namespace TCP {
 
@@ -42,8 +39,6 @@ public:
 private:
     std::shared_ptr <API::Router> mRouter;
     std::unique_ptr <OS::Socket> mSocket;
-    std::vector <std::string> mMessages;
-    std::mutex mMessagesMutex;
 };
 
 }

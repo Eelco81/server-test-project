@@ -28,7 +28,7 @@ public:
     Server (const Server& inServer) = delete;
     Server& operator= (const Server& inServer) = delete;
 
-    Server (const std::string& inAddress, const std::string& inPort);
+    Server (const std::string& inAddress, const std::string& inPort, std::shared_ptr <API::Router> inRouter);
     virtual ~Server ();
 
 public:

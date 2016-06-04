@@ -25,8 +25,8 @@ TEST (PeriodicThreadTester, TasksInOneThread) {
 
     APP::PeriodicThread thread ("PeriodicThread", 0u);
 
-    std::unique_ptr <TestTask> task1 (new TestTask ("Task1"));
-    std::unique_ptr <TestTask> task2 (new TestTask ("Task2"));
+    auto task1 = std::make_unique <TestTask> ("Task1");
+    auto task2 = std::make_unique <TestTask> ("Task2");
     
     EXPECT_CALL (*task1, Step ())
         .WillOnce (::testing::Return (true))
@@ -50,8 +50,8 @@ TEST (PeriodicThreadTester, TasksInMultipleThreads) {
     APP::PeriodicThread thread1 ("PeriodicThread1", 0u);
     APP::PeriodicThread thread2 ("PeriodicThread1", 0u);
 
-    std::unique_ptr <TestTask> task1 (new TestTask ("Task1"));
-    std::unique_ptr <TestTask> task2 (new TestTask ("Task2"));
+    auto task1 = std::make_unique <TestTask> ("Task1");
+    auto task2 = std::make_unique <TestTask> ("Task2");
 
     EXPECT_CALL (*task1, Step ())
         .WillOnce (::testing::Return (true))
