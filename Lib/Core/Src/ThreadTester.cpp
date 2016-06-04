@@ -6,7 +6,7 @@
 
 namespace {
 
-    class TestThread : public Core::Thread {
+    class TestThread : public OS::Thread {
     public:
         TestThread () : Thread ("TestThread") {}
         ~TestThread () {}

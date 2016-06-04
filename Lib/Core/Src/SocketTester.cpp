@@ -9,7 +9,7 @@
 
 namespace {
 
-    class SocketThread : public Core::Thread {
+    class SocketThread : public OS::Thread {
     public:
         SocketThread () :
             Thread ("SocketThread"),
@@ -21,9 +21,9 @@ namespace {
         }
         ~SocketThread () {}
     public:
-        Core::Buffer mInBuffer;
-        Core::Buffer mOutBuffer;
-        Core::Socket mSocket;
+        OS::Buffer mInBuffer;
+        OS::Buffer mOutBuffer;
+        OS::Socket mSocket;
     };
 
     class ServerThread : public SocketThread {
@@ -39,7 +39,7 @@ namespace {
             mSocket.Close ();
         }
     public:
-        Core::Socket mClientSocket;
+        OS::Socket mClientSocket;
     };
 
     class ClientThread : public SocketThread {
@@ -58,12 +58,12 @@ namespace {
 
 class SocketTester : public ::testing::Test {
     void SetUp () {
-        Core::Log::Instance ().Initialize (Core::Log::kTrace);
-        Core::Network::Initialize ();
+        OS::Log::Instance ().Initialize (OS::Log::kTrace);
+        OS::Network::Initialize ();
     }
     void TearDown () {
-        Core::Network::Done ();
-        Core::Log::Instance ().Flush ();
+        OS::Network::Done ();
+        OS::Log::Instance ().Flush ();
     }
 };
 

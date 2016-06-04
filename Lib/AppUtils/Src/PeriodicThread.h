@@ -11,7 +11,7 @@ namespace APP {
 
 class Task;
 
-class PeriodicThread : public Core::Thread {
+class PeriodicThread : public OS::Thread {
 
 public:
     PeriodicThread () = delete;

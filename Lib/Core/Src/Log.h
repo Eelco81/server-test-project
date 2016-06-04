@@ -6,7 +6,7 @@
 #include <mutex>
 #include <queue>
 
-namespace Core {
+namespace OS {
 
 class Log {
 

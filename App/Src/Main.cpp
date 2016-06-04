@@ -7,8 +7,8 @@
 
 int main (int* argc, char** argv) {
     
-    Core::Log::Instance ().Initialize (Core::Log::kTrace);
-    Core::Network::Initialize ();
+    OS::Log::Instance ().Initialize (OS::Log::kTrace);
+    OS::Network::Initialize ();
 
     APP::SupportThread supportThread;
     supportThread.Spawn ();
@@ -18,7 +18,7 @@ int main (int* argc, char** argv) {
 
     supportThread.Join ();
     
-    Core::Network::Done ();
+    OS::Network::Done ();
 
     return 0;
 }

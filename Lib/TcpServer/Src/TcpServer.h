@@ -6,7 +6,7 @@
 #include <memory>
 #include <mutex>
 
-namespace Core {
+namespace OS {
     class Buffer;
     class Thread;
     class Socket;
@@ -33,15 +33,15 @@ public:
 
 public:
     void Start ();
-    void RegisterClient (std::unique_ptr <Core::Socket> inClientSocket);
+    void RegisterClient (std::unique_ptr <OS::Socket> inClientSocket);
     void CleanUp ();
 
-    void BroadCast (const Core::Buffer& inBuffer);
-    void Send (unsigned inClientId, const Core::Buffer& inBuffer);
+    void BroadCast (const OS::Buffer& inBuffer);
+    void Send (unsigned inClientId, const OS::Buffer& inBuffer);
     
 private:
-    std::unique_ptr <Core::Thread> mListener;
-    std::unique_ptr <Core::Thread> mCleaner;
+    std::unique_ptr <OS::Thread> mListener;
+    std::unique_ptr <OS::Thread> mCleaner;
     std::vector <std::unique_ptr <Client>> mClients;
     std::mutex mMutex;
     std::shared_ptr <API::Router> mRouter;

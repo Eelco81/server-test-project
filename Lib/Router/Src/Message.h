@@ -5,7 +5,7 @@
 #include <string>
 #include "Header.h"
 
-namespace Core {
+namespace OS {
     class XmlNode;
 }
 

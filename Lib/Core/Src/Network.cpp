@@ -21,19 +21,19 @@
 
 #endif 
 
-bool Core::Network::mInitialized (false);
+bool OS::Network::mInitialized (false);
 
-void Core::Network::Initialize () {
+void OS::Network::Initialize () {
     if (!mInitialized) {
 
 #if (defined _WIN32 || defined _WIN64)
         WSADATA wsaData;
         int result = WSAStartup (MAKEWORD (2, 2), &wsaData);
         if (result != 0) {
-            Core::Log::Instance ().LogMessage (Core::Log::kError, "[Network] WinSock2::WSAStartup failed with error: " + result);
+            OS::Log::Instance ().LogMessage (OS::Log::kError, "[Network] WinSock2::WSAStartup failed with error: " + result);
         }
         else {
-            Core::Log::Instance ().LogMessage (Core::Log::kTrace, "[Network] WinSock2::WSAStartup completed");
+            OS::Log::Instance ().LogMessage (OS::Log::kTrace, "[Network] WinSock2::WSAStartup completed");
         }
 #endif
 
@@ -42,12 +42,12 @@ void Core::Network::Initialize () {
 
 }
 
-void Core::Network::Done ()  {
+void OS::Network::Done ()  {
     if (mInitialized) {
 
 #if (defined _WIN32 || defined _WIN64)
         WSACleanup ();
-        Core::Log::Instance ().LogMessage (Core::Log::kTrace, "WinSock2::WSACleanup completed");
+        OS::Log::Instance ().LogMessage (OS::Log::kTrace, "WinSock2::WSACleanup completed");
 #endif
 
     }

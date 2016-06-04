@@ -6,7 +6,7 @@
 #include <thread>
 #include <string>
 
-namespace Core {
+namespace OS {
 
 class Thread {
 

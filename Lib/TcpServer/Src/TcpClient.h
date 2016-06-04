@@ -11,7 +11,7 @@
 #include <string>
 #include <mutex>
 
-class Core::Socket;
+class OS::Socket;
 
 namespace API {
     class Router;
@@ -19,20 +19,20 @@ namespace API {
 
 namespace TCP {
 
-class Client : public Core::Thread {
+class Client : public OS::Thread {
 
 public:
     Client () = delete;
     Client (const Client& inClient) = delete;
     Client& operator= (const Client& inClient) = delete;
 
-    Client (std::shared_ptr <API::Router> inRouter, std::unique_ptr <Core::Socket> inSocket);
+    Client (std::shared_ptr <API::Router> inRouter, std::unique_ptr <OS::Socket> inSocket);
     virtual ~Client ();
 
 public:
     virtual void Execute () override;
     
-    void Send (const Core::Buffer& inBuffer);
+    void Send (const OS::Buffer& inBuffer);
     void ForceClose ();
 
     unsigned GetId () const {
@@ -41,7 +41,7 @@ public:
 
 private:
     std::shared_ptr <API::Router> mRouter;
-    std::unique_ptr <Core::Socket> mSocket;
+    std::unique_ptr <OS::Socket> mSocket;
     std::vector <std::string> mMessages;
     std::mutex mMessagesMutex;
 };

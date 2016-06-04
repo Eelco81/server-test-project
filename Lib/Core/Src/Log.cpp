@@ -7,19 +7,19 @@
 #include <chrono>
 #include <ctime>
 
-Core::Log::Log () :
+OS::Log::Log () :
     mLevel (kInfo)
 {
 }
 
-Core::Log::~Log () {
+OS::Log::~Log () {
 }
 
-void Core::Log::Initialize (Core::Log::Levels inLevel) {
+void OS::Log::Initialize (OS::Log::Levels inLevel) {
     mLevel = inLevel;
 }
 
-void Core::Log::LogMessage (Core::Log::Levels inLevel, const std::string& inMessage) {
+void OS::Log::LogMessage (OS::Log::Levels inLevel, const std::string& inMessage) {
 
     if (inLevel <= mLevel) {
 
@@ -36,7 +36,7 @@ void Core::Log::LogMessage (Core::Log::Levels inLevel, const std::string& inMess
     }
 }
 
-void Core::Log::Flush () {
+void OS::Log::Flush () {
     
     mMutex.lock ();
     while (mMessages.size () > 0) {
@@ -46,7 +46,7 @@ void Core::Log::Flush () {
     mMutex.unlock ();
 }
 
-std::string Core::Log::LevelToString (Core::Log::Levels inLevel) const {
+std::string OS::Log::LevelToString (OS::Log::Levels inLevel) const {
     switch (inLevel) {
     case kFatal:
         return "FATAL";

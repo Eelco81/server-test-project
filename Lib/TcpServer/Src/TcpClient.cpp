@@ -13,7 +13,7 @@
 #include "TcpServer.h"
 #include "TcpClient.h"
 
-TCP::Client::Client (std::shared_ptr <API::Router> inRouter, std::unique_ptr <Core::Socket> inSocket) :
+TCP::Client::Client (std::shared_ptr <API::Router> inRouter, std::unique_ptr <OS::Socket> inSocket) :
     Thread ("Client[" + std::to_string (inSocket->GetId ()) + "]"),
     mRouter (inRouter),
     mSocket (std::move (inSocket))
@@ -25,8 +25,8 @@ TCP::Client::~Client () {
 
 void TCP::Client::Execute () {
 
-    Core::Buffer recvBuffer (MAX_BUFFER_SIZE);
-    Core::Buffer sendBuffer (MAX_BUFFER_SIZE);
+    OS::Buffer recvBuffer (MAX_BUFFER_SIZE);
+    OS::Buffer sendBuffer (MAX_BUFFER_SIZE);
 
     while (mSocket->IsConnected ()) {
         if (mSocket->Receive (recvBuffer)) { // blocking call
@@ -62,7 +62,7 @@ void TCP::Client::Execute () {
     }
 }
 
-void TCP::Client::Send (const Core::Buffer& inBuffer) {
+void TCP::Client::Send (const OS::Buffer& inBuffer) {
     mSocket->Send (inBuffer);
 }
 

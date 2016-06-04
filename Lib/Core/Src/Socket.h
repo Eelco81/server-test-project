@@ -5,7 +5,7 @@
 #include <string>
 #include <memory>
 
-namespace Core {
+namespace OS {
 
 class Buffer;
 

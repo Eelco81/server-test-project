@@ -2,7 +2,7 @@
 #ifndef _NETWORK_H_
 #define _NETWORK_H_
 
-namespace Core {
+namespace OS {
 
 class Network {
 

@@ -8,7 +8,7 @@
 
 TEST (BufferTester, InitBufferSize) {
 
-    Core::Buffer buffer (5u);
+    OS::Buffer buffer (5u);
 
     ASSERT_EQ (0u, buffer.GetSize ());
     ASSERT_EQ (5u, buffer.GetMaxSize ());
@@ -19,7 +19,7 @@ TEST (BufferTester, SetBufferValues) {
     const char* kTestData = "Some Other Data";
     const unsigned kTestSize (static_cast<unsigned> (strlen (kTestData)));
 
-    Core::Buffer buffer (20u);
+    OS::Buffer buffer (20u);
 
     buffer.SetData (kTestData, kTestSize);
     ASSERT_EQ (kTestSize, buffer.GetSize ());
@@ -34,7 +34,7 @@ TEST (BufferTester, ChangingBufferSizes) {
     const char* kTestData = "12345";
     const unsigned kTestSize = static_cast<unsigned>(strlen (kTestData));
 
-    Core::Buffer buffer (kTestSize);
+    OS::Buffer buffer (kTestSize);
 
     ASSERT_EQ (0u, buffer.GetSize ());
     ASSERT_EQ (kTestSize, buffer.GetMaxSize ());

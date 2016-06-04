@@ -5,7 +5,7 @@
 #include <iostream>
 #include <fstream>
 
-bool Core::Files::Read (const std::string& inPath, Core::Buffer& outBuffer) {
+bool OS::Files::Read (const std::string& inPath, OS::Buffer& outBuffer) {
 
     std::ifstream stream;
     stream.open (inPath, std::ifstream::binary);
@@ -25,7 +25,7 @@ bool Core::Files::Read (const std::string& inPath, Core::Buffer& outBuffer) {
     return false;
 }
 
-bool Core::Files::Write (const std::string& inPath, const Core::Buffer& inBuffer) {
+bool OS::Files::Write (const std::string& inPath, const OS::Buffer& inBuffer) {
 
     std::ofstream stream;
     stream.open (inPath);

@@ -3,33 +3,33 @@
 #include "Thread.h"
 
 namespace {
-    void LaunchThreadExecution (Core::Thread* inThread) {
+    void LaunchThreadExecution (OS::Thread* inThread) {
         inThread->Run ();
     }
 }
 
-Core::Thread::Thread (const std::string& inName) :
+OS::Thread::Thread (const std::string& inName) :
     mName (inName),
     mStatus (kUnstarted)
 {
 }
 
-Core::Thread ::~Thread () {
-    Core::Log::Instance ().LogMessage (Core::Log::kTrace, std::string ("[Thread](") + GetName ()  + ") is being destructed");
+OS::Thread ::~Thread () {
+    OS::Log::Instance ().LogMessage (OS::Log::kTrace, std::string ("[Thread](") + GetName ()  + ") is being destructed");
 }
 
-void Core::Thread::Run () {
+void OS::Thread::Run () {
     mStatus = kRunning;
     Execute ();
     mStatus = kDone;
 }
 
-void Core::Thread::Spawn () {
-    Core::Log::Instance ().LogMessage (Core::Log::kTrace, std::string ("[Thread](") + GetName () + ") started");
+void OS::Thread::Spawn () {
+    OS::Log::Instance ().LogMessage (OS::Log::kTrace, std::string ("[Thread](") + GetName () + ") started");
     mImplementation.reset (new std::thread (LaunchThreadExecution, this));
 }
 
-void Core::Thread::Join () {
+void OS::Thread::Join () {
     if (mImplementation && mImplementation->joinable ()) {
         mImplementation->join ();
     }

@@ -2,7 +2,7 @@
 #ifndef _FILES_H_
 #define _FILES_H_
 
-namespace Core {
+namespace OS {
 
 class Buffer;
 

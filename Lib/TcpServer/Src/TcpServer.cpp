@@ -15,7 +15,7 @@
 
 namespace {
 
-    class ListenThread : public Core::Thread {
+    class ListenThread : public OS::Thread {
         
     public:
         ListenThread (TCP::Server& inServer, const std::string& inAddress, const std::string& inPort) :
@@ -30,7 +30,7 @@ namespace {
         void Execute () override {
             mSocket.Listen ();
             while (mSocket.IsListening ()) {
-                auto clientSocket = std::make_unique <Core::Socket> ("", "");
+                auto clientSocket = std::make_unique <OS::Socket> ("", "");
                 if (mSocket.Accept (*clientSocket)) {
                     mServer.RegisterClient (std::move (clientSocket));
                 }
@@ -39,7 +39,7 @@ namespace {
 
     private:
         TCP::Server& mServer;
-        Core::Socket mSocket;
+        OS::Socket mSocket;
     };
 
     class CleanUpTask : public APP::Task {
@@ -84,7 +84,7 @@ void TCP::Server::Start () {
     mCleaner->Spawn ();
 }
 
-void TCP::Server::BroadCast (const Core::Buffer& inBuffer) {
+void TCP::Server::BroadCast (const OS::Buffer& inBuffer) {
     mMutex.lock ();
     std::for_each (mClients.begin (), mClients.end (), [&](std::unique_ptr<Client>& client) {
         client->Send (inBuffer);
@@ -92,7 +92,7 @@ void TCP::Server::BroadCast (const Core::Buffer& inBuffer) {
     mMutex.unlock ();
 };
 
-void TCP::Server::Send (unsigned inClientId, const Core::Buffer& inBuffer) {
+void TCP::Server::Send (unsigned inClientId, const OS::Buffer& inBuffer) {
     mMutex.lock ();
     auto clientIterator = std::find_if (mClients.begin (), mClients.end (), [inClientId](const std::unique_ptr<Client>& client) {
         return client->GetId () == inClientId;
@@ -104,7 +104,7 @@ void TCP::Server::Send (unsigned inClientId, const Core::Buffer& inBuffer) {
 };
 
 // called from listener thread
-void TCP::Server::RegisterClient (std::unique_ptr <Core::Socket> inClientSocket) {
+void TCP::Server::RegisterClient (std::unique_ptr <OS::Socket> inClientSocket) {
     mMutex.lock ();
     mClients.emplace_back (std::make_unique <Client> (mRouter, std::move (inClientSocket)));
     mClients.back ()->Spawn ();
@@ -115,7 +115,7 @@ void TCP::Server::RegisterClient (std::unique_ptr <Core::Socket> inClientSocket)
 void TCP::Server::CleanUp () {
     mMutex.lock ();
     for (auto it = mClients.begin (); it != mClients.end (); it++) {
-        if ((*it)->GetStatus () == Core::Thread::kDone) {
+        if ((*it)->GetStatus () == OS::Thread::kDone) {
             (*it)->Join ();
             mClients.erase (it);
             break;
