@@ -12,7 +12,7 @@ namespace Core {
     class Socket;
 }
 
-namespace Api {
+namespace TCP {
 
 class Client;
 class Router;

@@ -14,8 +14,10 @@
 class Core::Socket;
 
 namespace Api {
+    class Router;
+}
 
-class Router;
+namespace TCP {
 
 class Client : public Core::Thread {
 

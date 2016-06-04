@@ -7,7 +7,7 @@
 
 #include "Thread.h"
 
-namespace App {
+namespace APP {
 
 class Task;
 

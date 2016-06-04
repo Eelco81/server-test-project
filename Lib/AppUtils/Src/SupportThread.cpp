@@ -5,7 +5,7 @@
 
 namespace {
 
-class LogTask : public App::Task {
+class LogTask : public APP::Task {
 public:
     LogTask () :
         Task ("FlushLog") 
@@ -21,11 +21,11 @@ public:
 
 }
 
-App::SupportThread::SupportThread () :
+APP::SupportThread::SupportThread () :
     PeriodicThread ("Support", 1000u)
 {
     AddTask (std::make_unique <LogTask> ());
 }
 
-App::SupportThread::~SupportThread () {
+APP::SupportThread::~SupportThread () {
 }

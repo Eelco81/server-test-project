@@ -18,7 +18,7 @@ namespace {
     class ListenThread : public Core::Thread {
         
     public:
-        ListenThread (Api::Server& inServer, const std::string& inAddress, const std::string& inPort) :
+        ListenThread (TCP::Server& inServer, const std::string& inAddress, const std::string& inPort) :
             Thread ("ServerListener"),
             mServer (inServer),
             mSocket (inAddress, inPort)
@@ -38,13 +38,13 @@ namespace {
         }
 
     private:
-        Api::Server& mServer;
+        TCP::Server& mServer;
         Core::Socket mSocket;
     };
 
-    class CleanUpTask : public Core::Task {
+    class CleanUpTask : public APP::Task {
     public:
-        CleanUpTask (Api::Server& inServer) : 
+        CleanUpTask (TCP::Server& inServer) : 
             Task ("CleanupServerTask"),
             mServer (inServer) 
         {
@@ -54,12 +54,12 @@ namespace {
             return true;
         }
     private:
-        Api::Server& mServer;
+        TCP::Server& mServer;
     };
 
-    class CleanupThread : public Core::PeriodicThread {
+    class CleanupThread : public APP::PeriodicThread {
     public:
-        CleanupThread (Api::Server& inServer) :
+        CleanupThread (TCP::Server& inServer) :
             PeriodicThread ("CleanupServer", 1000u)
         {
             AddTask (std::make_unique <CleanUpTask> (inServer));
@@ -69,22 +69,22 @@ namespace {
 
 }
 
-Api::Server::Server (const std::string& inAddress, const std::string& inPort) : 
+TCP::Server::Server (const std::string& inAddress, const std::string& inPort) : 
     mListener (std::make_unique <ListenThread> (*this, inAddress, inPort)),
     mCleaner (std::make_unique <CleanupThread> (*this)),
     mRouter (std::make_shared <Router> ())
 {
 }
 
-Api::Server::~Server () {
+TCP::Server::~Server () {
 }
 
-void Api::Server::Start () {
+void TCP::Server::Start () {
     mListener->Spawn ();
     mCleaner->Spawn ();
 }
 
-void Api::Server::BroadCast (const Core::Buffer& inBuffer) {
+void TCP::Server::BroadCast (const Core::Buffer& inBuffer) {
     mMutex.lock ();
     std::for_each (mClients.begin (), mClients.end (), [&](std::unique_ptr<Client>& client) {
         client->Send (inBuffer);
@@ -92,7 +92,7 @@ void Api::Server::BroadCast (const Core::Buffer& inBuffer) {
     mMutex.unlock ();
 };
 
-void Api::Server::Send (unsigned inClientId, const Core::Buffer& inBuffer) {
+void TCP::Server::Send (unsigned inClientId, const Core::Buffer& inBuffer) {
     mMutex.lock ();
     auto clientIterator = std::find_if (mClients.begin (), mClients.end (), [inClientId](const std::unique_ptr<Client>& client) {
         return client->GetId () == inClientId;
@@ -104,7 +104,7 @@ void Api::Server::Send (unsigned inClientId, const Core::Buffer& inBuffer) {
 };
 
 // called from listener thread
-void Api::Server::RegisterClient (std::unique_ptr <Core::Socket> inClientSocket) {
+void TCP::Server::RegisterClient (std::unique_ptr <Core::Socket> inClientSocket) {
     mMutex.lock ();
     mClients.emplace_back (std::make_unique <Client> (mRouter, std::move (inClientSocket)));
     mClients.back ()->Spawn ();
@@ -112,7 +112,7 @@ void Api::Server::RegisterClient (std::unique_ptr <Core::Socket> inClientSocket)
 }
 
 // called from cleaner thread
-void Api::Server::CleanUp () {
+void TCP::Server::CleanUp () {
     mMutex.lock ();
     for (auto it = mClients.begin (); it != mClients.end (); it++) {
         if ((*it)->GetStatus () == Core::Thread::kDone) {

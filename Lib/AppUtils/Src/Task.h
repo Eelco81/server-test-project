@@ -4,7 +4,7 @@
 
 #include <string>
 
-namespace App {
+namespace APP {
 
 class Task {
 

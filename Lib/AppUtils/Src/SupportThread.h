@@ -4,7 +4,7 @@
 
 #include "PeriodicThread.h"
 
-namespace App {
+namespace APP {
 
 class SupportThread : public PeriodicThread {
 

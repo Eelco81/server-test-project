@@ -13,17 +13,17 @@
 #include "TcpServer.h"
 #include "TcpClient.h"
 
-Api::Client::Client (std::shared_ptr <Router> inRouter, std::unique_ptr <Core::Socket> inSocket) :
+TCP::Client::Client (std::shared_ptr <Router> inRouter, std::unique_ptr <Core::Socket> inSocket) :
     Thread ("Client[" + std::to_string (inSocket->GetId ()) + "]"),
     mRouter (inRouter),
     mSocket (std::move (inSocket))
 {
 }
 
-Api::Client::~Client () {
+TCP::Client::~Client () {
 }
 
-void Api::Client::Execute () {
+void TCP::Client::Execute () {
 
     Core::Buffer recvBuffer (MAX_BUFFER_SIZE);
     Core::Buffer sendBuffer (MAX_BUFFER_SIZE);
@@ -37,11 +37,11 @@ void Api::Client::Execute () {
 
             std::cout << rawData << std::endl;
 
-            Core::XmlNode requestNode;
-            Core::XmlNode responseNode;
+            XmlNode requestNode;
+            XmlNode responseNode;
             Response response;
 
-            if (Core::Xml::Parse (rawData, requestNode, error)) {
+            if (Xml::Parse (rawData, requestNode, error)) {
                 Request request;
                 if (request.FromXml (requestNode, error)) {
                     mRouter->Dispatch (request, response);
@@ -56,18 +56,17 @@ void Api::Client::Execute () {
 
             response.ToXml (responseNode);
 
-            std::string outData ("HTTP/1.1 200 OK\nConnection: close\n\n");
-            //Core::Xml::Print (responseNode, outData, error, false);
+            Xml::Print (responseNode, outData, error, false);
             sendBuffer.SetData (outData);
             Send (sendBuffer);
         }
     }
 }
 
-void Api::Client::Send (const Core::Buffer& inBuffer) {
+void TCP::Client::Send (const Core::Buffer& inBuffer) {
     mSocket->Send (inBuffer);
 }
 
-void Api::Client::ForceClose () {
+void TCP::Client::ForceClose () {
     mSocket->Close ();
 }

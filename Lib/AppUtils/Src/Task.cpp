@@ -1,14 +1,14 @@
 
 #include "Task.h"
 
-App::Task::Task (const std::string& inName) :
+APP::Task::Task (const std::string& inName) :
     mName (inName)
 {
 }
 
-App::Task::~Task () {
+APP::Task::~Task () {
 }
 
-const std::string& App::Task::GetName () const {
+const std::string& APP::Task::GetName () const {
     return mName;
 }
