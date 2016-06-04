@@ -67,6 +67,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\Src\Main.cpp" />
+    <ClCompile Include="..\Src\Routes.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\External\tinyxml\tinyxml_lib.vcxproj">
@@ -87,6 +88,9 @@
     <ProjectReference Include="..\..\Lib\Xml\Win32\Xml.vcxproj">
       <Project>{3f6b5b2f-b4a6-4e36-a88e-cf60359dd0b8}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Src\Routes.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
