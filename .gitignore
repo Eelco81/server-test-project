@@ -3,14 +3,14 @@
 /Lib/*/Win32/*.user
 /Lib/*/Win32/*.suo
 /Lib/*/Win32/*.opensdf
-/Lib/*/Win32/Debug
-/Lib/*/Win32/Release
+/Lib/*/Win32/Debug*
+/Lib/*/Win32/Release*
 
 /App/Win32/*.sdf
 /App/Win32/*.user
 /App/Win32/*.suo
 /App/Win32/*.opensdf
-/App/Win32/Debug
-/App/Win32/Release
+/App/Win32/Debug*
+/App/Win32/Release*
 
 /External
