@@ -2,7 +2,7 @@
 #include "tinyxml.h"
 #include "Xml.h"
 
-bool Core::Xml::Parse (const std::string& inXmlString, Core::XmlNode& outNode, std::string& outError) {
+bool Xml::Parse (const std::string& inXmlString, XmlNode& outNode, std::string& outError) {
 
     TiXmlDocument doc;
     doc.Parse (inXmlString.c_str ());
@@ -13,7 +13,7 @@ bool Core::Xml::Parse (const std::string& inXmlString, Core::XmlNode& outNode, s
     return ConvertFromTinyXml (doc.FirstChildElement (), outNode);
 }
 
-bool Core::Xml::Print (const Core::XmlNode& inNode, std::string& outXmlString, std::string& outError, bool inPrettyPrint) {
+bool Xml::Print (const XmlNode& inNode, std::string& outXmlString, std::string& outError, bool inPrettyPrint) {
     
     TiXmlDocument doc;
     TiXmlElement* root = new TiXmlElement ("");
@@ -31,7 +31,7 @@ bool Core::Xml::Print (const Core::XmlNode& inNode, std::string& outXmlString, s
     return true;
 }
 
-bool Core::Xml::ConvertFromTinyXml (TiXmlElement* inElement, XmlNode& ioNode) {
+bool Xml::ConvertFromTinyXml (TiXmlElement* inElement, XmlNode& ioNode) {
 
     // Set attribute name
     ioNode.SetName (inElement->Value ());
@@ -54,7 +54,7 @@ bool Core::Xml::ConvertFromTinyXml (TiXmlElement* inElement, XmlNode& ioNode) {
     return true;
 }
 
-bool Core::Xml::ConvertToTinyXml (const XmlNode& inNode, TiXmlElement* outElement) {
+bool Xml::ConvertToTinyXml (const XmlNode& inNode, TiXmlElement* outElement) {
     
     outElement->SetValue (inNode.GetName ().c_str ());
     

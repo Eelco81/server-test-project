@@ -8,8 +8,6 @@ class TiXmlElement;
 
 #include "XmlNode.h"
 
-namespace Core {
-
 class Xml {
 
 public:
@@ -21,7 +19,6 @@ private:
     static bool ConvertToTinyXml (const XmlNode& ioNode, TiXmlElement* inElement);
 };
 
-}
 
 
 #endif

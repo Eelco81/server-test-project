@@ -8,8 +8,6 @@
 
 class TiXmlElement;
 
-namespace Core {
-
 class XmlNode {
 
 public:
@@ -37,6 +35,5 @@ private:
 
 };
 
-}
 
 #endif
