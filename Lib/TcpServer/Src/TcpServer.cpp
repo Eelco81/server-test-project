@@ -1,6 +1,8 @@
 
 #include <algorithm>
 
+#include "Log.h"
+
 #include "Buffer.h"
 
 #include "Socket.h"
@@ -28,7 +30,8 @@ namespace {
         ~ListenThread () {}
 
         void Execute () override {
-            mSocket.Listen ();
+            mSocket.Listen (); 
+            LOGMESSAGE (OS::Log::kInfo, "[TcpServer] Listening at " + mSocket.GetAddress () + ":" + mSocket.GetPortNumber ());
             while (mSocket.IsListening ()) {
                 auto clientSocket = std::make_unique <OS::Socket> ("", "");
                 if (mSocket.Accept (*clientSocket)) {
@@ -109,6 +112,7 @@ void TCP::Server::RegisterClient (std::unique_ptr <OS::Socket> inClientSocket) {
     mClients.emplace_back (std::make_unique <Client> (mRouter, std::move (inClientSocket)));
     mClients.back ()->Spawn ();
     mMutex.unlock ();
+    LOGMESSAGE (OS::Log::kInfo, "[TcpServer] Registered connected client with id " + inClientSocket->GetId ());
 }
 
 // called from cleaner thread
@@ -116,6 +120,7 @@ void TCP::Server::CleanUp () {
     mMutex.lock ();
     for (auto it = mClients.begin (); it != mClients.end (); it++) {
         if ((*it)->GetStatus () == OS::Thread::kDone) {
+            LOGMESSAGE (OS::Log::kInfo, "[TcpServer] Unregistered connected client with id " + (*it)->GetId ());
             (*it)->Join ();
             mClients.erase (it);
             break;

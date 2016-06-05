@@ -45,7 +45,7 @@ public:
     {
     }
     ~Implementation () {
-        OS::Log::Instance ().LogMessage (OS::Log::kTrace, std::string ("[Socket](") + std::to_string (GetId ()) + std::string (") is being destructed"));
+        LOGMESSAGE (OS::Log::kTrace, std::string ("[Socket](") + std::to_string (GetId ()) + std::string (") is being destructed"));
     }
 
 public:
@@ -62,7 +62,7 @@ public:
         mIsListening = false;
         mIsConnected = true;
         mSocketHandle = inSocketHandle;
-        OS::Log::Instance ().LogMessage (OS::Log::kInfo, std::string ("[Socket](") + std::to_string (GetId ()) + std::string (") initialized"));
+        LOGMESSAGE (OS::Log::kDebug, std::string ("[Socket](") + std::to_string (GetId ()) + std::string (") initialized"));
         return true;
     }
 
@@ -82,18 +82,18 @@ public:
         // Resolve the server address and port
         int res = getaddrinfo (inAddress.c_str (), inPort.c_str (), &hints, &mLatestAddrInfo);
         if (res != 0) {
-            OS::Log::Instance ().LogMessage (OS::Log::kTrace, "[Socket] WinSock2::getaddrinfo failed with code " + std::to_string (WSAGetLastError ()));
+            LOGMESSAGE (OS::Log::kDebug, "[Socket] WinSock2::getaddrinfo failed with code " + std::to_string (WSAGetLastError ()));
             return false;
         }
         
         // Create a SOCKET for connecting to server
         mSocketHandle = socket (mLatestAddrInfo->ai_family, mLatestAddrInfo->ai_socktype, mLatestAddrInfo->ai_protocol);
         if (mSocketHandle == INVALID_SOCKET) {
-            OS::Log::Instance ().LogMessage (OS::Log::kTrace, "[Socket] WinSock2::socket failed with code " + std::to_string (WSAGetLastError ()));
+            LOGMESSAGE (OS::Log::kDebug, "[Socket] WinSock2::socket failed with code " + std::to_string (WSAGetLastError ()));
             return false;
         }
         
-        OS::Log::Instance ().LogMessage (OS::Log::kInfo, "[Socket](" + std::to_string (GetId ()) + ") initialized at " + inAddress + ":" + inPort );
+        LOGMESSAGE (OS::Log::kDebug, "[Socket](" + std::to_string (GetId ()) + ") initialized at " + inAddress + ":" + inPort);
         return true;
     }
 
@@ -104,7 +104,7 @@ public:
             freeaddrinfo (mLatestAddrInfo);
             closesocket (mSocketHandle);
 
-            OS::Log::Instance ().LogMessage (OS::Log::kInfo, std::string ("[Socket](") + std::to_string (GetId ()) + std::string (") closed"));
+            LOGMESSAGE (OS::Log::kDebug, std::string ("[Socket](") + std::to_string (GetId ()) + std::string (") closed"));
         }
 
         mIsConnected = false;
@@ -117,19 +117,19 @@ public:
 
             int result = bind (mSocketHandle, mLatestAddrInfo->ai_addr, (int) mLatestAddrInfo->ai_addrlen);
             if (result == SOCKET_ERROR) {
-                OS::Log::Instance ().LogMessage (OS::Log::kTrace, "[Socket] WinSock2::bind failed with code " + std::to_string (WSAGetLastError ()));
+                LOGMESSAGE (OS::Log::kDebug, "[Socket] WinSock2::bind failed with code " + std::to_string (WSAGetLastError ()));
                 return false;
             }
 
             result = listen (mSocketHandle, SOMAXCONN);
             if (result == SOCKET_ERROR) {
-                OS::Log::Instance ().LogMessage (OS::Log::kTrace, "[Socket] WinSock2::listen failed with code " + std::to_string (WSAGetLastError ()));
+                LOGMESSAGE (OS::Log::kDebug, "[Socket] WinSock2::listen failed with code " + std::to_string (WSAGetLastError ()));
                 return false;
             }
         }
 
         mIsListening = true;
-        OS::Log::Instance ().LogMessage (OS::Log::kTrace, std::string ("[Socket](") + std::to_string (GetId ()) + std::string (") listening..."));
+        LOGMESSAGE (OS::Log::kDebug, std::string ("[Socket](") + std::to_string (GetId ()) + std::string (") listening..."));
         return true;
     }
 
@@ -141,12 +141,12 @@ public:
 
         SOCKET_HANDLE clientSocket = accept (mSocketHandle, NULL, NULL);
         if (clientSocket == INVALID_SOCKET) {
-            OS::Log::Instance ().LogMessage (OS::Log::kTrace, "[Socket] WinSock2::accept failed with code " + std::to_string (WSAGetLastError ()));
+            LOGMESSAGE (OS::Log::kDebug, "[Socket] WinSock2::accept failed with code " + std::to_string (WSAGetLastError ()));
             return false;
         }
         outSocket.Initialize (clientSocket);
 
-        OS::Log::Instance ().LogMessage (OS::Log::kInfo, std::string ("[Socket](") + std::to_string (GetId ()) + std::string (") connected to socket " + std::to_string (outSocket.GetId ())));
+        LOGMESSAGE (OS::Log::kDebug, std::string ("[Socket](") + std::to_string (GetId ()) + std::string (") connected to socket " + std::to_string (outSocket.GetId ())));
         return true;
     }
 
@@ -159,11 +159,11 @@ public:
         // Connect to server.
         int res = connect (mSocketHandle, mLatestAddrInfo->ai_addr, (int) mLatestAddrInfo->ai_addrlen);
         if (res == SOCKET_ERROR) {
-            OS::Log::Instance ().LogMessage (OS::Log::kTrace, "[Socket] WinSock2::connect failed with code " + std::to_string (WSAGetLastError ()));
+            LOGMESSAGE (OS::Log::kDebug, "[Socket] WinSock2::connect failed with code " + std::to_string (WSAGetLastError ()));
             return false;
         }
 
-        OS::Log::Instance ().LogMessage (OS::Log::kInfo, std::string ("[Socket](") + std::to_string (GetId ()) + std::string (") connected to server"));
+        LOGMESSAGE (OS::Log::kDebug, std::string ("[Socket](") + std::to_string (GetId ()) + std::string (") connected to server"));
         mIsConnected = true;
         return true;
     }
@@ -180,11 +180,11 @@ public:
 
         int result = send (mSocketHandle, inBuffer.GetDataPointer (), inBuffer.GetSize (), 0);
         if (result == SOCKET_ERROR) {
-            OS::Log::Instance ().LogMessage (OS::Log::kTrace, "[Socket] WinSock2::send failed with code " + std::to_string (WSAGetLastError ()));
+            LOGMESSAGE (OS::Log::kDebug, "[Socket] WinSock2::send failed with code " + std::to_string (WSAGetLastError ()));
             Close ();
             return false;
         }
-        OS::Log::Instance ().LogMessage (OS::Log::kTrace, std::string ("[Socket] Send ") + std::to_string (inBuffer.GetSize ()) + std::string (" bytes to client id ") + std::to_string (mSocketHandle));
+        LOGMESSAGE (OS::Log::kTrace, std::string ("[Socket] Send ") + std::to_string (inBuffer.GetSize ()) + std::string (" bytes to client id ") + std::to_string (mSocketHandle));
         return true;
     }
 
@@ -196,18 +196,18 @@ public:
 
         int result = recv (mSocketHandle, outBuffer.GetDataPointer (), outBuffer.GetMaxSize (), 0);
         if (result == 0) {
-            OS::Log::Instance ().LogMessage (OS::Log::kTrace, std::string ("[Socket] WinSock2::recv received termination signal from client with id ") + std::to_string (mSocketHandle));
+            LOGMESSAGE (OS::Log::kDebug, std::string ("[Socket] WinSock2::recv received termination signal from client with id ") + std::to_string (mSocketHandle));
             Close ();
             return false;
         }
         if (result < 0) {
-            OS::Log::Instance ().LogMessage (OS::Log::kTrace, "[Socket] WinSock2::recv failed with code " + std::to_string (WSAGetLastError ()));
+            LOGMESSAGE (OS::Log::kDebug, "[Socket] WinSock2::recv failed with code " + std::to_string (WSAGetLastError ()));
             Close ();
             return false;
         }
         outBuffer.Resize (result);
 
-        OS::Log::Instance ().LogMessage (OS::Log::kTrace, std::string ("[Socket] Received ") + std::to_string (result) + std::string (" bytes from client with id ") + std::to_string (mSocketHandle));
+        LOGMESSAGE (OS::Log::kTrace, std::string ("[Socket] Received ") + std::to_string (result) + std::string (" bytes from client with id ") + std::to_string (mSocketHandle));
         return true;
     }
 

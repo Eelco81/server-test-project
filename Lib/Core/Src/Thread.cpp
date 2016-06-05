@@ -15,7 +15,7 @@ OS::Thread::Thread (const std::string& inName) :
 }
 
 OS::Thread ::~Thread () {
-    OS::Log::Instance ().LogMessage (OS::Log::kTrace, std::string ("[Thread](") + GetName ()  + ") is being destructed");
+    LOGMESSAGE (OS::Log::kDebug, std::string ("[Thread](") + GetName ()  + ") is being destructed");
 }
 
 void OS::Thread::Run () {
@@ -25,7 +25,7 @@ void OS::Thread::Run () {
 }
 
 void OS::Thread::Spawn () {
-    OS::Log::Instance ().LogMessage (OS::Log::kTrace, std::string ("[Thread](") + GetName () + ") started");
+    LOGMESSAGE (OS::Log::kDebug, std::string ("[Thread](") + GetName () + ") started");
     mImplementation.reset (new std::thread (LaunchThreadExecution, this));
 }
 

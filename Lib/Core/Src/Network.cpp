@@ -30,10 +30,10 @@ void OS::Network::Initialize () {
         WSADATA wsaData;
         int result = WSAStartup (MAKEWORD (2, 2), &wsaData);
         if (result != 0) {
-            OS::Log::Instance ().LogMessage (OS::Log::kError, "[Network] WinSock2::WSAStartup failed with error: " + result);
+            LOGMESSAGE (OS::Log::kDebug, "[Network] WinSock2::WSAStartup failed with error: " + result);
         }
         else {
-            OS::Log::Instance ().LogMessage (OS::Log::kTrace, "[Network] WinSock2::WSAStartup completed");
+            LOGMESSAGE (OS::Log::kDebug, "[Network] WinSock2::WSAStartup completed");
         }
 #endif
 
@@ -47,7 +47,7 @@ void OS::Network::Done ()  {
 
 #if (defined _WIN32 || defined _WIN64)
         WSACleanup ();
-        OS::Log::Instance ().LogMessage (OS::Log::kTrace, "WinSock2::WSACleanup completed");
+        LOGMESSAGE (OS::Log::kDebug, "[Network] WinSock2::WSACleanup completed");
 #endif
 
     }

@@ -6,6 +6,8 @@
 #include <mutex>
 #include <queue>
 
+#define LOGMESSAGE OS::Log::Instance ().LogMessage
+
 namespace OS {
 
 class Log {
