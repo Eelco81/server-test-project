@@ -6,5 +6,6 @@
     <ClCompile Include="..\src\FilesTester.cpp" />
     <ClCompile Include="..\src\BufferTester.cpp" />
     <ClCompile Include="..\Src\GmockMain.cpp" />
+    <ClCompile Include="..\src\CommandLineTester.cpp" />
   </ItemGroup>
 </Project>

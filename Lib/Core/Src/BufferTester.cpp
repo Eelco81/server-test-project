@@ -1,7 +1,7 @@
 
 #include "gtest/gtest.h"
-#include <string>
 
+#include <string>
 #include <string.h>
 
 #include "Buffer.h"

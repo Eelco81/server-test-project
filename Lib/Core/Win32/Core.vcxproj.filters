@@ -7,6 +7,7 @@
     <ClInclude Include="..\src\Log.h" />
     <ClInclude Include="..\src\Files.h" />
     <ClInclude Include="..\src\Buffer.h" />
+    <ClInclude Include="..\src\CommandLine.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\Thread.cpp" />
@@ -15,5 +16,6 @@
     <ClCompile Include="..\src\Log.cpp" />
     <ClCompile Include="..\src\Files.cpp" />
     <ClCompile Include="..\src\Buffer.cpp" />
+    <ClCompile Include="..\src\CommandLine.cpp" />
   </ItemGroup>
 </Project>

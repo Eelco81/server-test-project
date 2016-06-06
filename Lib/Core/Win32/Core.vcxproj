@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\Buffer.h" />
+    <ClInclude Include="..\src\CommandLine.h" />
     <ClInclude Include="..\src\Files.h" />
     <ClInclude Include="..\src\Log.h" />
     <ClInclude Include="..\src\Network.h" />
@@ -20,6 +21,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\Buffer.cpp" />
+    <ClCompile Include="..\src\CommandLine.cpp" />
     <ClCompile Include="..\src\Files.cpp" />
     <ClCompile Include="..\src\Log.cpp" />
     <ClCompile Include="..\src\Network.cpp" />
