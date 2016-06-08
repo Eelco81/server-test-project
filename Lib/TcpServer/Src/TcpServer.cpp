@@ -79,8 +79,7 @@ TCP::Server::Server (const std::string& inAddress, const std::string& inPort, st
 {
 }
 
-TCP::Server::~Server () {
-}
+TCP::Server::~Server () = default;
 
 void TCP::Server::Start () {
     mListener->Spawn ();

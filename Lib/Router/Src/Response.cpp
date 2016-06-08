@@ -20,9 +20,6 @@ API::Response::Response (const Message& inMessage) :
 {
 }
 
-API::Response::~Response () {
-}
-
 void API::Response::ToXml (XmlNode& outNode) const {
     Message::ToXml (outNode);
     outNode.SetAttribute (kCodeTag, std::to_string (mCode));

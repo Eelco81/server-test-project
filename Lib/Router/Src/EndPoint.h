@@ -3,6 +3,7 @@
 #define _ENDPOINT_H_
 
 #include <string>
+#include "Macros.h"
 #include "Codes.h"
 
 namespace API {
@@ -12,11 +13,12 @@ class Response;
 
 class EndPoint {
 
+    NO_COPY_CONSTRUCTORS (EndPoint);
+
 public:
     EndPoint () = delete;
-    EndPoint (const EndPoint& inEndPoint) = delete;
     EndPoint (const std::string& inPath, Codes::Methods inMethod);
-    virtual ~EndPoint () = default;
+    virtual ~EndPoint ();
 
 public:
     virtual void Execute (const Request& inRequest, Response& outReponse) = 0;

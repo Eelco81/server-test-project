@@ -39,8 +39,8 @@ struct Codes {
         kServiceUnavailable
     };
 
-    Codes () {}
-    ~Codes () {}
+    Codes () = default;
+    ~Codes () = default;
 
     static std::string MethodToString (Methods inMethod) {
         switch (inMethod) {

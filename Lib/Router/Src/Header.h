@@ -12,9 +12,9 @@ namespace API {
 
 struct Header {
 
-    Header ();
+    Header () = default;
     Header (const std::string& inPath, const std::string& inVersion, Codes::Methods inMethod);
-    ~Header ();
+    ~Header () = default;
 
     std::string mPath;
     std::string mVersion;

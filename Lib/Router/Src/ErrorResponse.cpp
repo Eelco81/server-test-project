@@ -14,9 +14,6 @@ API::ErrorResponse::ErrorResponse (Codes::Responses inCode, std::string& inError
     SetCode (inCode);
 }
 
-API::ErrorResponse::~ErrorResponse () {
-}
-
 void API::ErrorResponse::ToXml (XmlNode& outNode) const {
     Response::ToXml (outNode);
     XmlNode bodyNode (kBodyTag);

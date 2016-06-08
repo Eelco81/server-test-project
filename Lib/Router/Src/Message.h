@@ -14,9 +14,10 @@ namespace API {
 class Message {
 
 public:
+    Message () = delete;
     Message (const std::string& inRootTag);
     Message (const std::string& inRootTag, const Message& inMessage);
-    virtual ~Message ();
+    virtual ~Message () = default;
 
 public:
     const Header& GetHeader () const { return mHeader; }

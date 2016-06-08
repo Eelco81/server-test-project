@@ -11,8 +11,9 @@ namespace API {
 class ErrorResponse : public Response {
 
 public:
+    ErrorResponse () = delete;
     ErrorResponse (Codes::Responses inCode, std::string& inErrorMessage);
-    ~ErrorResponse ();
+    ~ErrorResponse () = default;
 
 public:
     const std::string& GetMessage () const { return mMessage; }

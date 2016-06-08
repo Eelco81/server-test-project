@@ -13,6 +13,3 @@ API::Request::Request ():
     Message (kRootTag)
 {
 }
-
-API::Request::~Request () {
-}

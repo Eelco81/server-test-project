@@ -27,5 +27,3 @@ APP::SupportThread::SupportThread () :
     AddTask (std::make_unique <LogTask> ());
 }
 
-APP::SupportThread::~SupportThread () {
-}

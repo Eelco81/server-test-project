@@ -7,11 +7,8 @@
 
 #include <algorithm>
 
-API::Router::Router () {
-}
-
-API::Router::~Router () {
-}
+API::Router::Router () = default;
+API::Router::~Router () = default;
 
 void API::Router::AddEndPoint (std::unique_ptr <EndPoint> inEndPoint) {
     mEndPoints.emplace_back (std::move (inEndPoint));

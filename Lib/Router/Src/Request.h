@@ -11,7 +11,7 @@ namespace API {
 class Request : public Message {
 public:
     Request ();
-    virtual ~Request ();
+    virtual ~Request () = default;
 };
 
 }

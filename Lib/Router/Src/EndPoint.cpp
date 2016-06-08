@@ -6,3 +6,5 @@ API::EndPoint::EndPoint (const std::string& inPath, Codes::Methods inMethod) :
     mMethod (inMethod)
 {
 }
+
+API::EndPoint::~EndPoint () = default;

@@ -19,9 +19,6 @@ API::Message::Message (const std::string& inRootTag, const Message& inMessage) :
 {
 }
 
-API::Message::~Message () {
-}
-
 bool API::Message::FromXml (const XmlNode& inNode, std::string& outError) {
 
     if (inNode.GetName () != mRootTag) {

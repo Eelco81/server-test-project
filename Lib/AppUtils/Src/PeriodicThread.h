@@ -5,6 +5,7 @@
 #include <vector>
 #include <memory>
 
+#include "Macros.h"
 #include "Thread.h"
 
 namespace APP {
@@ -13,10 +14,11 @@ class Task;
 
 class PeriodicThread : public OS::Thread {
 
+    NO_COPY_CONSTRUCTORS (PeriodicThread);
+
 public:
     PeriodicThread () = delete;
     PeriodicThread (const std::string& inName, unsigned inWaitTime);
-    PeriodicThread (const PeriodicThread& inThread) = delete;
     virtual ~PeriodicThread (); 
 
 public:
