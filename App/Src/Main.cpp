@@ -10,9 +10,6 @@
 
 int main (int argc, char** argv) {
     
-    OS::Log::Instance ().Initialize (OS::Log::kTrace);
-    OS::Network::Initialize ();
-
     OS::CommandLine commandLine;
     commandLine.Parse (argc, argv);
 
@@ -21,6 +18,12 @@ int main (int argc, char** argv) {
 
     std::string port ("1234");
     commandLine.HasOption ("port", port);
+
+    std::string logLevel ("INFO");
+    commandLine.HasOption ("loglevel", logLevel);
+
+    OS::Log::Instance ().Initialize (logLevel);
+    OS::Network::Initialize ();
 
     APP::SupportThread supportThread;
     supportThread.Spawn ();

@@ -5,6 +5,7 @@
 #include <string>
 #include <mutex>
 #include <queue>
+#include <map>
 
 #define LOGMESSAGE OS::Log::Instance ().LogMessage
 
@@ -39,16 +40,15 @@ protected:
 
 public:
     void Initialize (Levels inType);
+    void Initialize (const std::string& inTypeString);
     void LogMessage (Levels inType, const std::string& inMessage);
     void Flush ();
 
 private:
-    std::string LevelToString (Levels inLevel) const;
-
-private:
     std::mutex mMutex;
     std::queue <std::string> mMessages;
-
+    
+    const std::map <Levels, std::string> kLevelMap;
     Levels mLevel;
 
 };

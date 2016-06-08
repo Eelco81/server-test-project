@@ -16,7 +16,7 @@ public:
     EndPoint () = delete;
     EndPoint (const EndPoint& inEndPoint) = delete;
     EndPoint (const std::string& inPath, Codes::Methods inMethod);
-    virtual ~EndPoint ();
+    virtual ~EndPoint () = default;
 
 public:
     virtual void Execute (const Request& inRequest, Response& outReponse) = 0;

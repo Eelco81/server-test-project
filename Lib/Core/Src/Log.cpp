@@ -6,13 +6,24 @@
 #include <iostream>
 #include <chrono>
 #include <ctime>
+#include <algorithm>
 
 OS::Log::Log () :
-    mLevel (kInfo)
+    mLevel (kInfo),
+    kLevelMap ({ { kFatal, "FATAL" }, { kError, "ERROR" }, { kWarning, "WARN " }, { kInfo, "INFO " }, { kDebug, "DEBUG" }, { kTrace, "TRACE" } })
 {
 }
 
 OS::Log::~Log () {
+}
+
+void OS::Log::Initialize (const std::string& inLevel) {
+    auto it = std::find_if (kLevelMap.begin (), kLevelMap.end (), [&inLevel] (const std::pair <Levels, std::string>& inPair) {
+        return inPair.second == inLevel;
+    });
+    if (it != kLevelMap.end ()) {
+        mLevel = it->first;
+    }
 }
 
 void OS::Log::Initialize (OS::Log::Levels inLevel) {
@@ -28,7 +39,7 @@ void OS::Log::LogMessage (OS::Log::Levels inLevel, const std::string& inMessage)
         char buffer [32];
         std::strftime (buffer, 32, "%d.%m.%Y %H:%M:%S", ptm);
 
-        std::string message = std::string (buffer) + std::string (" - ") + LevelToString (inLevel) + std::string (" - ") + inMessage;
+        std::string message = std::string (buffer) + std::string (" - ") + kLevelMap.at (inLevel) + std::string (" - ") + inMessage;
 
         mMutex.lock ();
         mMessages.push (message);
@@ -44,23 +55,4 @@ void OS::Log::Flush () {
         mMessages.pop ();
     }
     mMutex.unlock ();
-}
-
-std::string OS::Log::LevelToString (OS::Log::Levels inLevel) const {
-    switch (inLevel) {
-    case kFatal:
-        return "FATAL";
-    case kError: 
-        return "ERROR";
-    case kWarning:
-        return "WARN ";
-    case kInfo:
-        return "INFO ";
-    case kDebug:
-        return "DEBUG";
-    case kTrace:
-        return "TRACE";
-    default:
-        return "?????";
-    }
 }

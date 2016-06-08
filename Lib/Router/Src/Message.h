@@ -23,7 +23,7 @@ public:
     void SetHeader (const Header& inHeader) { mHeader = inHeader; }
 
 public:
-    virtual bool FromXml (const XmlNode& inNode, std::string& inError);
+    virtual bool FromXml (const XmlNode& inNode, std::string& outError);
     virtual void ToXml (XmlNode& outNode) const;
 
 private:

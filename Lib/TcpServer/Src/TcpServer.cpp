@@ -89,7 +89,7 @@ void TCP::Server::Start () {
 
 void TCP::Server::BroadCast (const OS::Buffer& inBuffer) {
     mMutex.lock ();
-    std::for_each (mClients.begin (), mClients.end (), [&](std::unique_ptr<Client>& client) {
+    std::for_each (mClients.begin (), mClients.end (), [&inBuffer] (std::unique_ptr<Client>& client) {
         client->Send (inBuffer);
     });
     mMutex.unlock ();
@@ -97,7 +97,7 @@ void TCP::Server::BroadCast (const OS::Buffer& inBuffer) {
 
 void TCP::Server::Send (unsigned inClientId, const OS::Buffer& inBuffer) {
     mMutex.lock ();
-    auto clientIterator = std::find_if (mClients.begin (), mClients.end (), [inClientId](const std::unique_ptr<Client>& client) {
+    auto clientIterator = std::find_if (mClients.begin (), mClients.end (), [inClientId] (const std::unique_ptr<Client>& client) {
         return client->GetId () == inClientId;
     });
     if (clientIterator != mClients.end ()) {
@@ -108,23 +108,26 @@ void TCP::Server::Send (unsigned inClientId, const OS::Buffer& inBuffer) {
 
 // called from listener thread
 void TCP::Server::RegisterClient (std::unique_ptr <OS::Socket> inClientSocket) {
+    LOGMESSAGE (OS::Log::kInfo, std::string ("[TcpServer] Registering connected client with id ") + std::to_string (inClientSocket->GetId ()));
     mMutex.lock ();
     mClients.emplace_back (std::make_unique <Client> (mRouter, std::move (inClientSocket)));
     mClients.back ()->Spawn ();
     mMutex.unlock ();
-    LOGMESSAGE (OS::Log::kInfo, "[TcpServer] Registered connected client with id " + inClientSocket->GetId ());
 }
 
 // called from cleaner thread
 void TCP::Server::CleanUp () {
-    mMutex.lock ();
-    for (auto it = mClients.begin (); it != mClients.end (); it++) {
-        if ((*it)->GetStatus () == OS::Thread::kDone) {
-            LOGMESSAGE (OS::Log::kInfo, "[TcpServer] Unregistered connected client with id " + (*it)->GetId ());
-            (*it)->Join ();
-            mClients.erase (it);
-            break;
+
+    auto remover = [] (const std::unique_ptr<Client>& client) {
+        if (client->GetStatus () == OS::Thread::kDone) {
+            client->Join ();
+            LOGMESSAGE (OS::Log::kInfo, std::string ("[TcpServer] Unregistering connected client with id ") + std::to_string (client->GetId ()));
+            return true;
         }
-    }
+        return false;
+    };
+
+    mMutex.lock ();
+    mClients.erase (std::remove_if (mClients.begin (), mClients.end (), remover), mClients.end ());
     mMutex.unlock ();
 }
