@@ -15,6 +15,7 @@
     <ClInclude Include="..\src\CommandLine.h" />
     <ClInclude Include="..\src\Files.h" />
     <ClInclude Include="..\src\Log.h" />
+    <ClInclude Include="..\src\Macros.h" />
     <ClInclude Include="..\src\Network.h" />
     <ClInclude Include="..\src\Socket.h" />
     <ClInclude Include="..\src\Thread.h" />

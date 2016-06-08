@@ -7,8 +7,8 @@ namespace OS {
 class Network {
 
 public: 
-    Network ();
-    ~Network ();
+    Network () = default;
+    ~Network () = default;
 
     static void Initialize ();
     static void Done ();

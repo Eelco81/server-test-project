@@ -4,6 +4,7 @@
 
 #define MAX_BUFFER_SIZE 2048
 
+#include "Macros.h"
 #include "Thread.h"
 
 #include <memory>
@@ -18,11 +19,10 @@ namespace TCP {
 
 class Client : public OS::Thread {
 
+    NO_COPY_CONSTRUCTORS (Client);
+
 public:
     Client () = delete;
-    Client (const Client& inClient) = delete;
-    Client& operator= (const Client& inClient) = delete;
-
     Client (std::shared_ptr <API::Router> inRouter, std::unique_ptr <OS::Socket> inSocket);
     virtual ~Client ();
 

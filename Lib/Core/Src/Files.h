@@ -9,8 +9,8 @@ class Buffer;
 class Files {
 
 public:
-    Files () {}
-    ~Files () {}
+    Files () = default; 
+    ~Files () = default;
 
 public:
     static bool Read (const std::string& inPath, Buffer& outBuffer);

@@ -6,6 +6,8 @@
 #include <memory>
 #include <mutex>
 
+#include "Macros.h"
+
 namespace OS {
     class Buffer;
     class Thread;
@@ -23,11 +25,10 @@ class Client;
 
 class Server {
 
+    NO_COPY_CONSTRUCTORS (Server);
+
 public:
     Server () = delete;
-    Server (const Server& inServer) = delete;
-    Server& operator= (const Server& inServer) = delete;
-
     Server (const std::string& inAddress, const std::string& inPort, std::shared_ptr <API::Router> inRouter);
     virtual ~Server ();
 

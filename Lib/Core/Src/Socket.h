@@ -5,17 +5,18 @@
 #include <string>
 #include <memory>
 
+#include "Macros.h"
+
 namespace OS {
 
 class Buffer;
 
 class Socket {
 
+    NO_COPY_CONSTRUCTORS (Socket);
+
 public:
     Socket () = delete;
-    Socket (const Socket& inSocket) = delete;
-    Socket& operator= (const Socket& inSocket) = delete;
-
     Socket (const std::string& inAddress, const std::string& inPortNumber);
     ~Socket ();
 

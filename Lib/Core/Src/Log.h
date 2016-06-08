@@ -7,11 +7,15 @@
 #include <queue>
 #include <map>
 
+#include "Macros.h"
+
 #define LOGMESSAGE OS::Log::Instance ().LogMessage
 
 namespace OS {
 
 class Log {
+
+    NO_COPY_CONSTRUCTORS (Log);
 
 public:
     enum Levels {
@@ -23,12 +27,7 @@ public:
         kTrace
     };
 
-public:
-    Log (Log const&) = delete;
-    Log (Log&&) = delete;
-    Log& operator=(Log const&) = delete;
-    Log& operator=(Log &&) = delete;
-
+public: 
     static Log& Instance (){
         static Log instance;
         return instance;

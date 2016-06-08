@@ -8,6 +8,7 @@
     <ClInclude Include="..\src\Files.h" />
     <ClInclude Include="..\src\Buffer.h" />
     <ClInclude Include="..\src\CommandLine.h" />
+    <ClInclude Include="..\src\Macros.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\Thread.cpp" />

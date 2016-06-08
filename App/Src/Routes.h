@@ -10,6 +10,11 @@ namespace API {
 
 class Routes {
 public:
+    Routes () = default;
+    Routes (const Routes& inRoutes) = default;
+    ~Routes () = default;
+
+public:
     static void SetupEndpoints (std::shared_ptr <API::Router> ioRouter);
 };
 

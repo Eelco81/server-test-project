@@ -4,14 +4,16 @@
 
 #include <string>
 
+#include "Macros.h"
+
 namespace OS {
 
 class Buffer {
 
+    NO_COPY_CONSTRUCTORS (Buffer);
+
 public:
     Buffer () = delete;
-    Buffer (const Buffer& inBuffer) = delete;
-
     Buffer (std::size_t inMaxLength);
     ~Buffer ();
 

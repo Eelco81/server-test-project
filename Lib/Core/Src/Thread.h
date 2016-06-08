@@ -6,9 +6,13 @@
 #include <thread>
 #include <string>
 
+#include "Macros.h"
+
 namespace OS {
 
 class Thread {
+
+    NO_COPY_CONSTRUCTORS (Thread);
 
 public:
     enum Status {
@@ -20,7 +24,6 @@ public:
 public:
     Thread () = delete;
     Thread (const std::string& inName);
-    Thread (const Thread& inThread) = delete;
     virtual ~Thread ();
 
 public:

@@ -13,7 +13,8 @@ public:
         EndPoint ("/echo", API::Codes::kGet) 
     {
     }
-    
+    virtual ~EchoEndPoint () = default;
+
     virtual void Execute (const API::Request& inRequest, API::Response& outResponse) {
         outResponse.SetCode (API::Codes::kNoContent);
     }
