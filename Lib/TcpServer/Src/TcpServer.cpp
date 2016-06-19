@@ -88,17 +88,13 @@ void TCP::Server::Start () {
 
 void TCP::Server::BroadCast (const OS::Buffer& inBuffer) {
     mMutex.lock ();
-    std::for_each (mClients.begin (), mClients.end (), [&inBuffer] (std::unique_ptr<Client>& client) {
-        client->Send (inBuffer);
-    });
+    std::for_each (mClients.begin (), mClients.end (), [&inBuffer] (ClientPtr& client) { client->Send (inBuffer); });
     mMutex.unlock ();
 };
 
 void TCP::Server::Send (unsigned inClientId, const OS::Buffer& inBuffer) {
     mMutex.lock ();
-    auto clientIterator = std::find_if (mClients.begin (), mClients.end (), [inClientId] (const std::unique_ptr<Client>& client) {
-        return client->GetId () == inClientId;
-    });
+    auto clientIterator = std::find_if (mClients.begin (), mClients.end (), [inClientId] (const ClientPtr& client) { return client->GetId () == inClientId; });
     if (clientIterator != mClients.end ()) {
         (*clientIterator)->Send (inBuffer);
     }
@@ -117,7 +113,7 @@ void TCP::Server::RegisterClient (std::unique_ptr <OS::Socket> inClientSocket) {
 // called from cleaner thread
 void TCP::Server::CleanUp () {
 
-    auto remover = [] (const std::unique_ptr<Client>& client) {
+    auto remover = [] (const ClientPtr& client) {
         if (client->GetStatus () == OS::Thread::kDone) {
             client->Join ();
             LOGMESSAGE (OS::Log::kInfo, std::string ("[TcpServer] Unregistering connected client with id ") + std::to_string (client->GetId ()));

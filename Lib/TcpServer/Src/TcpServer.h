@@ -41,11 +41,15 @@ public:
     void Send (unsigned inClientId, const OS::Buffer& inBuffer);
     
 private:
+
+    using  ClientPtr = std::unique_ptr <Client>;
+    std::vector <ClientPtr> mClients;
+
+    std::shared_ptr <API::Router> mRouter;
+
     std::unique_ptr <OS::Thread> mListener;
     std::unique_ptr <OS::Thread> mCleaner;
-    std::vector <std::unique_ptr <Client>> mClients;
     std::mutex mMutex;
-    std::shared_ptr <API::Router> mRouter;
 };
 
 }
