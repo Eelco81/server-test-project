@@ -12,8 +12,12 @@
 #include <string>
 #include <mutex>
 
-class OS::Socket;
-class API::Router;
+namespace OS {
+    class Socket;
+}
+namespace API {
+    class Router;
+}
 
 namespace TCP {
 

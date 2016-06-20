@@ -20,7 +20,7 @@ void OS::CommandLine::Parse (int inArgc, char** inArgv) {
 
     const char kIndicatorPrefix ('-');
 
-    for (std::size_t i = 0; i < inArgc; i++) {
+    for (int i = 0; i < inArgc; i++) {
         
         if (inArgv [i][0] == kIndicatorPrefix) {
             if (i + 1 < inArgc && inArgv [i + 1][0] != kIndicatorPrefix) {

@@ -47,8 +47,8 @@ private:
     std::mutex mMutex;
     std::queue <std::string> mMessages;
     
-    const std::map <Levels, std::string> kLevelMap;
     Levels mLevel;
+    const std::map <Levels, std::string> kLevelMap;
 
 };
 

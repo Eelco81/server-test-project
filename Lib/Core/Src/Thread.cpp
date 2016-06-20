@@ -2,6 +2,8 @@
 #include "Log.h"
 #include "Thread.h"
 
+#include <thread>
+
 namespace {
     void LaunchThreadExecution (OS::Thread* inThread) {
         inThread->Run ();

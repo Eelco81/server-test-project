@@ -44,12 +44,12 @@ private:
 
     using  ClientPtr = std::unique_ptr <Client>;
     std::vector <ClientPtr> mClients;
-
-    std::shared_ptr <API::Router> mRouter;
+    std::mutex mMutex;
 
     std::unique_ptr <OS::Thread> mListener;
     std::unique_ptr <OS::Thread> mCleaner;
-    std::mutex mMutex;
+    std::shared_ptr <API::Router> mRouter;
+
 };
 
 }

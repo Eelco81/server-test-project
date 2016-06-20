@@ -3,10 +3,13 @@
 #define _THREAD_H_
 
 #include <memory>
-#include <thread>
 #include <string>
 
 #include "Macros.h"
+
+namespace std {
+    class thread;
+}
 
 namespace OS {
 

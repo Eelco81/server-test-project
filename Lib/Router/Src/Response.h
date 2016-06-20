@@ -13,8 +13,7 @@ class Response : public Message {
 
 public:
     Response ();
-    Response (const Message& inMessage);
-    ~Response () = default;
+    ~Response () {};
 
 public:
     virtual void ToXml (XmlNode& outNode) const override;

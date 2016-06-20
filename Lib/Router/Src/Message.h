@@ -17,7 +17,7 @@ public:
     Message () = delete;
     Message (const std::string& inRootTag);
     Message (const std::string& inRootTag, const Message& inMessage);
-    virtual ~Message () = default;
+    virtual ~Message () {};
 
 public:
     const Header& GetHeader () const { return mHeader; }
@@ -28,8 +28,8 @@ public:
     virtual void ToXml (XmlNode& outNode) const;
 
 private:
-    Header mHeader;
     std::string mRootTag;
+    Header mHeader;
 };
 
 };
