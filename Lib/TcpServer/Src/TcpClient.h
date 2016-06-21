@@ -2,17 +2,15 @@
 #ifndef _Client_H_
 #define _Client_H_
 
-#define MAX_BUFFER_SIZE 2048
-
 #include "Macros.h"
 #include "Thread.h"
 
 #include <memory>
 #include <vector>
-#include <string>
 #include <mutex>
 
 namespace OS {
+    class Buffer;
     class Socket;
 }
 namespace API {
@@ -36,9 +34,7 @@ public:
     void Send (const OS::Buffer& inBuffer);
     void ForceClose ();
 
-    unsigned GetId () const {
-        return mSocket->GetId ();
-    }
+    unsigned GetId () const;
 
 private:
     std::shared_ptr <API::Router> mRouter;

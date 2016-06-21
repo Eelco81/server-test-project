@@ -34,7 +34,7 @@ namespace {
             LOGMESSAGE (OS::Log::kInfo, "[TcpServer] Listening at " + mSocket.GetAddress () + ":" + mSocket.GetPortNumber ());
             while (mSocket.IsListening ()) {
                 auto clientSocket = std::make_unique <OS::Socket> ("", "");
-                if (mSocket.Accept (*clientSocket)) {
+                if (mSocket.Accept (*clientSocket)) { // blocking call
                     mServer.RegisterClient (std::move (clientSocket));
                 }
             }

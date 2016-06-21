@@ -5,7 +5,6 @@ LIBDIR      = ./../../Lib
 
 CC          = g++
 CFLAGS      = -c -std=c++14
-LFLAGS      = -o
 ALLSOURCES  = $(wildcard $(SOURCEDIR)/*.cpp)
 APPSOURCES  = $(ALLSOURCES)
 APPOBJECTS  = $(APPSOURCES:.cpp=.o)
@@ -31,7 +30,7 @@ LIBRARIES=\
 all: buildlibs $(APPSOURCES) $(TARGET)
 
 $(TARGET): $(APPOBJECTS)
-	$(CC) $(LFLAGS) $@ $(APPOBJECTS) $(LIBPATHS) $(LIBRARIES) 
+	$(CC) -o $@ $(APPOBJECTS) $(LIBPATHS) $(LIBRARIES) -lpthread
 
 .cpp.o:
 	$(CC) $(CFLAGS) $(INCLUDES) $< -o $@

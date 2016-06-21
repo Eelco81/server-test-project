@@ -29,7 +29,7 @@ void APP::PeriodicThread::Execute () {
 
     while (mRunning) {
 
-        for (auto& it : mTasks) {
+        for (const auto& it : mTasks) {
             if (!it->Step ()) {
                 mRunning = false;
                 break;

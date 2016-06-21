@@ -59,9 +59,7 @@ bool OS::CommandLine::HasOption (const std::string& inKey, std::string& outValue
 
 bool OS::CommandLine::FindOption (const std::string& inKey, Option& outOption) {
 
-    auto optionIterator = std::find_if (mOptions.begin (), mOptions.end (), [inKey](const Option& option) {
-        return option.mKey == inKey;
-    });
+    auto optionIterator = std::find_if (mOptions.begin (), mOptions.end (), [inKey] (const Option& option) { return option.mKey == inKey; });
 
     if (optionIterator != mOptions.end ()) {
         outOption = *optionIterator;

@@ -1,5 +1,7 @@
 
-#include <iostream>
+#define MAX_BUFFER_SIZE 2048
+
+#include <string>
 
 #include "Socket.h"
 #include "Buffer.h"
@@ -21,6 +23,10 @@ TCP::Client::Client (std::shared_ptr <API::Router> inRouter, std::unique_ptr <OS
 }
 
 TCP::Client::~Client () {
+}
+
+unsigned TCP::Client::GetId () const {
+    return mSocket->GetId ();
 }
 
 void TCP::Client::Execute () {
