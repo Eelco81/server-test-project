@@ -7,7 +7,7 @@
 #include <iostream>
 
 /* ------------------------------------- */
-#if defined __CYGWIN__ 
+#if (defined __CYGWIN__ || defined __GNUC__)
 
 #include <unistd.h>
 #include <stdio.h>
@@ -90,10 +90,10 @@ public:
 
         struct addrinfo hints;
         
-#ifndef __CYGWIN__
-        ZeroMemory (&hints, sizeof (hints));
-#else
+#if (defined __CYGWIN__ || defined __GNUC__)
         ::memset (&hints, 0, sizeof (hints));
+#else
+        ZeroMemory (&hints, sizeof (hints));
 #endif
         hints.ai_family = AF_INET;
         hints.ai_socktype = SOCK_STREAM;
@@ -123,10 +123,10 @@ public:
         if (mIsConnected || mIsListening) {
 
             freeaddrinfo (mLatestAddrInfo);
-#ifndef __CYGWIN__
-            closesocket (mSocketHandle);
-#else 
+#if (defined __CYGWIN__ || defined __GNUC__)
             close (mSocketHandle);
+#else 
+            closesocket (mSocketHandle);
 #endif
             LOGMESSAGE (OS::Log::kDebug, std::string ("[Socket](") + std::to_string (GetId ()) + std::string (") closed"));
         }
@@ -218,10 +218,10 @@ public:
             return false;
         }
 
-#ifndef __CYGWIN__
-        int result = recv (mSocketHandle, outBuffer.GetDataPointer (), outBuffer.GetMaxSize (), 0);
-#else
+#if (defined __CYGWIN__ || defined __GNUC__)
         int result = read (mSocketHandle, outBuffer.GetDataPointer (), outBuffer.GetMaxSize ());
+#else
+        int result = recv (mSocketHandle, outBuffer.GetDataPointer (), outBuffer.GetMaxSize (), 0);
 #endif
         if (result == 0) {
             LOGMESSAGE (OS::Log::kDebug, std::string ("[Socket] Received termination signal from client with id ") + std::to_string (mSocketHandle));

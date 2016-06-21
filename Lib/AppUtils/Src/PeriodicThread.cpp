@@ -2,6 +2,7 @@
 #include "PeriodicThread.h"
 #include "Task.h"
 
+#include <thread>
 #include <chrono>
 
 APP::PeriodicThread::PeriodicThread (const std::string& inName, unsigned inWaitTime) :
