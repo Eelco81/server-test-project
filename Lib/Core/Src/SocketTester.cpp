@@ -1,5 +1,5 @@
 
-#include "gtest\gtest.h"
+#include "gtest/gtest.h"
 
 #include "Log.h"
 #include "Network.h"
