@@ -44,7 +44,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>.\..\..\..\External\gmock\googlemock\include;.\..\..\..\External\gmock\googletest\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\..\..\..\External\gmock\googlemock\include;.\..\..\..\External\gmock\googlemock\gtest\include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -60,7 +60,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>.\..\..\..\External\gmock\googlemock\include;.\..\..\..\External\gmock\googletest\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\..\..\..\External\gmock\googlemock\include;.\..\..\..\External\gmock\googlemock\gtest\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
