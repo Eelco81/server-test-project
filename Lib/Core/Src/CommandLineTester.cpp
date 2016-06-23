@@ -6,7 +6,7 @@
 TEST (CommandLine, BasicParsing) {
 
     const int kArgc = 3;
-    char* kArgv [kArgc] = { "program_name", "-option1", "-option2" };
+    const char* const kArgv [kArgc] = { "program_name", "-option1", "-option2" };
 
     OS::CommandLine commandLine;
     commandLine.Parse (kArgc, kArgv);
@@ -21,7 +21,7 @@ TEST (CommandLine, BasicParsing) {
 TEST (CommandLine, KeyValueParsing) {
 
     const int kArgc (5);
-    char* kArgv [kArgc] = { "program_name", "-option1", "value1", "-option2", "value2"};
+    const char* const kArgv [kArgc] = { "program_name", "-option1", "value1", "-option2", "value2"};
 
     OS::CommandLine commandLine;
     commandLine.Parse (kArgc, kArgv);

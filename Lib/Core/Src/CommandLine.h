@@ -13,7 +13,7 @@ public:
     CommandLine () = default;
     ~CommandLine () = default;
 
-    void Parse (int inArgc, char** inArgv);
+    void Parse (int inArgc, const char* const* inArgv);
     bool HasOption (const std::string& inKey);
     bool HasOption (const std::string& inKey, std::string& outValue);
 

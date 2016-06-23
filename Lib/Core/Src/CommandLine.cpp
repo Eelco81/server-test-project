@@ -16,7 +16,7 @@ OS::CommandLine::Option::Option (const std::string& inKey, const std::string& in
 {
 }
 
-void OS::CommandLine::Parse (int inArgc, char** inArgv) {
+void OS::CommandLine::Parse (int inArgc, const char* const* inArgv) {
 
     const char kIndicatorPrefix ('-');
 
