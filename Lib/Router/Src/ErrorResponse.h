@@ -12,7 +12,7 @@ class ErrorResponse : public Response {
 
 public:
     ErrorResponse () = delete;
-    ErrorResponse (Codes::Responses inCode, std::string& inErrorMessage);
+    ErrorResponse (Codes::Responses inCode, const std::string& inErrorMessage);
     ~ErrorResponse () = default;
 
 public:

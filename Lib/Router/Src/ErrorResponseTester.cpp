@@ -7,7 +7,7 @@
 
 TEST (ErrorResponseTester, PrintingXml) {
 
-    API::ErrorResponse response (API::Codes::kInternalServerError, std::string ("Something bad happened"));
+    API::ErrorResponse response (API::Codes::kInternalServerError, "Something bad happened");
     response.SetHeader (API::Header ("Path", "Version", API::Codes::kGet));
 
     XmlNode node;

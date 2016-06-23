@@ -8,7 +8,7 @@ namespace {
     const std::string kMessageTag ("Message");
 }
 
-API::ErrorResponse::ErrorResponse (Codes::Responses inCode, std::string& inErrorMessage) :
+API::ErrorResponse::ErrorResponse (Codes::Responses inCode, const std::string& inErrorMessage) :
     mMessage (inErrorMessage)
 {
     SetCode (inCode);

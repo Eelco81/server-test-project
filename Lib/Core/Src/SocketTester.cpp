@@ -21,9 +21,9 @@ namespace {
         }
         ~SocketThread () {}
     public:
+        OS::Socket mSocket;
         OS::Buffer mInBuffer;
         OS::Buffer mOutBuffer;
-        OS::Socket mSocket;
     };
 
     class ServerThread : public SocketThread {
