@@ -42,6 +42,8 @@ namespace {
             mSocket.Close ();
         }
     public:
+        bool IsListening () const { return mSocket.IsListening (); }
+    protected:
         OS::Socket mClientSocket;
     };
 
@@ -55,6 +57,8 @@ namespace {
         ~ClientThread () {
             mSocket.Close ();
         }
+    public:
+        bool IsConnected () const { return mSocket.IsConnected (); }
     };
 
 }
@@ -73,7 +77,7 @@ class SocketTester : public ::testing::Test {
 TEST_F (SocketTester, BasicDataTransfer) {
 
     class Server : public ServerThread {
-        void Execute () override {
+        virtual void Execute () override {
             EXPECT_FALSE (mSocket.IsListening ());
             EXPECT_FALSE (mClientSocket.IsConnected ());
             EXPECT_TRUE (mSocket.Listen ());
@@ -153,6 +157,9 @@ TEST_F (SocketTester, ClosingClients) {
     Client client;
 
     server.Spawn ();
+
+    while (!server.IsListening ()) {}
+
     client.Spawn ();
 
     server.Join ();
@@ -189,6 +196,9 @@ TEST_F (SocketTester, ServerClosesConnection) {
     Client client;
 
     server.Spawn ();
+
+    while (!server.IsListening ()) {}
+
     client.Spawn ();
 
     server.Join ();
@@ -228,6 +238,9 @@ TEST_F (SocketTester, ServerCloses) {
     Client client;
 
     server.Spawn ();
+
+    while (!server.IsListening ()) {}
+
     client.Spawn ();
 
     server.Join ();

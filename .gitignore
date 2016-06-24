@@ -6,6 +6,7 @@
 /Lib/*/Win32/Debug*
 /Lib/*/Win32/Release*
 /Lib/*/Src/*.o
+/Lib/*/Src/*.TMP
 /Lib/*/Make/*.a
 /Lib/*/Make/Google*
 
@@ -16,6 +17,7 @@
 /App/Win32/Debug*
 /App/Win32/Release*
 /App/Src/*.o
+/App/Src/*.TMP
 /App/Make/*.exe
 
 /External
