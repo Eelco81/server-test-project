@@ -1,32 +1,13 @@
 # Make a static library
 
-SOURCEDIR   = ./../Src
-LIBDIR      = ./../..
-EXTDIR      = ./../../../External/tinyxml
+EXTERNAL        = ./../../../External/tinyxml
+SOURCEDIR       = ./../Src
+LIBDIR          = ./../..
+TOOLDIR         = ./../../../Tools/
+SOURCES         = $(wildcard $(SOURCEDIR)/*.cpp) $(filter-out %test.cpp,$(wildcard $(EXTERNAL)/*.cpp))
+DEPENDENCIES    = 
+LINKS           = 
+INCLUDES        = -I$(EXTERNAL)
+LIBTARGET       = libxml.a
 
-CC          = g++
-AR          = ar
-CFLAGS      = -c -Wall -std=c++14
-ARFLAGS     = -qsv
-ALLSOURCES  = $(wildcard $(SOURCEDIR)/*.cpp $(EXTDIR)/*.cpp)
-LIBSOURCES  = $(filter-out %test.cpp, $(filter-out %Main.cpp,$(filter-out %Tester.cpp,$(ALLSOURCES))))
-LIBOBJECTS  = $(LIBSOURCES:.cpp=.o)
-TARGET      = libxml.a
-
-DEPENDENCIES=
-    
-INCLUDES=\
-    -I$(SOURCEDIR) \
-    -I$(EXTDIR) \
-    $(patsubst %,-I$(LIBDIR)/%/Src,$(DEPENDENCIES))
-
-all: $(LIBSOURCES) $(TARGET)
-
-$(TARGET): $(LIBOBJECTS)
-	$(AR) $(ARFLAGS) $@ $(LIBOBJECTS) 
-
-.cpp.o:
-	$(CC) $(CFLAGS) $(INCLUDES) $< -o $@
-
-clean:
-	rm -rf $(SOURCEDIR)/*.o $(EXTDIR)/*.o $(TARGET)
+-include $(TOOLDIR)/build.mk
