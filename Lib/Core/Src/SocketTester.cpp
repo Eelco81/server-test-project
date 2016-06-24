@@ -22,7 +22,9 @@ namespace {
         {
             mSocket.Initialize ();
         }
-        ~SocketThread () {}
+        virtual ~SocketThread () {
+            mSocket.Close ();
+        }
     public:
         OS::Socket mSocket;
         OS::Buffer mInBuffer;
@@ -37,9 +39,8 @@ namespace {
         {
             mOutBuffer.SetData ("FROM_SERVER", 11u);
         }
-        ~ServerThread () {
+        virtual ~ServerThread () {
             mClientSocket.Close ();
-            mSocket.Close ();
         }
     public:
         bool IsListening () const { return mSocket.IsListening (); }
@@ -54,9 +55,7 @@ namespace {
         {
             mOutBuffer.SetData ("FROM_CLIENT", 11u);
         }
-        ~ClientThread () {
-            mSocket.Close ();
-        }
+        virtual ~ClientThread () {}
     public:
         bool IsConnected () const { return mSocket.IsConnected (); }
     };

@@ -6,7 +6,7 @@
 
 #include <atomic>
 
-#define SOCKET_MAX_CONNECTIONS 100
+#define SOCKET_MAX_CONNECTIONS 5
 
 /* ------------------------------------- */
 #if (defined __CYGWIN__ || defined __GNUC__)
