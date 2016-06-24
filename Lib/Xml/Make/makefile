@@ -6,7 +6,7 @@ LIBDIR          = ./../..
 TOOLDIR         = ./../../../Tools/
 SOURCES         = $(wildcard $(SOURCEDIR)/*.cpp) $(filter-out %test.cpp,$(wildcard $(EXTERNAL)/*.cpp))
 DEPENDENCIES    = 
-LINKS           = 
+LINKS           = -lpthread
 INCLUDES        = -I$(EXTERNAL)
 LIBTARGET       = libxml.a
 
