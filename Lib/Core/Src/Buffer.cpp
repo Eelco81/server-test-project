@@ -44,6 +44,7 @@ void OS::Buffer::ResizeContainer (std::size_t inSize) {
         mMaxSize = inSize;
         char* cache = mBuffer;
         mBuffer = new char [mMaxSize];
+        ::memset (mBuffer, 0, mMaxSize);
         ::memcpy (mBuffer, cache, mSize);
         delete [] cache;
     }

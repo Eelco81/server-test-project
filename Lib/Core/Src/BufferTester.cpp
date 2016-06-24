@@ -31,7 +31,7 @@ TEST (BufferTester, SetBufferValues) {
 
 TEST (BufferTester, ChangingBufferSizes) {
 
-    const char* kTestData = "12345";
+    const char* kTestData = "12345\0";
     const unsigned kTestSize = static_cast<unsigned>(strlen (kTestData));
 
     OS::Buffer buffer (kTestSize);
@@ -51,7 +51,7 @@ TEST (BufferTester, ChangingBufferSizes) {
     ASSERT_EQ (6u, buffer.GetSize ());
 
     buffer.ToString (output);
-    ASSERT_EQ (std::string ("12345\xCD"), output);
+    ASSERT_EQ (std::string ("12345\0"), std::string (output.c_str ()));
 
     buffer.Resize (4u);
     ASSERT_EQ (6u, buffer.GetMaxSize ());
