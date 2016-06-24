@@ -7,13 +7,16 @@
 #include "Thread.h"
 #include "Socket.h"
 
+#define IP_FOR_TESTING "127.0.0.1"
+#define PORT_FOR_TESTING "1701"
+
 namespace {
 
     class SocketThread : public OS::Thread {
     public:
         SocketThread () :
             Thread ("SocketThread"),
-            mSocket ("127.0.0.1", "1234"),
+            mSocket (IP_FOR_TESTING, PORT_FOR_TESTING),
             mInBuffer (100u),
             mOutBuffer (100u)
         {
@@ -30,7 +33,7 @@ namespace {
     public:
         ServerThread () : 
             SocketThread (),
-            mClientSocket ("127.0.0.1", "1234") 
+            mClientSocket (IP_FOR_TESTING, PORT_FOR_TESTING)
         {
             mOutBuffer.SetData ("FROM_SERVER", 11u);
         }
