@@ -72,7 +72,7 @@
     <ClCompile Include="..\src\BufferTester.cpp" />
     <ClCompile Include="..\src\CommandLineTester.cpp" />
     <ClCompile Include="..\src\FilesTester.cpp" />
-    <ClCompile Include="..\Src\GmockMain.cpp" />
+    <ClCompile Include="..\Src\GMockMain.cpp" />
     <ClCompile Include="..\src\SocketTester.cpp" />
     <ClCompile Include="..\src\ThreadTester.cpp" />
   </ItemGroup>

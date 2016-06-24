@@ -4,7 +4,7 @@
 #include "Buffer.h"
 #include <string.h>
 
-#include <iostream>
+#include <atomic>
 
 /* ------------------------------------- */
 #if (defined __CYGWIN__ || defined __GNUC__)
@@ -243,8 +243,8 @@ public:
 private:
     SOCKET_HANDLE mSocketHandle;
     struct addrinfo *mLatestAddrInfo;
-    bool mIsConnected;
-    bool mIsListening;
+    std::atomic<bool> mIsConnected;
+    std::atomic<bool> mIsListening;
 };
 
 /* ------------------------------------- */
