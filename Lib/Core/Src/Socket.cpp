@@ -6,6 +6,8 @@
 
 #include <atomic>
 
+#define SOCKET_MAX_CONNECTIONS 100
+
 /* ------------------------------------- */
 #if (defined __CYGWIN__ || defined __GNUC__)
 
@@ -145,7 +147,7 @@ public:
                 return false;
             }
 
-            result = listen (mSocketHandle, SOMAXCONN);
+            result = listen (mSocketHandle, SOCKET_MAX_CONNECTIONS);
             if (result == SOCKET_ERROR) {
                 LOGMESSAGE (OS::Log::kDebug, ErrorMessage ("listen"));
                 return false;

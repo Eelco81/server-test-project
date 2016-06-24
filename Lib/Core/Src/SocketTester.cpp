@@ -122,7 +122,6 @@ TEST_F (SocketTester, BasicDataTransfer) {
     server.Join ();
     client.Join ();
 
-
     client.mInBuffer.ToString (output);
     ASSERT_EQ (std::string ("FROM_SERVER"), std::string (output));
 
@@ -207,7 +206,6 @@ TEST_F (SocketTester, ServerClosesConnection) {
     server.Join ();
     client.Join ();
 }
-
 
 TEST_F (SocketTester, ServerCloses) {
 
