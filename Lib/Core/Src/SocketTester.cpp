@@ -114,6 +114,9 @@ TEST_F (SocketTester, BasicDataTransfer) {
     ASSERT_EQ (std::string (""), std::string (output));
 
     server.Spawn ();
+
+    while (!server.IsListening ()) {}
+
     client.Spawn ();
 
     server.Join ();
