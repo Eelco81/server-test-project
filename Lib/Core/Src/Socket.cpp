@@ -125,6 +125,9 @@ public:
         if (mIsConnected || mIsListening) {
 
             freeaddrinfo (mLatestAddrInfo);
+
+            shutdown (mSocketHandle, 2);
+
 #if (defined __CYGWIN__ || defined __GNUC__)
             close (mSocketHandle);
 #else 
