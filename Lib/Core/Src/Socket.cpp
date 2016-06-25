@@ -116,6 +116,16 @@ public:
             return false;
         }
         
+        int flag (1);
+#if (defined __CYGWIN__ || defined __GNUC__)
+        if (setsockopt (mSocketHandle, SOL_SOCKET, SO_REUSEADDR, reinterpret_cast<char*>(&flag), sizeof(flag)) < 0) {
+#else
+        if (setsockopt (mSocketHandle, SOL_SOCKET, SO_EXCLUSIVEADDRUSE, reinterpret_cast<char*>(&flag), sizeof(flag)) < 0) {
+#endif
+            LOGMESSAGE (OS::Log::kDebug, ErrorMessage ("setsocketopt"));
+            return false;
+        }
+
         LOGMESSAGE (OS::Log::kDebug, "[Socket](" + std::to_string (GetId ()) + ") initialized at " + inAddress + ":" + inPort);
         return true;
     }
