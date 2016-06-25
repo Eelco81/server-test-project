@@ -223,11 +223,7 @@ public:
             return false;
         }
 
-#if (defined __CYGWIN__ || defined __GNUC__)
-        int result = read (mSocketHandle, outBuffer.GetDataPointer (), outBuffer.GetMaxSize ());
-#else
         int result = recv (mSocketHandle, outBuffer.GetDataPointer (), outBuffer.GetMaxSize (), 0);
-#endif
         if (result == 0) {
             LOGMESSAGE (OS::Log::kDebug, std::string ("[Socket] Received termination signal from client with id ") + std::to_string (mSocketHandle));
             Close ();
