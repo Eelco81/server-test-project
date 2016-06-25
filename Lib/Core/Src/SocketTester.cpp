@@ -20,13 +20,18 @@ namespace {
             mInBuffer (100u),
             mOutBuffer (100u)
         {
-            mSocket.Initialize ();
         }
         virtual ~SocketThread () {
             mSocket.Close ();
         }
     public:
+        void Initialize () { mSocket.Initialize (); }
+        virtual void Close () { mSocket.Close (); }
+        bool IsListening () const { return mSocket.IsListening (); }
+        bool IsConnected () const { return mSocket.IsConnected (); }
+    protected:
         OS::Socket mSocket;
+    public:
         OS::Buffer mInBuffer;
         OS::Buffer mOutBuffer;
     };
@@ -39,11 +44,11 @@ namespace {
         {
             mOutBuffer.SetData ("FROM_SERVER", 11u);
         }
-        virtual ~ServerThread () {
+        virtual ~ServerThread () {}
+        virtual void Close () override {
             mClientSocket.Close ();
+            SocketThread::Close ();
         }
-    public:
-        bool IsListening () const { return mSocket.IsListening (); }
     protected:
         OS::Socket mClientSocket;
     };
@@ -56,8 +61,6 @@ namespace {
             mOutBuffer.SetData ("FROM_CLIENT", 11u);
         }
         virtual ~ClientThread () {}
-    public:
-        bool IsConnected () const { return mSocket.IsConnected (); }
     };
 
 }
@@ -112,14 +115,19 @@ TEST_F (SocketTester, BasicDataTransfer) {
     server.mInBuffer.ToString (output);
     ASSERT_EQ (std::string (""), std::string (output));
 
+    server.Initialize ();
     server.Spawn ();
 
     while (!server.IsListening ()) {}
 
+    client.Initialize ();
     client.Spawn ();
 
-    server.Join ();
     client.Join ();
+    client.Close ();
+
+    server.Join ();
+    server.Close ();
 
     client.mInBuffer.ToString (output);
     ASSERT_EQ (std::string ("FROM_SERVER"), std::string (output));
@@ -157,14 +165,19 @@ TEST_F (SocketTester, ClosingClients) {
     Server server;
     Client client;
 
+    server.Initialize ();
     server.Spawn ();
 
     while (!server.IsListening ()) {}
 
+    client.Initialize ();
     client.Spawn ();
 
-    server.Join ();
     client.Join ();
+    client.Close ();
+
+    server.Join ();
+    server.Close ();
 }
 
 TEST_F (SocketTester, ServerClosesConnection) {
@@ -196,14 +209,19 @@ TEST_F (SocketTester, ServerClosesConnection) {
     Server server;
     Client client;
 
+    server.Initialize ();
     server.Spawn ();
 
     while (!server.IsListening ()) {}
 
+    client.Initialize ();
     client.Spawn ();
 
-    server.Join ();
     client.Join ();
+    client.Close ();
+
+    server.Join ();
+    server.Close ();
 }
 
 TEST_F (SocketTester, ServerCloses) {
@@ -237,13 +255,18 @@ TEST_F (SocketTester, ServerCloses) {
     Server server;
     Client client;
 
+    server.Initialize ();
     server.Spawn ();
 
     while (!server.IsListening ()) {}
 
+    client.Initialize ();
     client.Spawn ();
 
-    server.Join ();
     client.Join ();
+    client.Close ();
+
+    server.Join ();
+    server.Close ();
 }
 
