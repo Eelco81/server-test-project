@@ -6,7 +6,7 @@
 
 TEST (FilesTester, ReadFile) {
 
-    std::string testFile = "../test/Files/readfile.txt";
+    std::string testFile = "../Test/Files/readfile.txt";
     
     OS::Buffer buffer (0u);
     ASSERT_TRUE (OS::Files::Read (testFile, buffer));
@@ -21,7 +21,7 @@ TEST (FilesTester, ReadFile) {
 
 TEST (FilesTester, WriteFile) {
 
-    const std::string kTestFile ("../test/Files/tmp_writefile.txt");
+    const std::string kTestFile ("../Test/Files/tmp_writefile.txt");
     const std::string kTestData ("I must be written and read");
     const unsigned kTestSize (kTestData.length ());
 
