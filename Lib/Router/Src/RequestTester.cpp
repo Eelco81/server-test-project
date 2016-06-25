@@ -19,44 +19,42 @@ TEST (RequestTester, ParsingXml) {
     ASSERT_EQ (API::Codes::kGet, request.GetHeader ().mMethod);
     ASSERT_EQ (std::string ("Path"), request.GetHeader ().mPath);
 }
-/*
+
 TEST (RequestTester, ParsingErrorneousXml) {
     {
         std::string xml ("<Request></Request>");
-        OS::XmlNode node;
+        XmlNode node;
         std::string error;
-        ASSERT_TRUE (OS::Xml::Parse (xml, node, error));
+        ASSERT_TRUE (Xml::Parse (xml, node, error));
         API::Request request;
         ASSERT_FALSE (request.FromXml (node, error));
         ASSERT_EQ (std::string ("Not a valid header found"), error);
     }
     {
         std::string xml ("<Request><Header/></Request>");
-        OS::XmlNode node;
+        XmlNode node;
         std::string error;
-        ASSERT_TRUE (OS::Xml::Parse (xml, node, error));
+        ASSERT_TRUE (Xml::Parse (xml, node, error));
         API::Request request;
         ASSERT_FALSE (request.FromXml (node, error));
         ASSERT_EQ (std::string ("Not a valid path tag Path"), error);
     }
     {
         std::string xml ("<Request><Header Path='Path'/></Request>");
-        OS::XmlNode node;
+        XmlNode node;
         std::string error;
-        ASSERT_TRUE (OS::Xml::Parse (xml, node, error));
+        ASSERT_TRUE (Xml::Parse (xml, node, error));
         API::Request request;
         ASSERT_FALSE (request.FromXml (node, error));
         ASSERT_EQ (std::string ("Not a valid version tag Version"), error);
     }
     {
         std::string xml ("<Request><Header Path='Path' Version='Version'/></Request>");
-        OS::XmlNode node;
+        XmlNode node;
         std::string error;
-        ASSERT_TRUE (OS::Xml::Parse (xml, node, error));
+        ASSERT_TRUE (Xml::Parse (xml, node, error));
         API::Request request;
         ASSERT_FALSE (request.FromXml (node, error));
         ASSERT_EQ (std::string ("Not a valid method tag Method"), error);
     }
 }
-
-*/
