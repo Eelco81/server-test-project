@@ -38,7 +38,7 @@ TEST (RequestTester, ParsingErrorneousXml) {
         API::Request request;
         ASSERT_FALSE (request.FromXml (node, error));
         ASSERT_EQ (std::string ("Not a valid path tag Path"), error);
-    }
+    } 
     {
         std::string xml ("<Request><Header Path='Path'/></Request>");
         XmlNode node;
