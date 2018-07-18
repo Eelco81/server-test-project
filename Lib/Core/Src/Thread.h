@@ -4,12 +4,10 @@
 
 #include <memory>
 #include <string>
+#include <thread>
 
 #include "Macros.h"
 
-namespace std {
-    class thread;
-}
 
 namespace OS {
 
@@ -40,11 +38,9 @@ public:
 public:
     virtual void Execute () = 0;
 
-public:
-    // The execute function must be public, it will be called by a C-style function
-    // which otherwise would not be able to access it
-    virtual void Run ();
-
+private:
+    void Run ();
+	
 private:
     std::string mName;
     Status mStatus;

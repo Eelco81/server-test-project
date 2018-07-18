@@ -2,14 +2,6 @@
 #include "Log.h"
 #include "Thread.h"
 
-#include <thread>
-
-namespace {
-    void LaunchThreadExecution (OS::Thread* inThread) {
-        inThread->Run ();
-    }
-}
-
 OS::Thread::Thread (const std::string& inName) :
     mName (inName),
     mStatus (kUnstarted)
@@ -28,7 +20,7 @@ void OS::Thread::Run () {
 
 void OS::Thread::Spawn () {
     LOGMESSAGE (OS::Log::kDebug, std::string ("[Thread](") + GetName () + ") started");
-    mImplementation.reset (new std::thread (LaunchThreadExecution, this));
+    mImplementation.reset (new std::thread ([](Thread* inThread) { inThread->Run(); }, this));
 }
 
 void OS::Thread::Join () {

@@ -14,8 +14,8 @@ namespace {
 
     class SocketThread : public OS::Thread {
     public:
-        SocketThread () :
-            Thread ("SocketThread"),
+        SocketThread (const std::string& inName) :
+            Thread (inName),
             mSocket (IP_FOR_TESTING, PORT_FOR_TESTING),
             mInBuffer (100u),
             mOutBuffer (100u)
@@ -39,7 +39,7 @@ namespace {
     class ServerThread : public SocketThread {
     public:
         ServerThread () : 
-            SocketThread (),
+            SocketThread ("ServerThread"),
             mClientSocket (IP_FOR_TESTING, PORT_FOR_TESTING)
         {
             mOutBuffer.SetData ("FROM_SERVER", 11u);
@@ -56,7 +56,7 @@ namespace {
     class ClientThread : public SocketThread {
     public:
         ClientThread () : 
-            SocketThread () 
+            SocketThread ("ClientThread") 
         {
             mOutBuffer.SetData ("FROM_CLIENT", 11u);
         }
