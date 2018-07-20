@@ -4,7 +4,7 @@ SOURCEDIR       = ./../Src
 LIBDIR          = ./../..
 TOOLDIR         = ./../../../Tools/
 SOURCES         = $(wildcard $(SOURCEDIR)/*.cpp)
-DEPENDENCIES    = Router AppUtils Core Xml
+DEPENDENCIES    = AppUtils Core Xml
 LINKS           = -lpthread
 LIBTARGET       = libtcpserver.a
 

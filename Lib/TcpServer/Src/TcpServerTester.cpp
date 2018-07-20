@@ -23,7 +23,6 @@ class TcpServerTester : public ::testing::Test {
 
 TEST_F (TcpServerTester, TcpServerTester) {
     
-    
     TCP::Server server (IP_FOR_TESTING, PORT_FOR_TESTING);
     
     server.Start();

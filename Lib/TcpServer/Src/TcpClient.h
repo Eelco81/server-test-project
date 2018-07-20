@@ -7,8 +7,6 @@
 
 #include <memory>
 #include <vector>
-#include <mutex>
-#include <atomic>
 
 namespace OS {
     class Buffer;
@@ -31,7 +29,8 @@ public:
     virtual void Kill() override;
     
     void Send (const OS::Buffer& inBuffer);
-
+    void OnReceived (OS::Buffer& inBuffer);
+    
     unsigned GetId () const;
 
 private:

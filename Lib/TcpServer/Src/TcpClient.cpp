@@ -12,8 +12,7 @@
 
 TCP::Client::Client (std::unique_ptr <OS::Socket> inSocket) :
     Thread ("Client[" + std::to_string (inSocket->GetId ()) + "]"),
-    mSocket (std::move (inSocket)),
-    mKeepAlive (true)
+    mSocket (std::move (inSocket))
 {
 }
 
@@ -29,8 +28,26 @@ void TCP::Client::Execute () {
     OS::Buffer recvBuffer (MAX_BUFFER_SIZE);
     OS::Buffer sendBuffer (MAX_BUFFER_SIZE);
 
-    while (mSocket->IsConnected () && mKeepAlive) {
+    while (mSocket->IsConnected ()) {
         if (mSocket->Receive (recvBuffer)) { // blocking call
+            OnReceived( recvBuffer );
+        }
+    }
+    
+    mSocket->Close ();
+}
+
+void TCP::Client::Send (const OS::Buffer& inBuffer) {
+    mSocket->Send (inBuffer);
+}
+
+void TCP::Client::Kill () {
+    mSocket->Close();
+}
+
+void TCP::Client::OnReceived (OS::Buffer& inBuffer) {
+}
+
             /*
             std::string error;
             std::string rawData;
@@ -60,17 +77,3 @@ void TCP::Client::Execute () {
             sendBuffer.SetData (outData);
             Send (sendBuffer);
             */
-        }
-    }
-    
-    mSocket->Close ();
-}
-
-void TCP::Client::Send (const OS::Buffer& inBuffer) {
-    mSocket->Send (inBuffer);
-}
-
-void TCP::Client::Kill () {
-    mSocket->Close();
-    mKeepAlive = false;
-}
