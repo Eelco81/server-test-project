@@ -8,13 +8,11 @@
 #include <memory>
 #include <vector>
 #include <mutex>
+#include <atomic>
 
 namespace OS {
     class Buffer;
     class Socket;
-}
-namespace API {
-    class Router;
 }
 
 namespace TCP {
@@ -25,20 +23,20 @@ class Client : public OS::Thread {
 
 public:
     Client () = delete;
-    Client (std::shared_ptr <API::Router> inRouter, std::unique_ptr <OS::Socket> inSocket);
+    Client (std::unique_ptr <OS::Socket> inSocket);
     virtual ~Client ();
 
 public:
     virtual void Execute () override;
+    virtual void Kill() override;
     
     void Send (const OS::Buffer& inBuffer);
-    void ForceClose ();
 
     unsigned GetId () const;
 
 private:
-    std::shared_ptr <API::Router> mRouter;
     std::unique_ptr <OS::Socket> mSocket;
+    std::atomic<bool> mKeepAlive;
 };
 
 }

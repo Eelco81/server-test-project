@@ -13,7 +13,7 @@
 #include "TcpServer.h"
 #include "TcpClient.h"
 
-#include "Router.h"
+#include <iostream>
 
 namespace {
 
@@ -29,7 +29,7 @@ namespace {
         }
         ~ListenThread () {}
 
-        void Execute () override {
+        virtual void Execute () override {
             mSocket.Listen (); 
             LOGMESSAGE (OS::Log::kInfo, "[TcpServer] Listening at " + mSocket.GetAddress () + ":" + mSocket.GetPortNumber ());
             while (mSocket.IsListening ()) {
@@ -38,8 +38,13 @@ namespace {
                     mServer.RegisterClient (std::move (clientSocket));
                 }
             }
+            LOGMESSAGE (OS::Log::kInfo, "[TcpServer] Stopped at " + mSocket.GetAddress () + ":" + mSocket.GetPortNumber ());
         }
 
+        virtual void Kill () override {
+            mSocket.Close();
+        }
+        
     private:
         TCP::Server& mServer;
         OS::Socket mSocket;
@@ -72,10 +77,9 @@ namespace {
 
 }
 
-TCP::Server::Server (const std::string& inAddress, const std::string& inPort, std::shared_ptr <API::Router> inRouter) :
+TCP::Server::Server (const std::string& inAddress, const std::string& inPort) :
     mListener (std::make_unique <ListenThread> (*this, inAddress, inPort)),
-    mCleaner (std::make_unique <CleanupThread> (*this)),
-    mRouter (inRouter)
+    mCleaner (std::make_unique <CleanupThread> (*this))
 {
 }
 
@@ -86,11 +90,26 @@ void TCP::Server::Start () {
     mCleaner->Spawn ();
 }
 
+void TCP::Server::Stop() {
+    
+    mListener->Kill();
+    mListener->Join();
+    
+    mMutex.lock ();
+    std::for_each (mClients.begin (), mClients.end (), [] (ClientPtr& client) { client->Kill(); });
+    mMutex.unlock ();
+    
+    CleanUp();
+    
+    mCleaner->Kill();
+    mCleaner->Join();
+}
+
 void TCP::Server::BroadCast (const OS::Buffer& inBuffer) {
     mMutex.lock ();
     std::for_each (mClients.begin (), mClients.end (), [&inBuffer] (ClientPtr& client) { client->Send (inBuffer); });
     mMutex.unlock ();
-};
+}
 
 void TCP::Server::Send (unsigned inClientId, const OS::Buffer& inBuffer) {
     mMutex.lock ();
@@ -99,13 +118,17 @@ void TCP::Server::Send (unsigned inClientId, const OS::Buffer& inBuffer) {
         (*clientIterator)->Send (inBuffer);
     }
     mMutex.unlock ();
-};
+}
+
+std::size_t TCP::Server::GetClientCount() const {
+    return mClients.size();
+}
 
 // called from listener thread
 void TCP::Server::RegisterClient (std::unique_ptr <OS::Socket> inClientSocket) {
     LOGMESSAGE (OS::Log::kInfo, std::string ("[TcpServer] Registering connected client with id ") + std::to_string (inClientSocket->GetId ()));
     mMutex.lock ();
-    mClients.emplace_back (std::make_unique <Client> (mRouter, std::move (inClientSocket)));
+    mClients.emplace_back (std::make_unique <Client> (std::move (inClientSocket)));
     mClients.back ()->Spawn ();
     mMutex.unlock ();
 }

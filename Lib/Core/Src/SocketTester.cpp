@@ -1,6 +1,7 @@
 
 #include "gtest/gtest.h"
 
+#include "Timing.h"
 #include "Log.h"
 #include "Network.h"
 #include "Buffer.h"
@@ -26,7 +27,7 @@ namespace {
         }
     public:
         void Initialize () { mSocket.Initialize (); }
-        virtual void Close () { mSocket.Close (); }
+        virtual void Kill () override { mSocket.Close (); }
         bool IsListening () const { return mSocket.IsListening (); }
         bool IsConnected () const { return mSocket.IsConnected (); }
     protected:
@@ -45,9 +46,9 @@ namespace {
             mOutBuffer.SetData ("FROM_SERVER", 11u);
         }
         virtual ~ServerThread () {}
-        virtual void Close () override {
+        virtual void Kill () override {
             mClientSocket.Close ();
-            SocketThread::Close ();
+            SocketThread::Kill ();
         }
     protected:
         OS::Socket mClientSocket;
@@ -73,6 +74,7 @@ class SocketTester : public ::testing::Test {
     void TearDown () {
         OS::Network::Done ();
         OS::Log::Instance ().Flush ();
+        OS::Timing::Sleep (100u); // give the OS some time to clean up the socket
     }
 };
 
@@ -119,15 +121,13 @@ TEST_F (SocketTester, BasicDataTransfer) {
     server.Spawn ();
 
     while (!server.IsListening ()) {}
-
+    OS::Timing::Sleep(1000u);
+    
     client.Initialize ();
     client.Spawn ();
 
     client.Join ();
-    client.Close ();
-
     server.Join ();
-    server.Close ();
 
     client.mInBuffer.ToString (output);
     ASSERT_EQ (std::string ("FROM_SERVER"), std::string (output));
@@ -169,15 +169,13 @@ TEST_F (SocketTester, ClosingClients) {
     server.Spawn ();
 
     while (!server.IsListening ()) {}
-
+    OS::Timing::Sleep(1000u);
+    
     client.Initialize ();
     client.Spawn ();
 
     client.Join ();
-    client.Close ();
-
     server.Join ();
-    server.Close ();
 }
 
 TEST_F (SocketTester, ServerClosesConnection) {
@@ -213,15 +211,13 @@ TEST_F (SocketTester, ServerClosesConnection) {
     server.Spawn ();
 
     while (!server.IsListening ()) {}
-
+    OS::Timing::Sleep(1000u);
+    
     client.Initialize ();
     client.Spawn ();
 
     client.Join ();
-    client.Close ();
-
     server.Join ();
-    server.Close ();
 }
 
 TEST_F (SocketTester, ServerCloses) {
@@ -259,14 +255,12 @@ TEST_F (SocketTester, ServerCloses) {
     server.Spawn ();
 
     while (!server.IsListening ()) {}
-
+    OS::Timing::Sleep(1000u);
+    
     client.Initialize ();
     client.Spawn ();
 
     client.Join ();
-    client.Close ();
-
     server.Join ();
-    server.Close ();
 }
 

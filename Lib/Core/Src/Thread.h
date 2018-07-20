@@ -37,7 +37,7 @@ public:
 
 public:
     virtual void Execute () = 0;
-
+    virtual void Kill() = 0;
 private:
     void Run ();
 	

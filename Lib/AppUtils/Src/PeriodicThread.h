@@ -25,7 +25,8 @@ public:
     bool IsRunning ();
     void AddTask (std::unique_ptr<Task> inTask);
     void Execute () override;
-
+    void Kill() override;
+    
 private:
     std::vector<std::unique_ptr<Task>> mTasks;
     unsigned mWaitTime;

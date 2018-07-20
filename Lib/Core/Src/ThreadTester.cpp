@@ -12,6 +12,7 @@ namespace {
         ~TestThread () {}
 
         MOCK_METHOD0 (Execute, void ());
+        MOCK_METHOD0 (Kill, void ());
     };
 
 }

@@ -6,17 +6,14 @@
 #include <memory>
 #include <mutex>
 
+#include <atomic>
+
 #include "Macros.h"
 
 namespace OS {
     class Buffer;
     class Thread;
     class Socket;
-}
-
-namespace API {
-    class Router;
-    class Request;
 }
 
 namespace TCP {
@@ -29,26 +26,30 @@ class Server {
 
 public:
     Server () = delete;
-    Server (const std::string& inAddress, const std::string& inPort, std::shared_ptr <API::Router> inRouter);
+    Server (const std::string& inAddress, const std::string& inPort);
     virtual ~Server ();
 
 public:
     void Start ();
-    void RegisterClient (std::unique_ptr <OS::Socket> inClientSocket);
-    void CleanUp ();
+    void Stop ();
 
     void BroadCast (const OS::Buffer& inBuffer);
     void Send (unsigned inClientId, const OS::Buffer& inBuffer);
     
-private:
+public:
+    std::size_t GetClientCount () const;
+    
+public:
+    void RegisterClient (std::unique_ptr <OS::Socket> inClientSocket);
+    void CleanUp ();
 
+private:
     using  ClientPtr = std::unique_ptr <Client>;
     std::vector <ClientPtr> mClients;
     std::mutex mMutex;
 
     std::unique_ptr <OS::Thread> mListener;
     std::unique_ptr <OS::Thread> mCleaner;
-    std::shared_ptr <API::Router> mRouter;
 
 };
 

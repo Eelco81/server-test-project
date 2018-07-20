@@ -1,9 +1,8 @@
 
+#include "Timing.h"
 #include "PeriodicThread.h"
 #include "Task.h"
 
-#include <thread>
-#include <chrono>
 
 APP::PeriodicThread::PeriodicThread (const std::string& inName, unsigned inWaitTime) :
     Thread (inName),
@@ -35,7 +34,11 @@ void APP::PeriodicThread::Execute () {
                 break;
             }
         }
-        std::this_thread::sleep_for (std::chrono::milliseconds (mWaitTime));
+        OS::Timing::Sleep (mWaitTime);
     }
 
+}
+
+void APP::PeriodicThread::Kill() {
+    mRunning = false;
 }
