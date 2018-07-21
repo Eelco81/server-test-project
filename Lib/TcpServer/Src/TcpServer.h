@@ -19,6 +19,7 @@ namespace OS {
 namespace TCP {
 
 class Client;
+class ClientFactory;
 
 class Server {
 
@@ -26,16 +27,13 @@ class Server {
 
 public:
     Server () = delete;
-    Server (const std::string& inAddress, const std::string& inPort);
+    Server (const std::string& inAddress, const std::string& inPort, std::unique_ptr<ClientFactory> inFactory);
     virtual ~Server ();
 
 public:
     void Start ();
     void Stop ();
 
-    void BroadCast (const OS::Buffer& inBuffer);
-    void Send (unsigned inClientId, const OS::Buffer& inBuffer);
-    
 public:
     std::size_t GetClientCount () const;
     
@@ -51,6 +49,7 @@ private:
     std::unique_ptr <OS::Thread> mListener;
     std::unique_ptr <OS::Thread> mCleaner;
 
+    std::unique_ptr<ClientFactory> mFactory;
 };
 
 }

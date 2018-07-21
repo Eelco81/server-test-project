@@ -12,7 +12,7 @@
 
 #include "TcpServer.h"
 #include "TcpClient.h"
-
+#include "TcpClientFactory.h"
 #include <iostream>
 
 namespace {
@@ -77,9 +77,10 @@ namespace {
 
 }
 
-TCP::Server::Server (const std::string& inAddress, const std::string& inPort) :
+TCP::Server::Server (const std::string& inAddress, const std::string& inPort, std::unique_ptr<ClientFactory> inFactory) :
     mListener (std::make_unique <ListenThread> (*this, inAddress, inPort)),
-    mCleaner (std::make_unique <CleanupThread> (*this))
+    mCleaner (std::make_unique <CleanupThread> (*this)),
+    mFactory (std::move (inFactory))
 {
 }
 
@@ -105,21 +106,6 @@ void TCP::Server::Stop() {
     mCleaner->Join();
 }
 
-void TCP::Server::BroadCast (const OS::Buffer& inBuffer) {
-    mMutex.lock ();
-    std::for_each (mClients.begin (), mClients.end (), [&inBuffer] (ClientPtr& client) { client->Send (inBuffer); });
-    mMutex.unlock ();
-}
-
-void TCP::Server::Send (unsigned inClientId, const OS::Buffer& inBuffer) {
-    mMutex.lock ();
-    auto clientIterator = std::find_if (mClients.begin (), mClients.end (), [inClientId] (const ClientPtr& client) { return client->GetId () == inClientId; });
-    if (clientIterator != mClients.end ()) {
-        (*clientIterator)->Send (inBuffer);
-    }
-    mMutex.unlock ();
-}
-
 std::size_t TCP::Server::GetClientCount() const {
     return mClients.size();
 }
@@ -128,7 +114,7 @@ std::size_t TCP::Server::GetClientCount() const {
 void TCP::Server::RegisterClient (std::unique_ptr <OS::Socket> inClientSocket) {
     LOGMESSAGE (OS::Log::kInfo, std::string ("[TcpServer] Registering connected client with id ") + std::to_string (inClientSocket->GetId ()));
     mMutex.lock ();
-    mClients.emplace_back (std::make_unique <Client> (std::move (inClientSocket)));
+    mClients.emplace_back (mFactory->Create (std::move (inClientSocket)));
     mClients.back ()->Spawn ();
     mMutex.unlock ();
 }

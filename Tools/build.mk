@@ -55,4 +55,4 @@ clean:
 	rm -rf $(TESTOBJECTS) $(GMOCKOBJECTS) $(LIBTARGET) $(TARGET) $(TESTTARGET)
     
 test: $(TESTTARGET)
-	./$(TESTTARGET)
+	./$(TESTTARGET) --gtest_filter="*"

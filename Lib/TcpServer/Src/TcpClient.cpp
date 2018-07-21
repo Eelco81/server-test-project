@@ -45,8 +45,8 @@ void TCP::Client::Kill () {
     mSocket->Close();
 }
 
-void TCP::Client::OnReceived (OS::Buffer& inBuffer) {
-}
+//void TCP::Client::OnReceived (OS::Buffer& inBuffer) {
+//}
 
             /*
             std::string error;

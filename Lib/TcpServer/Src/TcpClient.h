@@ -29,7 +29,7 @@ public:
     virtual void Kill() override;
     
     void Send (const OS::Buffer& inBuffer);
-    void OnReceived (OS::Buffer& inBuffer);
+    virtual void OnReceived (const OS::Buffer& inBuffer) = 0;
     
     unsigned GetId () const;
 
