@@ -31,11 +31,10 @@ public:
     void Send (const OS::Buffer& inBuffer);
     virtual void OnReceived (const OS::Buffer& inBuffer) = 0;
     
-    unsigned GetId () const;
+    int GetId () const;
 
 private:
     std::unique_ptr <OS::Socket> mSocket;
-    std::atomic<bool> mKeepAlive;
 };
 
 }

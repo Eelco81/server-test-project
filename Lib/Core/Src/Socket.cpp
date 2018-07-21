@@ -23,8 +23,8 @@
 #define SOCKET_ERROR -1
 
 namespace {
-    std::string ErrorMessage (const std::string& inMethod) {
-        return "[Socket] CygWin::" + inMethod + " failed";
+    std::string ErrorMessage (const std::string& inMethod, int inId) {
+        return std::string ("[Socket](") + std::to_string (inId) + std::string (") CygWin::" + inMethod + " failed");
     }
 }
 
@@ -42,8 +42,8 @@ namespace {
 #define SOCKET_HANDLE SOCKET
 
 namespace {
-    std::string ErrorMessage (const std::string& inMethod) {
-        return "[Socket] WinSock2::" + inMethod + " failed with code " + std::to_string (WSAGetLastError ());
+    std::string ErrorMessage (const std::string& inMethod, int inId) {
+        return std::string ("[Socket](") + std::to_string (inId) + std::string (") WinSock2::") + inMethod + std::string(" failed with code ") + std::to_string (WSAGetLastError ());
     }
 }
 
@@ -105,14 +105,14 @@ public:
         // Resolve the server address and port
         int res = getaddrinfo (inAddress.c_str (), inPort.c_str (), &hints, &mLatestAddrInfo);
         if (res != 0) {
-            LOGMESSAGE (OS::Log::kDebug, ErrorMessage ("getaddrinfo"));
+            LOGMESSAGE (OS::Log::kDebug, ErrorMessage ("getaddrinfo", GetId()));
             return false;
         }
         
         // Create a SOCKET for connecting to server
         mSocketHandle = socket (mLatestAddrInfo->ai_family, mLatestAddrInfo->ai_socktype, mLatestAddrInfo->ai_protocol);
         if (mSocketHandle == INVALID_SOCKET) {
-            LOGMESSAGE (OS::Log::kDebug, ErrorMessage ("socket"));
+            LOGMESSAGE (OS::Log::kDebug, ErrorMessage ("socket", GetId()));
             return false;
         }
         
@@ -122,7 +122,7 @@ public:
 #else
         if (setsockopt (mSocketHandle, SOL_SOCKET, SO_EXCLUSIVEADDRUSE, reinterpret_cast<char*>(&flag), sizeof(flag)) < 0) {
 #endif
-            LOGMESSAGE (OS::Log::kDebug, ErrorMessage ("setsocketopt"));
+            LOGMESSAGE (OS::Log::kDebug, ErrorMessage ("setsocketopt", GetId()));
             return false;
         }
 
@@ -156,13 +156,13 @@ public:
 
             int result = bind (mSocketHandle, mLatestAddrInfo->ai_addr, (int) mLatestAddrInfo->ai_addrlen);
             if (result == SOCKET_ERROR) {
-                LOGMESSAGE (OS::Log::kDebug, ErrorMessage ("bind"));
+                LOGMESSAGE (OS::Log::kDebug, ErrorMessage ("bind", GetId()));
                 return false;
             }
 
             result = listen (mSocketHandle, SOCKET_MAX_CONNECTIONS);
             if (result == SOCKET_ERROR) {
-                LOGMESSAGE (OS::Log::kDebug, ErrorMessage ("listen"));
+                LOGMESSAGE (OS::Log::kDebug, ErrorMessage ("listen", GetId()));
                 return false;
             }
         }
@@ -179,8 +179,8 @@ public:
         }
 
         SOCKET_HANDLE clientSocket = accept (mSocketHandle, NULL, NULL);
-        if (clientSocket == INVALID_SOCKET) {
-            LOGMESSAGE (OS::Log::kDebug, ErrorMessage ("accept"));
+        if (clientSocket <= 0) {
+            LOGMESSAGE (OS::Log::kDebug, ErrorMessage ("accept", GetId()));
             return false;
         }
         outSocket.Initialize (clientSocket);
@@ -198,7 +198,7 @@ public:
         // Connect to server.
         int res = connect (mSocketHandle, mLatestAddrInfo->ai_addr, (int) mLatestAddrInfo->ai_addrlen);
         if (res == SOCKET_ERROR) {
-            LOGMESSAGE (OS::Log::kDebug, ErrorMessage ("connect")); 
+            LOGMESSAGE (OS::Log::kDebug, ErrorMessage ("connect", GetId())); 
             return false;
         }
 
@@ -207,8 +207,8 @@ public:
         return true;
     }
 
-    unsigned GetId () const {
-        return static_cast<unsigned> (mSocketHandle);
+    int GetId () const {
+        return mSocketHandle;
     }
 
     bool Send (const OS::Buffer& inBuffer) {
@@ -219,11 +219,11 @@ public:
 
         int result = send (mSocketHandle, inBuffer.GetDataPointer (), inBuffer.GetSize (), 0);
         if (result == SOCKET_ERROR) {
-            LOGMESSAGE (OS::Log::kDebug, ErrorMessage ("send"));
+            LOGMESSAGE (OS::Log::kDebug, ErrorMessage ("send", GetId()));
             Close ();
             return false;
         }
-        LOGMESSAGE (OS::Log::kTrace, std::string ("[Socket] Send ") + std::to_string (inBuffer.GetSize ()) + std::string (" bytes to client id ") + std::to_string (mSocketHandle));
+        LOGMESSAGE (OS::Log::kTrace, std::string ("[Socket](") + std::to_string (GetId ()) + std::string (") Send ") + std::to_string (inBuffer.GetSize ()) + std::string (" bytes to client id ") + std::to_string (mSocketHandle));
         return true;
     }
 
@@ -235,19 +235,19 @@ public:
 
         int result = recv (mSocketHandle, outBuffer.GetDataPointer (), outBuffer.GetMaxSize (), 0);
         if (result == 0) {
-            LOGMESSAGE (OS::Log::kDebug, std::string ("[Socket] Received termination signal from client with id ") + std::to_string (mSocketHandle));
+            LOGMESSAGE (OS::Log::kDebug, std::string ("[Socket](") + std::to_string (GetId ()) + std::string (") Received termination signal from client with id ") + std::to_string (mSocketHandle));
             Close ();
             return false;
         }
         if (result < 0) {
-            LOGMESSAGE (OS::Log::kDebug, ErrorMessage ("recv"));
+            LOGMESSAGE (OS::Log::kDebug, ErrorMessage ("recv", GetId()));
             Close ();
             return false;
         }
         
         outBuffer.Resize (result);
 
-        LOGMESSAGE (OS::Log::kTrace, std::string ("[Socket] Received ") + std::to_string (result) + std::string (" bytes from client with id ") + std::to_string (mSocketHandle));
+        LOGMESSAGE (OS::Log::kTrace, std::string ("[Socket](") + std::to_string (GetId ()) + std::string (") Received ") + std::to_string (result) + std::string (" bytes from client with id ") + std::to_string (mSocketHandle));
         return true;
     }
 
@@ -274,7 +274,7 @@ bool OS::Socket::Initialize () {
     return mImpl->Initialize (mAddress, mPortNumber);
 }
 
-bool OS::Socket::Initialize (unsigned inHandle) {
+bool OS::Socket::Initialize (int inHandle) {
     return mImpl->Initialize (inHandle);
 }
 
@@ -282,7 +282,7 @@ void OS::Socket::Close () {
     mImpl->Close ();
 }
 
-unsigned OS::Socket::GetId () {
+int OS::Socket::GetId () {
     return mImpl->GetId ();
 }
 

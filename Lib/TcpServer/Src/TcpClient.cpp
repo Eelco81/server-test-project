@@ -19,7 +19,7 @@ TCP::Client::Client (std::unique_ptr <OS::Socket> inSocket) :
 TCP::Client::~Client () {
 }
 
-unsigned TCP::Client::GetId () const {
+int TCP::Client::GetId () const {
     return mSocket->GetId ();
 }
 

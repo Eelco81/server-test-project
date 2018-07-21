@@ -42,7 +42,7 @@ public:
     void CleanUp ();
 
 private:
-    using  ClientPtr = std::unique_ptr <Client>;
+    using ClientPtr = std::unique_ptr <Client>;
     std::vector <ClientPtr> mClients;
     std::mutex mMutex;
 

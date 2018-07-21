@@ -21,7 +21,7 @@ public:
 
 public:
     bool Initialize ();
-    bool Initialize (unsigned inHandle);
+    bool Initialize (int inHandle);
 
     void Close ();
 
@@ -32,7 +32,7 @@ public:
     bool Send (const Buffer& inBuffer);
     bool Receive (Buffer& outBuffer);
 
-    unsigned GetId ();
+    int GetId ();
 
     bool IsConnected () const;
     bool IsListening () const;
