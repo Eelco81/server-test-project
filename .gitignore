@@ -9,6 +9,7 @@
 /Lib/*/Src/*.TMP
 /Lib/*/Make/*.a
 /Lib/*/Make/Google*
+/Lib/Core/Test/Files/tmp*
 
 /App/Win32/*.sdf
 /App/Win32/*.user
