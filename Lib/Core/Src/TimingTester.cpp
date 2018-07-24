@@ -6,7 +6,7 @@
 
 TEST (Timing, Sleep) {
     
-    OS::Timing::Sleep(1000);
+    OS::Timing::Sleep(10u);
     
 }
 

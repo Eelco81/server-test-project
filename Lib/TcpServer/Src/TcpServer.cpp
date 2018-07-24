@@ -75,7 +75,7 @@ namespace {
         ~CleanupThread () {}
     };
 
-}
+} // end anonymous namespace
 
 TCP::Server::Server (const std::string& inAddress, const std::string& inPort, std::unique_ptr<ClientFactory> inFactory) :
     mListener (std::make_unique <ListenThread> (*this, inAddress, inPort)),

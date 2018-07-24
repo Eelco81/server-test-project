@@ -2,9 +2,10 @@
 #ifndef _FILES_H_
 #define _FILES_H_
 
-namespace OS {
+#include <vector>
+#include <cstdint>
 
-class Buffer;
+namespace OS {
 
 class Files {
 
@@ -13,8 +14,8 @@ public:
     ~Files () = default;
 
 public:
-    static bool Read (const std::string& inPath, Buffer& outBuffer);
-    static bool Write (const std::string& inPath, const Buffer& outBuffer);
+    static bool Read (const std::string& inPath, std::vector<uint8_t>& outBuffer);
+    static bool Write (const std::string& inPath, const std::vector<uint8_t>& outBuffer);
 
 };
 
