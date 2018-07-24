@@ -5,11 +5,11 @@
 #include "Macros.h"
 #include "Thread.h"
 
+#include <cstdint>
 #include <memory>
 #include <vector>
 
 namespace OS {
-    class Buffer;
     class Socket;
 }
 
@@ -28,8 +28,8 @@ public:
     virtual void Execute () override;
     virtual void Kill() override;
     
-    void Send (const OS::Buffer& inBuffer);
-    virtual void OnReceived (const OS::Buffer& inBuffer) = 0;
+    void Send (const std::vector<uint8_t>& inBuffer);
+    virtual void OnReceived (const std::vector<uint8_t>& inBuffer) = 0;
     
     int GetId () const;
 

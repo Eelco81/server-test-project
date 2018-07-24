@@ -13,13 +13,15 @@
 
 namespace {
 
+    const int kBufferSize (1000);
+    
     class SocketThread : public OS::Thread {
     public:
-        SocketThread (const std::string& inName) :
+        SocketThread (const std::string& inName, uint8_t inBufferValue) :
             Thread (inName),
             mSocket (IP_FOR_TESTING, PORT_FOR_TESTING),
-            mInBuffer (100u),
-            mOutBuffer (100u)
+            mInBuffer (kBufferSize + 1u, 0x00),// for simplicity make it bugger than outBuffer
+            mOutBuffer (kBufferSize, inBufferValue)
         {
         }
         virtual ~SocketThread () {
@@ -33,17 +35,16 @@ namespace {
     protected:
         OS::Socket mSocket;
     public:
-        OS::Buffer mInBuffer;
-        OS::Buffer mOutBuffer;
+        std::vector<uint8_t> mInBuffer;
+        const std::vector<uint8_t> mOutBuffer;
     };
 
     class ServerThread : public SocketThread {
     public:
         ServerThread () : 
-            SocketThread ("ServerThread"),
+            SocketThread ("ServerThread", 0xFF),
             mClientSocket (IP_FOR_TESTING, PORT_FOR_TESTING)
         {
-            mOutBuffer.SetData ("FROM_SERVER", 11u);
         }
         virtual ~ServerThread () {}
         virtual void Kill () override {
@@ -57,14 +58,13 @@ namespace {
     class ClientThread : public SocketThread {
     public:
         ClientThread () : 
-            SocketThread ("ClientThread") 
+            SocketThread ("ClientThread", 0x0F) 
         {
-            mOutBuffer.SetData ("FROM_CLIENT", 11u);
         }
         virtual ~ClientThread () {}
     };
 
-}
+} // end anonymous namespace
 
 class SocketTester : public ::testing::Test {
     void SetUp () {
@@ -88,8 +88,8 @@ TEST_F (SocketTester, BasicDataTransfer) {
             EXPECT_TRUE (mSocket.IsListening ());
             EXPECT_TRUE (mSocket.Accept (mClientSocket));
             EXPECT_TRUE (mClientSocket.IsConnected ());
-            EXPECT_TRUE (mClientSocket.Send (mOutBuffer));
-            EXPECT_TRUE (mClientSocket.Receive (mInBuffer));
+            EXPECT_EQ (mClientSocket.Send (mOutBuffer), kBufferSize);
+            EXPECT_EQ (mClientSocket.Receive (mInBuffer), kBufferSize);
             EXPECT_TRUE (mSocket.IsListening ());
             EXPECT_TRUE (mClientSocket.IsConnected ());
         }
@@ -100,22 +100,14 @@ TEST_F (SocketTester, BasicDataTransfer) {
             EXPECT_FALSE (mSocket.IsConnected ());
             EXPECT_TRUE (mSocket.Connect ());
             EXPECT_TRUE (mSocket.IsConnected ());
-            EXPECT_TRUE (mSocket.Send (mOutBuffer));
-            EXPECT_TRUE (mSocket.Receive (mInBuffer));
+            EXPECT_EQ (mSocket.Send (mOutBuffer), kBufferSize);
+            EXPECT_EQ (mSocket.Receive (mInBuffer), kBufferSize);
             EXPECT_TRUE (mSocket.IsConnected ());
         }
     };
 
     Server server;
     Client client;
-    
-    std::string output;
-
-    client.mInBuffer.ToString (output);
-    ASSERT_EQ (std::string (""), std::string (output));
-
-    server.mInBuffer.ToString (output);
-    ASSERT_EQ (std::string (""), std::string (output));
 
     server.Initialize ();
     server.Spawn ();
@@ -128,12 +120,9 @@ TEST_F (SocketTester, BasicDataTransfer) {
 
     client.Join ();
     server.Join ();
-
-    client.mInBuffer.ToString (output);
-    ASSERT_EQ (std::string ("FROM_SERVER"), std::string (output));
-
-    server.mInBuffer.ToString (output);
-    ASSERT_EQ (std::string ("FROM_CLIENT"), std::string (output));
+    
+    ASSERT_TRUE (std::equal (server.mOutBuffer.begin(), server.mOutBuffer.end(), client.mInBuffer.begin()));
+    ASSERT_TRUE (std::equal (client.mOutBuffer.begin(), client.mOutBuffer.end(), server.mInBuffer.begin()));
 }
 
 TEST_F (SocketTester, ClosingClients) {
@@ -146,7 +135,7 @@ TEST_F (SocketTester, ClosingClients) {
             EXPECT_TRUE (mSocket.IsListening ());
             EXPECT_TRUE (mSocket.Accept (mClientSocket));
             EXPECT_TRUE (mClientSocket.IsConnected ());
-            EXPECT_FALSE (mClientSocket.Receive (mInBuffer)); // received 0
+            EXPECT_LE (mClientSocket.Receive (mInBuffer), 0); // received 0
             EXPECT_FALSE (mClientSocket.IsConnected ());
             EXPECT_TRUE (mSocket.IsListening ());
         }
@@ -199,7 +188,7 @@ TEST_F (SocketTester, ServerClosesConnection) {
             EXPECT_FALSE (mSocket.IsConnected ());
             EXPECT_TRUE (mSocket.Connect ());
             EXPECT_TRUE (mSocket.IsConnected ());
-            EXPECT_FALSE (mSocket.Receive (mInBuffer)); // received 0
+            EXPECT_LE (mSocket.Receive (mInBuffer), 0); // received 0
             EXPECT_FALSE (mSocket.IsConnected ());
         }
     };
@@ -243,7 +232,7 @@ TEST_F (SocketTester, ServerCloses) {
             EXPECT_FALSE (mSocket.IsConnected ());
             EXPECT_TRUE (mSocket.Connect ());
             EXPECT_TRUE (mSocket.IsConnected ());
-            EXPECT_FALSE (mSocket.Receive (mInBuffer)); // received 0
+            EXPECT_LE (mSocket.Receive (mInBuffer), 0); // received 0
             EXPECT_FALSE (mSocket.IsConnected ());
         }
     };
@@ -263,4 +252,3 @@ TEST_F (SocketTester, ServerCloses) {
     client.Join ();
     server.Join ();
 }
-

@@ -5,7 +5,6 @@
 
 #include "Network.h"
 #include "Socket.h"
-#include "Buffer.h"
 
 #include "TcpServer.h"
 #include "TcpClient.h"
@@ -25,19 +24,20 @@ int TCP::Client::GetId () const {
 
 void TCP::Client::Execute () {
 
-    OS::Buffer recvBuffer (MAX_BUFFER_SIZE);
-    OS::Buffer sendBuffer (MAX_BUFFER_SIZE);
-
     while (mSocket->IsConnected ()) {
-        if (mSocket->Receive (recvBuffer)) { // blocking call
-            OnReceived( recvBuffer );
+        
+        std::vector<uint8_t> buffer (MAX_BUFFER_SIZE);
+        auto result (mSocket->Receive (buffer)); // blocking call
+        if (result > 0) {
+            buffer.resize (result);
+            OnReceived (buffer);
         }
     }
     
     mSocket->Close ();
 }
 
-void TCP::Client::Send (const OS::Buffer& inBuffer) {
+void TCP::Client::Send (const std::vector<uint8_t>& inBuffer) {
     mSocket->Send (inBuffer);
 }
 

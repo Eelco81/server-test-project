@@ -64,7 +64,8 @@ public:
     {
     }
     ~Implementation () {
-        LOGMESSAGE (OS::Log::kTrace, std::string ("[Socket](") + std::to_string (GetId ()) + std::string (") is being destructed"));
+        Close ();
+        //LOGMESSAGE (OS::Log::kTrace, std::string ("[Socket](") + std::to_string (GetId ()) + std::string (") is being destructed"));
     }
 
 public:
@@ -211,44 +212,48 @@ public:
         return mSocketHandle;
     }
 
-    bool Send (const OS::Buffer& inBuffer) {
+    int Send (const uint8_t* inBuffer, std::size_t inBufferSize)  {
         
         if (!mIsConnected) {
             return false;
         }
 
-        int result = send (mSocketHandle, inBuffer.GetDataPointer (), inBuffer.GetSize (), 0);
+        int result = send (mSocketHandle, inBuffer, inBufferSize, 0);
         if (result == SOCKET_ERROR) {
             LOGMESSAGE (OS::Log::kDebug, ErrorMessage ("send", GetId()));
             Close ();
-            return false;
+            return -1;
         }
-        LOGMESSAGE (OS::Log::kTrace, std::string ("[Socket](") + std::to_string (GetId ()) + std::string (") Send ") + std::to_string (inBuffer.GetSize ()) + std::string (" bytes to client id ") + std::to_string (mSocketHandle));
-        return true;
+        if (result == 0) {
+            LOGMESSAGE (OS::Log::kDebug, std::string ("[Socket](") + std::to_string (GetId ()) + std::string (") Failed to send any bytes"));
+            Close ();
+            return -1;
+        }
+ 
+        LOGMESSAGE (OS::Log::kTrace, std::string ("[Socket](") + std::to_string (GetId ()) + std::string (") Send ") + std::to_string (result) + std::string (" bytes"));
+        return result;
     }
 
-    bool Receive (OS::Buffer& outBuffer) {
+    int Receive (uint8_t* ioBuffer, std::size_t inBufferSize) {
         
         if (!mIsConnected) {
             return false;
         }
 
-        int result = recv (mSocketHandle, outBuffer.GetDataPointer (), outBuffer.GetMaxSize (), 0);
+        int result = recv (mSocketHandle, ioBuffer, inBufferSize, 0);
         if (result == 0) {
-            LOGMESSAGE (OS::Log::kDebug, std::string ("[Socket](") + std::to_string (GetId ()) + std::string (") Received termination signal from client with id ") + std::to_string (mSocketHandle));
+            LOGMESSAGE (OS::Log::kDebug, std::string ("[Socket](") + std::to_string (GetId ()) + std::string (") Received termination signal"));
             Close ();
-            return false;
+            return -1;
         }
         if (result < 0) {
             LOGMESSAGE (OS::Log::kDebug, ErrorMessage ("recv", GetId()));
             Close ();
-            return false;
+            return -1;
         }
         
-        outBuffer.Resize (result);
-
-        LOGMESSAGE (OS::Log::kTrace, std::string ("[Socket](") + std::to_string (GetId ()) + std::string (") Received ") + std::to_string (result) + std::string (" bytes from client with id ") + std::to_string (mSocketHandle));
-        return true;
+        LOGMESSAGE (OS::Log::kTrace, std::string ("[Socket](") + std::to_string (GetId ()) + std::string (") Received ") + std::to_string (result) + std::string (" bytes"));
+        return result;
     }
 
 private:
@@ -298,12 +303,20 @@ bool OS::Socket::Connect () {
     return mImpl->Connect ();
 }
 
-bool OS::Socket::Send (const Buffer& inBuffer) {
-    return mImpl->Send (inBuffer);
+int OS::Socket::Send (const std::vector<uint8_t>& inBuffer) {
+    return mImpl->Send (inBuffer.data(), inBuffer.size());
 }
 
-bool OS::Socket::Receive (Buffer& outBuffer) {
-    return mImpl->Receive (outBuffer);
+int OS::Socket::Send (const uint8_t* inBuffer, std::size_t inBufferSize) {
+    return mImpl->Send (inBuffer, inBufferSize);
+}
+
+int OS::Socket::Receive (std::vector<uint8_t>& ioBuffer) {
+    return mImpl->Receive (ioBuffer.data(), ioBuffer.size());
+}
+
+int OS::Socket::Receive (uint8_t* ioBuffer, std::size_t inBufferSize) {
+    return mImpl->Receive (ioBuffer, inBufferSize);
 }
 
 bool OS::Socket::IsConnected () const {

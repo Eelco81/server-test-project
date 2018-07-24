@@ -5,13 +5,9 @@
 #include <vector>
 #include <memory>
 #include <mutex>
-
-#include <atomic>
-
 #include "Macros.h"
 
 namespace OS {
-    class Buffer;
     class Thread;
     class Socket;
 }
@@ -49,7 +45,7 @@ private:
     std::unique_ptr <OS::Thread> mListener;
     std::unique_ptr <OS::Thread> mCleaner;
 
-    std::unique_ptr<ClientFactory> mFactory;
+    std::unique_ptr <ClientFactory> mFactory;
 };
 
 }

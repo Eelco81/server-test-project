@@ -9,7 +9,7 @@ OS::Thread::Thread (const std::string& inName) :
 }
 
 OS::Thread ::~Thread () {
-    LOGMESSAGE (OS::Log::kDebug, std::string ("[Thread](") + GetName ()  + ") is being destructed");
+    // LOGMESSAGE (OS::Log::kDebug, std::string ("[Thread](") + GetName ()  + ") is being destructed");
 }
 
 void OS::Thread::Run () {

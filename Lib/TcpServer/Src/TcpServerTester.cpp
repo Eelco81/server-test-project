@@ -16,28 +16,24 @@
 namespace {
 
 class EchoClient : public TCP::Client {
-
 public:
     EchoClient(std::unique_ptr<OS::Socket> inSocket) :
        TCP::Client (std::move (inSocket)) 
     {
     }
-    void OnReceived (const OS::Buffer& inBuffer) override {
+    void OnReceived (const std::vector<uint8_t>& inBuffer) override {
         Send (inBuffer);
     }
 };
-    
+
 class TestClientFactory : public TCP::ClientFactory {
-    
-    
 public:
-    std::unique_ptr<TCP::Client> Create (std::unique_ptr<OS::Socket> inSocket) override {
+    std::unique_ptr<TCP::Client> Create (std::unique_ptr<OS::Socket> inSocket) const override {
         return std::make_unique<EchoClient> (std::move (inSocket));
     }
-    
 };
-    
-}
+
+} // end anonymous namespace
 
 class TcpServerTester : public ::testing::Test {
     void SetUp () {
@@ -52,9 +48,6 @@ class TcpServerTester : public ::testing::Test {
 
 TEST_F (TcpServerTester, OpenAndCloseConnection) {
     
-    const char* kTestData = "Some Other Data";
-    const unsigned kTestSize (static_cast<unsigned> (strlen (kTestData)));
-    
     auto factory (std::make_unique<TestClientFactory>());
     TCP::Server server (IP_FOR_TESTING, PORT_FOR_TESTING, std::move (factory));
     
@@ -67,16 +60,13 @@ TEST_F (TcpServerTester, OpenAndCloseConnection) {
     
     OS::Timing::Sleep (100);
     
-    OS::Buffer bufferSend (20u);
-    bufferSend.SetData (kTestData, kTestSize);    
-    socket.Send (bufferSend);
+    const std::vector<uint8_t> bufferSend (1000u, 0xFF);
+    EXPECT_EQ (socket.Send (bufferSend), 1000);
 
-    OS::Buffer bufferReceive (20u);
-    socket.Receive (bufferReceive);
+    std::vector<uint8_t> bufferReceive (1001u);
+    EXPECT_EQ (socket.Receive (bufferReceive), 1000);
     
-    std::string bufferString;
-    bufferReceive.ToString (bufferString);
-    EXPECT_EQ (std::string (kTestData), bufferString);
+    EXPECT_TRUE (std::equal (bufferSend.begin(), bufferSend.end(), bufferReceive.begin()));
     
     socket.Close ();
     server.Stop ();
@@ -151,8 +141,8 @@ TEST_F (TcpServerTester, ClosingServer) {
     OS::Timing::Sleep (100u);
     
     for (auto& socket : sockets) {
-        OS::Buffer buffer (1u);
-        EXPECT_FALSE (socket->Receive (buffer));
+        std::vector<uint8_t> buffer (1u);
+        EXPECT_LE (socket->Receive (buffer), 0); // sockets must receive before they see anything happening
         EXPECT_FALSE (socket->IsConnected ());
     }
     EXPECT_EQ (0u, server.GetClientCount ());

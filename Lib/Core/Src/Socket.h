@@ -2,13 +2,13 @@
 #ifndef _SOCKET_H_
 #define _SOCKET_H_
 
+#include <cstdint>
 #include <string>
 #include <memory>
+#include <vector>
 #include "Macros.h"
 
 namespace OS {
-
-class Buffer;
 
 class Socket {
 
@@ -29,8 +29,11 @@ public:
     bool Accept (Socket& outSocket);
     bool Connect ();
 
-    bool Send (const Buffer& inBuffer);
-    bool Receive (Buffer& outBuffer);
+    int Send (const std::vector<uint8_t>& inBuffer);
+    int Send (const uint8_t* inBuffer, std::size_t inBufferSize);
+
+    int Receive (std::vector<uint8_t>& ioBuffer);
+    int Receive (uint8_t* ioBuffer, std::size_t inBufferSize);
 
     int GetId ();
 
