@@ -48,6 +48,7 @@ class TcpServerTester : public ::testing::Test {
 
 TEST_F (TcpServerTester, OpenAndCloseConnection) {
     
+    const int kBufferSize (1000);
     auto factory (std::make_unique<TestClientFactory>());
     TCP::Server server (IP_FOR_TESTING, PORT_FOR_TESTING, std::move (factory));
     
@@ -60,11 +61,11 @@ TEST_F (TcpServerTester, OpenAndCloseConnection) {
     
     OS::Timing::Sleep (100);
     
-    const std::vector<uint8_t> bufferSend (1000u, 0xFF);
-    EXPECT_EQ (socket.Send (bufferSend), 1000);
+    const std::vector<uint8_t> bufferSend (kBufferSize, 0xFF);
+    EXPECT_EQ (socket.Send (bufferSend), kBufferSize);
 
-    std::vector<uint8_t> bufferReceive (1001u);
-    EXPECT_EQ (socket.Receive (bufferReceive), 1000);
+    std::vector<uint8_t> bufferReceive (kBufferSize + 1u, 0x00);
+    EXPECT_EQ (socket.Receive (bufferReceive), kBufferSize);
     
     EXPECT_TRUE (std::equal (bufferSend.begin(), bufferSend.end(), bufferReceive.begin()));
     
@@ -74,26 +75,20 @@ TEST_F (TcpServerTester, OpenAndCloseConnection) {
 
 TEST_F (TcpServerTester, MultipleConnnections) {
     
-    std::vector<std::unique_ptr<OS::Socket>> sockets;
-    for (std::size_t i (0u); i < 5u; ++i) {
-        sockets.emplace_back (std::make_unique<OS::Socket> (IP_FOR_TESTING, PORT_FOR_TESTING));
-    }
-    
     auto factory (std::make_unique<TestClientFactory>());
     TCP::Server server (IP_FOR_TESTING, PORT_FOR_TESTING, std::move (factory));
     
     server.Start();
     
-    for (auto& socket : sockets) {
-        socket->Initialize ();
-    }
-    
     OS::Timing::Sleep (100u);
     EXPECT_EQ (0u, server.GetClientCount ());
     
-    for (auto& socket : sockets) {
-        EXPECT_TRUE (socket->Connect ());
-        EXPECT_TRUE (socket->IsConnected ());
+    std::vector<std::unique_ptr<OS::Socket>> sockets;
+    for (std::size_t i (0u); i < 5u; ++i) {
+        sockets.emplace_back (std::make_unique<OS::Socket> (IP_FOR_TESTING, PORT_FOR_TESTING));
+        sockets.back()->Initialize();
+        EXPECT_TRUE (sockets.back()->Connect ());
+        EXPECT_TRUE (sockets.back()->IsConnected ());
     }
     
     OS::Timing::Sleep (100u);
@@ -107,37 +102,33 @@ TEST_F (TcpServerTester, MultipleConnnections) {
     OS::Timing::Sleep (2000u); // Make sure cleaner ticked once
     EXPECT_EQ (0u, server.GetClientCount ());
     
-    server.Stop();
+    server.Stop ();
+    
+    EXPECT_EQ (0u, server.GetClientCount ());
 }
 
 TEST_F (TcpServerTester, ClosingServer) {
-    
-    std::vector<std::unique_ptr<OS::Socket>> sockets;
-    for (std::size_t i (0u); i < 5u; ++i) {
-        sockets.emplace_back (std::make_unique<OS::Socket> (IP_FOR_TESTING, PORT_FOR_TESTING));
-    }
     
     auto factory (std::make_unique<TestClientFactory>());
     TCP::Server server (IP_FOR_TESTING, PORT_FOR_TESTING, std::move (factory));
     
     server.Start();
     
-    for (auto& socket : sockets) {
-        socket->Initialize ();
-    }
-    
     OS::Timing::Sleep (100u);
     EXPECT_EQ (0u, server.GetClientCount ());
     
-    for (auto& socket : sockets) {
-        EXPECT_TRUE (socket->Connect ());
-        EXPECT_TRUE (socket->IsConnected ());
+    std::vector<std::unique_ptr<OS::Socket>> sockets;
+    for (std::size_t i (0u); i < 5u; ++i) {
+        sockets.emplace_back (std::make_unique<OS::Socket> (IP_FOR_TESTING, PORT_FOR_TESTING));
+        sockets.back()->Initialize();
+        EXPECT_TRUE (sockets.back()->Connect ());
+        EXPECT_TRUE (sockets.back()->IsConnected ());
     }
     
     OS::Timing::Sleep (100u);
     EXPECT_EQ (sockets.size (), server.GetClientCount ());
     
-    server.Stop();
+    server.Stop ();
     OS::Timing::Sleep (100u);
     
     for (auto& socket : sockets) {
@@ -145,5 +136,6 @@ TEST_F (TcpServerTester, ClosingServer) {
         EXPECT_LE (socket->Receive (buffer), 0); // sockets must receive before they see anything happening
         EXPECT_FALSE (socket->IsConnected ());
     }
+    
     EXPECT_EQ (0u, server.GetClientCount ());
 }
