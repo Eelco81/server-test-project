@@ -2,7 +2,6 @@
 #include "gtest/gtest.h"
 
 #include "Files.h"
-#include "Buffer.h"
 
 TEST (FilesTester, ReadFile) {
 
