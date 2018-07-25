@@ -1,6 +1,4 @@
 
-#include "Log.h"
-
 #ifdef _WIN32
 #pragma warning(disable:4996)
 #endif
@@ -8,6 +6,7 @@
 #include <iostream>
 #include <algorithm>
 
+#include "Log.h"
 #include "Timing.h"
 
 OS::Log::Log () :

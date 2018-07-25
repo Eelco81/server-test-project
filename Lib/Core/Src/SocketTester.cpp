@@ -65,11 +65,10 @@ namespace {
 
 class SocketTester : public ::testing::Test {
     void SetUp () {
+        OS::Log::Instance ().Flush ();
         OS::Log::Instance ().Initialize (OS::Log::kTrace);
-        OS::Network::Initialize ();
     }
     void TearDown () {
-        OS::Network::Done ();
         OS::Log::Instance ().Flush ();
         OS::Timing::Sleep (100u); // give the OS some time to clean up the socket
     }

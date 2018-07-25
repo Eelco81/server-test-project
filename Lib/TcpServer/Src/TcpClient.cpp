@@ -27,7 +27,7 @@ void TCP::Client::Execute () {
     while (mSocket->IsConnected ()) {
         
         std::vector<uint8_t> buffer (MAX_BUFFER_SIZE);
-        auto result (mSocket->Receive (buffer)); // blocking call
+        const auto result (mSocket->Receive (buffer)); // blocking call
         if (result > 0) {
             buffer.resize (result);
             OnReceived (buffer);

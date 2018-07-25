@@ -16,7 +16,7 @@ namespace {
 
 class EchoClient : public TCP::Client {
 public:
-    EchoClient(std::unique_ptr<OS::Socket> inSocket) :
+    EchoClient (std::unique_ptr<OS::Socket> inSocket) :
        TCP::Client (std::move (inSocket)) 
     {
     }
@@ -36,11 +36,8 @@ public:
 
 class TcpServerTester : public ::testing::Test {
     void SetUp () {
-        OS::Log::Instance ().Initialize (OS::Log::kTrace);
-        OS::Network::Initialize ();
-    }
+        OS::Log::Instance ().Initialize (OS::Log::kTrace);    }
     void TearDown () {
-        OS::Network::Done ();
         OS::Log::Instance ().Flush ();
     }
 };
