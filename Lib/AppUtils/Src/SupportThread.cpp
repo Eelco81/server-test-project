@@ -11,8 +11,6 @@ public:
         Task ("FlushLog") 
     {
     }
-    ~LogTask () {
-    }
     virtual bool Step () override {
         OS::Log::Instance ().Flush ();
         return true;

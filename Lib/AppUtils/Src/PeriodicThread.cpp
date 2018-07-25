@@ -4,15 +4,14 @@
 #include "Task.h"
 
 
-APP::PeriodicThread::PeriodicThread (const std::string& inName, unsigned inWaitTime) :
+APP::PeriodicThread::PeriodicThread (const std::string& inName, uint64_t inWaitTime) :
     Thread (inName),
     mWaitTime (inWaitTime),
     mRunning (false)
 {
 }
 
-APP::PeriodicThread::~PeriodicThread () {
-}
+APP::PeriodicThread::~PeriodicThread () = default;
 
 bool APP::PeriodicThread::IsRunning () {
     return mRunning;

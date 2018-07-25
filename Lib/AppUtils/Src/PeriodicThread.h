@@ -2,6 +2,7 @@
 #ifndef _PERIODICTHREAD_H_
 #define _PERIODICTHREAD_H_
 
+#include <cstdint>
 #include <vector>
 #include <memory>
 
@@ -18,7 +19,7 @@ class PeriodicThread : public OS::Thread {
 
 public:
     PeriodicThread () = delete;
-    PeriodicThread (const std::string& inName, unsigned inWaitTime);
+    PeriodicThread (const std::string& inName, uint64_t inWaitTime);
     virtual ~PeriodicThread (); 
 
 public:
@@ -29,7 +30,7 @@ public:
     
 private:
     std::vector<std::unique_ptr<Task>> mTasks;
-    unsigned mWaitTime;
+    uint64_t mWaitTime;
     bool mRunning;
 };
 

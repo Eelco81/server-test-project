@@ -9,8 +9,6 @@ namespace {
     class TestThread : public OS::Thread {
     public:
         TestThread () : Thread ("TestThread") {}
-        ~TestThread () {}
-
         MOCK_METHOD0 (Execute, void ());
         MOCK_METHOD0 (Kill, void ());
     };

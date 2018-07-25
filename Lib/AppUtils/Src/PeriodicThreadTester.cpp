@@ -9,7 +9,6 @@ namespace {
     class TestTask : public APP::Task {
     public:
         TestTask (const std::string& inName) : Task (inName) {}
-        ~TestTask () {}
         MOCK_METHOD0 (Step, bool ());
     };
 

@@ -185,7 +185,7 @@ public:
         }
         outSocket.Initialize (clientSocket);
 
-        LOGMESSAGE (OS::Log::kDebug, std::string ("[Socket](") + std::to_string (GetId ()) + std::string (") connected to socket " + std::to_string (outSocket.GetId ())));
+        LOGMESSAGE (OS::Log::kDebug, std::string ("[Socket](") + std::to_string (GetId ()) + std::string (") accepted socket " + std::to_string (outSocket.GetId ())));
         return true;
     }
 
@@ -271,8 +271,7 @@ OS::Socket::Socket (const std::string& inAddress, const std::string& inPortNumbe
 {
 }
 
-OS::Socket::~Socket () {
-}
+OS::Socket::~Socket () = default;
 
 bool OS::Socket::Initialize () {
     return mImpl->Initialize (mAddress, mPortNumber);

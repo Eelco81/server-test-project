@@ -45,7 +45,6 @@ namespace {
             mClientSocket (IP_FOR_TESTING, PORT_FOR_TESTING)
         {
         }
-        virtual ~ServerThread () {}
         virtual void Kill () override {
             mClientSocket.Close ();
             SocketThread::Kill ();
@@ -60,7 +59,6 @@ namespace {
             SocketThread ("ClientThread", 0x0F) 
         {
         }
-        virtual ~ClientThread () {}
     };
 
 } // end anonymous namespace

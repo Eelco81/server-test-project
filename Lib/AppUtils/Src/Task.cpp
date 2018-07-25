@@ -6,8 +6,7 @@ APP::Task::Task (const std::string& inName) :
 {
 }
 
-APP::Task::~Task () {
-}
+APP::Task::~Task () = default;
 
 const std::string& APP::Task::GetName () const {
     return mName;

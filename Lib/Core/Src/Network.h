@@ -6,10 +6,7 @@ namespace OS {
 
 class Network {
 
-public: 
-    Network () = default;
-    ~Network () = default;
-
+public:
     static void Initialize ();
     static void Done ();
 
