@@ -3,9 +3,10 @@
 #include "Socket.h"
 #include <string.h>
 
+#include <iostream>
 #include <atomic>
 
-#define SOCKET_MAX_CONNECTIONS 5
+#define SOCKET_MAX_CONNECTIONS 20
 
 /* ------------------------------------- */
 #if (defined __CYGWIN__ || defined __GNUC__)
@@ -134,8 +135,11 @@ public:
 
         if (mIsConnected || mIsListening) {
 
-            freeaddrinfo (mLatestAddrInfo);
-
+            if (mLatestAddrInfo != NULL) {
+                freeaddrinfo (mLatestAddrInfo);
+                mLatestAddrInfo = NULL;
+            }
+            
             shutdown (mSocketHandle, 2);
 
 #if (defined __CYGWIN__ || defined __GNUC__)

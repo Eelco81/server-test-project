@@ -33,7 +33,7 @@ public:
 public:
     std::size_t GetClientCount () const;
     
-public:
+public: // todo: this should be private
     void RegisterClient (std::unique_ptr <OS::Socket> inClientSocket);
     void CleanUp ();
 

@@ -81,30 +81,32 @@ TCP::Server::Server (const std::string& inAddress, const std::string& inPort, st
 {
 }
 
-TCP::Server::~Server () = default;
+TCP::Server::~Server () {
+    Stop ();
+}
 
 void TCP::Server::Start () {
     mListener->Spawn ();
     mCleaner->Spawn ();
 }
 
-void TCP::Server::Stop() {
+void TCP::Server::Stop () {
     
-    mListener->Kill();
-    mListener->Join();
+    mListener->Kill ();
+    mListener->Join ();
     
     mMutex.lock ();
-    std::for_each (mClients.begin (), mClients.end (), [] (ClientPtr& client) { client->Kill(); });
+    std::for_each (mClients.begin (), mClients.end (), [] (ClientPtr& client) { client->Stop (); });
     mMutex.unlock ();
     
     CleanUp();
     
-    mCleaner->Kill();
-    mCleaner->Join();
+    mCleaner->Kill ();
+    mCleaner->Join ();
 }
 
-std::size_t TCP::Server::GetClientCount() const {
-    return mClients.size();
+std::size_t TCP::Server::GetClientCount () const {
+    return mClients.size ();
 }
 
 // called from listener thread
@@ -112,7 +114,7 @@ void TCP::Server::RegisterClient (std::unique_ptr <OS::Socket> inClientSocket) {
     LOGMESSAGE (OS::Log::kInfo, std::string ("[TcpServer] Registering connected client with id ") + std::to_string (inClientSocket->GetId ()));
     mMutex.lock ();
     mClients.emplace_back (mFactory->Create (std::move (inClientSocket)));
-    mClients.back ()->Spawn ();
+    mClients.back ()->Start (); // No need to listen to the return value of start
     mMutex.unlock ();
 }
 
@@ -120,8 +122,8 @@ void TCP::Server::RegisterClient (std::unique_ptr <OS::Socket> inClientSocket) {
 void TCP::Server::CleanUp () {
 
     auto remover = [] (const ClientPtr& client) {
-        if (client->GetStatus () == OS::Thread::kDone) {
-            client->Join ();
+        if (!client->IsConnected ()) {
+            client->Stop ();
             LOGMESSAGE (OS::Log::kInfo, std::string ("[TcpServer] Unregistering connected client with id ") + std::to_string (client->GetId ()));
             return true;
         }

@@ -13,18 +13,26 @@ OS::Thread ::~Thread () {
 }
 
 void OS::Thread::Run () {
+    
+    LOGMESSAGE (OS::Log::kDebug, std::string ("[Thread](") + GetName () + ") started");
     mStatus = kRunning;
+    
     Execute ();
+    
+    LOGMESSAGE (OS::Log::kDebug, std::string ("[Thread](") + GetName () + ") stopped");
     mStatus = kDone;
 }
 
 void OS::Thread::Spawn () {
-    LOGMESSAGE (OS::Log::kDebug, std::string ("[Thread](") + GetName () + ") started");
     mImplementation.reset (new std::thread ([](Thread* inThread) { inThread->Run(); }, this));
 }
 
 void OS::Thread::Join () {
     if (mImplementation && mImplementation->joinable ()) {
+        LOGMESSAGE (OS::Log::kTrace, std::string ("Joining [Thread](") + GetName ()  + ")");
         mImplementation->join ();
+    }
+    else{
+        LOGMESSAGE (OS::Log::kTrace, std::string ("[Thread](") + GetName ()  + ") cannot be joined!");
     }
 }

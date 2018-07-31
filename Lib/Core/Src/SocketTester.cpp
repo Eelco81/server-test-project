@@ -64,10 +64,6 @@ namespace {
 } // end anonymous namespace
 
 class SocketTester : public ::testing::Test {
-    void SetUp () {
-        OS::Log::Instance ().Flush ();
-        OS::Log::Instance ().Initialize (OS::Log::kTrace);
-    }
     void TearDown () {
         OS::Log::Instance ().Flush ();
         OS::Timing::Sleep (100u); // give the OS some time to clean up the socket
@@ -226,7 +222,7 @@ TEST_F (SocketTester, ServerCloses) {
     class Client : public ClientThread {
         virtual void Execute () override {
             EXPECT_FALSE (mSocket.IsConnected ());
-            EXPECT_TRUE (mSocket.Connect ());
+            while (!mSocket.Connect ()) {}
             EXPECT_TRUE (mSocket.IsConnected ());
             EXPECT_LE (mSocket.Receive (mInBuffer), 0); // received 0
             EXPECT_FALSE (mSocket.IsConnected ());
@@ -240,7 +236,7 @@ TEST_F (SocketTester, ServerCloses) {
     server.Spawn ();
 
     while (!server.IsListening ()) {}
-    OS::Timing::Sleep(1000u);
+    OS::Timing::Sleep (1000u);
     
     client.Initialize ();
     client.Spawn ();

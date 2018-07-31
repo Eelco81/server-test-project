@@ -25,6 +25,18 @@ public:
     }
 };
 
+class HarvestClient : public TCP::Client {
+public:
+    HarvestClient (std::string inAddress, std::string inPort) :
+       TCP::Client (inAddress, inPort) 
+    {
+    }
+    void OnReceived (const std::vector<uint8_t>& inBuffer) override {
+        std::copy (inBuffer.begin (), inBuffer.end (), std::back_inserter (mData));
+    }
+    std::vector<uint8_t> mData = {};
+};
+
 class TestClientFactory : public TCP::ClientFactory {
 public:
     std::unique_ptr<TCP::Client> Create (std::unique_ptr<OS::Socket> inSocket) const override {
@@ -35,8 +47,6 @@ public:
 } // end anonymous namespace
 
 class TcpServerTester : public ::testing::Test {
-    void SetUp () {
-        OS::Log::Instance ().Initialize (OS::Log::kTrace);    }
     void TearDown () {
         OS::Log::Instance ().Flush ();
     }
@@ -44,28 +54,26 @@ class TcpServerTester : public ::testing::Test {
 
 TEST_F (TcpServerTester, OpenAndCloseConnection) {
     
-    const int kBufferSize (1000);
     auto factory (std::make_unique<TestClientFactory>());
     TCP::Server server (IP_FOR_TESTING, PORT_FOR_TESTING, std::move (factory));
     
     server.Start();
     OS::Timing::Sleep (100);
-    
-    OS::Socket socket(IP_FOR_TESTING, PORT_FOR_TESTING);
-    socket.Initialize();
-    EXPECT_TRUE (socket.Connect());
+
+    HarvestClient client (IP_FOR_TESTING, PORT_FOR_TESTING);
+    EXPECT_TRUE (client.Start ());
     
     OS::Timing::Sleep (100);
     
-    const std::vector<uint8_t> bufferSend (kBufferSize, 0xFF);
-    EXPECT_EQ (socket.Send (bufferSend), kBufferSize);
+    const std::vector<uint8_t> buffer (1000, 0xFF);
+    EXPECT_TRUE (client.Send (buffer));
+    
+    OS::Timing::Sleep (100);
+    
+    EXPECT_EQ (buffer.size (), client.mData.size ());
+    EXPECT_TRUE (std::equal (buffer.begin (), buffer.end (), client.mData.begin ()));
 
-    std::vector<uint8_t> bufferReceive (kBufferSize + 1u, 0x00);
-    EXPECT_EQ (socket.Receive (bufferReceive), kBufferSize);
-    
-    EXPECT_TRUE (std::equal (bufferSend.begin(), bufferSend.end(), bufferReceive.begin()));
-    
-    socket.Close ();
+    client.Stop (); 
     server.Stop ();
 }
 
@@ -79,20 +87,18 @@ TEST_F (TcpServerTester, MultipleConnnections) {
     OS::Timing::Sleep (100u);
     EXPECT_EQ (0u, server.GetClientCount ());
     
-    std::vector<std::unique_ptr<OS::Socket>> sockets;
+    std::vector<std::unique_ptr<HarvestClient>> clients;
     for (std::size_t i (0u); i < 5u; ++i) {
-        sockets.emplace_back (std::make_unique<OS::Socket> (IP_FOR_TESTING, PORT_FOR_TESTING));
-        sockets.back()->Initialize();
-        EXPECT_TRUE (sockets.back()->Connect ());
-        EXPECT_TRUE (sockets.back()->IsConnected ());
+        clients.emplace_back (std::make_unique<HarvestClient> (IP_FOR_TESTING, PORT_FOR_TESTING));
+        EXPECT_TRUE (clients.back()->Start ());
     }
     
     OS::Timing::Sleep (100u);
-    EXPECT_EQ (sockets.size (), server.GetClientCount ());
+    EXPECT_EQ (clients.size (), server.GetClientCount ());
     
-    for (auto& socket : sockets) {
-        socket->Close ();
-        EXPECT_FALSE (socket->IsConnected ());
+    for (auto& client : clients) {
+        client->Stop ();
+        EXPECT_FALSE (client->IsConnected ());
     }
     
     OS::Timing::Sleep (2000u); // Make sure cleaner ticked once
@@ -113,24 +119,20 @@ TEST_F (TcpServerTester, ClosingServer) {
     OS::Timing::Sleep (100u);
     EXPECT_EQ (0u, server.GetClientCount ());
     
-    std::vector<std::unique_ptr<OS::Socket>> sockets;
+    std::vector<std::unique_ptr<HarvestClient>> clients;
     for (std::size_t i (0u); i < 5u; ++i) {
-        sockets.emplace_back (std::make_unique<OS::Socket> (IP_FOR_TESTING, PORT_FOR_TESTING));
-        sockets.back()->Initialize();
-        EXPECT_TRUE (sockets.back()->Connect ());
-        EXPECT_TRUE (sockets.back()->IsConnected ());
+        clients.emplace_back (std::make_unique<HarvestClient> (IP_FOR_TESTING, PORT_FOR_TESTING));
+        EXPECT_TRUE (clients.back()->Start ());
     }
     
     OS::Timing::Sleep (100u);
-    EXPECT_EQ (sockets.size (), server.GetClientCount ());
+    EXPECT_EQ (clients.size (), server.GetClientCount ());
     
     server.Stop ();
     OS::Timing::Sleep (100u);
     
-    for (auto& socket : sockets) {
-        std::vector<uint8_t> buffer (1u);
-        EXPECT_LE (socket->Receive (buffer), 0); // sockets must receive before they see anything happening
-        EXPECT_FALSE (socket->IsConnected ());
+    for (auto& client : clients) {
+        EXPECT_FALSE (client->IsConnected ());
     }
     
     EXPECT_EQ (0u, server.GetClientCount ());
