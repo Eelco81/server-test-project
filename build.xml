@@ -39,13 +39,12 @@
         <exec command="make all -C App/Make"/>
     </target>
     
-    <!-- Run unit tests -->
+    <!-- Run unit and integration tests -->
     <target name="Test">
         <exec command="make test -C Lib/Core/Make" />
         <exec command="make test -C Lib/AppUtils/Make" />
         <exec command="make test -C Lib/TcpServer/Make" />
         <exec command="make integration-test -C App/Make" />
     </target>
-    
     
 </project>
