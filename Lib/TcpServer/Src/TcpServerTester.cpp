@@ -52,7 +52,7 @@ class TcpServerTester : public ::testing::Test {
     }
 };
 
-TEST_F (TcpServerTester, OpenAndCloseConnection) {
+TEST_F (TcpServerTester, DataTransfer) {
     
     auto factory (std::make_unique<TestClientFactory>());
     TCP::Server server (IP_FOR_TESTING, PORT_FOR_TESTING, std::move (factory));
@@ -90,7 +90,7 @@ TEST_F (TcpServerTester, MultipleConnnections) {
     std::vector<std::unique_ptr<HarvestClient>> clients;
     for (std::size_t i (0u); i < 5u; ++i) {
         clients.emplace_back (std::make_unique<HarvestClient> (IP_FOR_TESTING, PORT_FOR_TESTING));
-        EXPECT_TRUE (clients.back()->Start ());
+        EXPECT_TRUE (clients.back ()->Start ());
     }
     
     OS::Timing::Sleep (100u);
@@ -114,7 +114,7 @@ TEST_F (TcpServerTester, ClosingServer) {
     auto factory (std::make_unique<TestClientFactory>());
     TCP::Server server (IP_FOR_TESTING, PORT_FOR_TESTING, std::move (factory));
     
-    server.Start();
+    server.Start ();
     
     OS::Timing::Sleep (100u);
     EXPECT_EQ (0u, server.GetClientCount ());
@@ -122,7 +122,7 @@ TEST_F (TcpServerTester, ClosingServer) {
     std::vector<std::unique_ptr<HarvestClient>> clients;
     for (std::size_t i (0u); i < 5u; ++i) {
         clients.emplace_back (std::make_unique<HarvestClient> (IP_FOR_TESTING, PORT_FOR_TESTING));
-        EXPECT_TRUE (clients.back()->Start ());
+        EXPECT_TRUE (clients.back ()->Start ());
     }
     
     OS::Timing::Sleep (100u);
