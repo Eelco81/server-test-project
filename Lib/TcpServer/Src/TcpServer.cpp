@@ -1,6 +1,7 @@
 
 #include <algorithm>
 
+#include "Mutex.h"
 #include "Log.h"
 #include "Socket.h"
 #include "Thread.h"
@@ -10,7 +11,6 @@
 #include "TcpServer.h"
 #include "TcpClient.h"
 #include "TcpClientFactory.h"
-#include <iostream>
 
 namespace {
 
@@ -75,6 +75,7 @@ namespace {
 } // end anonymous namespace
 
 TCP::Server::Server (const std::string& inAddress, const std::string& inPort, std::unique_ptr<ClientFactory> inFactory) :
+    mMutex (std::make_unique <OS::Mutex> ()),
     mListener (std::make_unique <ListenThread> (*this, inAddress, inPort)),
     mCleaner (std::make_unique <CleanupThread> (*this)),
     mFactory (std::move (inFactory))
@@ -95,11 +96,11 @@ void TCP::Server::Stop () {
     mListener->Kill ();
     mListener->Join ();
     
-    mMutex.lock ();
+    mMutex->Lock ();
     std::for_each (mClients.begin (), mClients.end (), [] (ClientPtr& client) { client->Stop (); });
-    mMutex.unlock ();
+    mMutex->UnLock ();
     
-    CleanUp();
+    CleanUp ();
     
     mCleaner->Kill ();
     mCleaner->Join ();
@@ -112,10 +113,10 @@ std::size_t TCP::Server::GetClientCount () const {
 // called from listener thread
 void TCP::Server::RegisterClient (std::unique_ptr <OS::Socket> inClientSocket) {
     LOGMESSAGE (OS::Log::kInfo, std::string ("[TcpServer] Registering connected client with id ") + std::to_string (inClientSocket->GetId ()));
-    mMutex.lock ();
+    mMutex->Lock ();
     mClients.emplace_back (mFactory->Create (std::move (inClientSocket)));
     mClients.back ()->Start (); // No need to listen to the return value of start
-    mMutex.unlock ();
+    mMutex->UnLock ();
 }
 
 // called from cleaner thread
@@ -130,7 +131,7 @@ void TCP::Server::CleanUp () {
         return false;
     };
 
-    mMutex.lock ();
+    mMutex->Lock ();
     mClients.erase (std::remove_if (mClients.begin (), mClients.end (), remover), mClients.end ());
-    mMutex.unlock ();
+    mMutex->UnLock ();
 }

@@ -178,7 +178,7 @@ TEST_F (SocketTester, ServerClosesConnection) {
     class Client : public ClientThread {
         virtual void Execute () override {
             EXPECT_FALSE (mSocket.IsConnected ());
-            EXPECT_TRUE (mSocket.Connect ());
+            while (!mSocket.Connect ()) {} // todo: this can cause a test to hang
             EXPECT_TRUE (mSocket.IsConnected ());
             EXPECT_LE (mSocket.Receive (mInBuffer), 0); // received 0
             EXPECT_FALSE (mSocket.IsConnected ());
@@ -222,7 +222,7 @@ TEST_F (SocketTester, ServerCloses) {
     class Client : public ClientThread {
         virtual void Execute () override {
             EXPECT_FALSE (mSocket.IsConnected ());
-            while (!mSocket.Connect ()) {}
+            while (!mSocket.Connect ()) {} // todo: this can cause a test to hang
             EXPECT_TRUE (mSocket.IsConnected ());
             EXPECT_LE (mSocket.Receive (mInBuffer), 0); // received 0
             EXPECT_FALSE (mSocket.IsConnected ());

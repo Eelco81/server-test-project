@@ -4,12 +4,12 @@
 
 #include <vector>
 #include <memory>
-#include <mutex>
 #include "Macros.h"
 
 namespace OS {
     class Thread;
     class Socket;
+    class Mutex;
 }
 
 namespace TCP {
@@ -40,8 +40,8 @@ public: // todo: this should be private
 private:
     using ClientPtr = std::unique_ptr <Client>;
     std::vector <ClientPtr> mClients;
-    std::mutex mMutex;
-
+    
+    std::unique_ptr <OS::Mutex> mMutex;
     std::unique_ptr <OS::Thread> mListener;
     std::unique_ptr <OS::Thread> mCleaner;
 
