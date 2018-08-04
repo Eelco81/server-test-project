@@ -1,4 +1,5 @@
 
+/*
 #include "Routes.h"
 
 #include "Codes.h"
@@ -26,3 +27,4 @@ void Routes::SetupEndpoints (std::shared_ptr <API::Router> inRouter) {
 
 }
 
+*/

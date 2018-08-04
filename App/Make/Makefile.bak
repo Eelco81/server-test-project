@@ -8,4 +8,4 @@ DEPENDENCIES    = AppUtils TcpServer Core
 LINKS           = -lpthread
 TARGET          = serveraplication
 
--include $(TOOLDIR)/build.mk# DO NOT DELETE
+-include $(TOOLDIR)/build.mk
