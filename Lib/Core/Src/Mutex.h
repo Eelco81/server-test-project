@@ -1,6 +1,4 @@
 
-
-
 #ifndef _OS_MUTEX_H_
 #define _OS_MUTEX_H_
 

@@ -11,3 +11,4 @@ def after_feature(context, feature):
     context.server.communicate(input=b'quit\n')
     time.sleep(3)
     context.server.kill()
+    time.sleep(2)

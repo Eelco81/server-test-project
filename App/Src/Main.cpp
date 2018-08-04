@@ -4,9 +4,6 @@
 #include "Network.h"
 #include "Log.h"
 #include "CommandLine.h"
-//#include "Router.h"
-//#include "Routes.h"
-
 #include "Socket.h"
 #include "TcpClient.h"
 #include "TcpServer.h"
@@ -55,9 +52,6 @@ int main (int argc, char** argv) {
     APP::SupportThread supportThread;
     supportThread.Spawn ();
 
-    //auto router = std::make_shared <API::Router> ();
-    //Routes::SetupEndpoints (router);
-    
     auto factory (std::make_unique<EchoClientFactory> ());
     TCP::Server server (ip, port, std::move (factory));
     server.Start ();

@@ -9,3 +9,6 @@ LINKS           = -lpthread
 TARGET          = serveraplication
 
 -include $(TOOLDIR)/build.mk# DO NOT DELETE
+
+integration-test : 
+	cd ../Test; behave

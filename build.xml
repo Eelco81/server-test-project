@@ -42,9 +42,10 @@
     <!-- Run unit tests -->
     <target name="Test">
         <exec command="make test -C Lib/Core/Make" />
-        <exec command="make test -C Lib/Xml/Make" />
-        <exec command="make test -C Lib/Router/Make" />
         <exec command="make test -C Lib/AppUtils/Make" />
+        <exec command="make test -C Lib/TcpServer/Make" />
+        <exec command="make integration-test -C App/Make" />
     </target>
+    
     
 </project>
