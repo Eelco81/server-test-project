@@ -58,17 +58,17 @@ TEST_F (TcpServerTester, DataTransfer) {
     TCP::Server server (IP_FOR_TESTING, PORT_FOR_TESTING, std::move (factory));
     
     server.Start();
-    OS::Timing::Sleep (100);
+    OS::Timing::Sleep (100u);
 
     HarvestClient client (IP_FOR_TESTING, PORT_FOR_TESTING);
     EXPECT_TRUE (client.Start ());
     
-    OS::Timing::Sleep (100);
+    OS::Timing::Sleep (100u);
     
     const std::vector<uint8_t> buffer (1000, 0xFF);
     EXPECT_TRUE (client.Send (buffer));
     
-    OS::Timing::Sleep (100);
+    OS::Timing::Sleep (100u);
     
     EXPECT_EQ (buffer.size (), client.mData.size ());
     EXPECT_TRUE (std::equal (buffer.begin (), buffer.end (), client.mData.begin ()));
