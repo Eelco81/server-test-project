@@ -1,6 +1,7 @@
 
 #include <regex>
 #include <iostream>
+#include <sstream>
 #include "HttpRequest.h"
 
 HTTP::Request::Request () :
@@ -9,41 +10,23 @@ HTTP::Request::Request () :
 {
 }
 
-const HTTP::Method& HTTP::Request::GetMethod () const { 
-    return mMethod;
-}
-
-const HTTP::Version& HTTP::Request::GetVersion () const { 
-    return mVersion;
-}
-
-const HTTP::Request::HeaderMap& HTTP::Request::GetHeaders () const { 
-    return mHeaders;
-}
-
-bool HTTP::Request::Parse (const std::string& inData) {
+void HTTP::RequestParser::Write (const std::string& inData) {
     
-    // Find method
-    std::regex reMethod ("^([A-Z]+)");
-    std::smatch matchMethod;
-    if (!std::regex_search (inData, matchMethod, reMethod)) {
-        return false;
+    std::istringstream iss (inData);
+    
+    Request request;
+    
+    // parse requests
+    for (std::string line; std::getline(iss, line); ) {
+        
+        std::regex reInitialLine ("^([A-Z]+)\\s([A-Za-z0-9_/\\-\\.]+)\\sHTTP/([0-9\\.0-9]+)");
+        std::smatch matchLine;
+        if (std::regex_search (line, matchLine, reInitialLine)) {
+            request.mMethod = StringToMethod (matchLine[1].str ());
+            request.mPath = matchLine[2].str ();
+            request.mVersion = StringToVersion (matchLine[3].str ());
+        }
     }
-    // std::cout << matchMethod.str() << std::endl;
-    mMethod = StringToMethod (matchMethod.str ());
     
-    // Find version
-    std::regex reVersion ("HTTP/[0-9]\\.[0-9]");
-    std::smatch matchVersion;
-    if (!std::regex_search (inData, matchVersion, reVersion)) {
-        return false;
-    }
-    std::string version (matchVersion.str());
-    version.erase (version.begin(), version.begin() + 5);
-    // std::cout << version << std::endl;
-    mVersion = StringToVersion (version);
-    
-    //std::regex re ("^([A-Z]+)\\s+([A-Za-z0-9_/\\-\\.]+\\s+HTTP/[0-9\\.]+)");
-    
-    return true;
+    HandleRequest (request);
 }

@@ -9,24 +9,26 @@
 
 namespace HTTP {
 
-class Request {
+struct Request {
     
-public:
-
     using HeaderMap = std::map<std::string,std::string>;
     
     Request ();
     
-    bool Parse (const std::string& inData);
-    
-    const Method& GetMethod () const;
-    const Version& GetVersion () const;
-    const HeaderMap& GetHeaders () const;
-    
-private:
     Method mMethod;
     Version mVersion;
     HeaderMap mHeaders;
+    std::string mPath;
+};
+
+class RequestParser {
+    
+public:
+    void Write (const std::string& inData);
+
+protected:
+    virtual void HandleRequest (const Request& inRequest) = 0;
+    
 };
 
 } // end namespace HTTP
