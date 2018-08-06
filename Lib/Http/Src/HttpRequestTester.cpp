@@ -49,7 +49,7 @@ TEST_P (HttpRequestParserSuccessTester, ParseInitialLine) {
     ASSERT_EQ (std::string ("/some/path"), parser.mRequests[0].mPath);
     ASSERT_EQ (0u, parser.mRequests[0].mHeaders.size ());
 }
-/*
+
 class HttpRequestParserErrorTester : public ::testing::TestWithParam<std::string> {};
 
 INSTANTIATE_TEST_CASE_P (HttpRequestParserErrorTester, HttpRequestParserErrorTester,
@@ -64,7 +64,7 @@ INSTANTIATE_TEST_CASE_P (HttpRequestParserErrorTester, HttpRequestParserErrorTes
 );
 
 TEST_P (HttpRequestParserErrorTester, InvalidInitialLines) {
-    HTTP::Request request;
-    ASSERT_FALSE (request.Parse (GetParam ()));
+    RequestHarvester parser;
+    parser.Write (GetParam ());
+    ASSERT_EQ (0u, parser.mRequests.size ());
 }
-*/
