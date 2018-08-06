@@ -48,17 +48,21 @@ TEST_P (HttpRequestParserSuccessTester, ParseInitialLine) {
     ASSERT_EQ (std::get<2> (GetParam ()), parser.mRequests[0].mVersion);
     ASSERT_EQ (std::string ("/some/path"), parser.mRequests[0].mPath);
     ASSERT_EQ (0u, parser.mRequests[0].mHeaders.size ());
+    ASSERT_EQ (std::string (""), parser.mRequests[0].mBody);
 }
 
 class HttpRequestParserErrorTester : public ::testing::TestWithParam<std::string> {};
 
 INSTANTIATE_TEST_CASE_P (HttpRequestParserErrorTester, HttpRequestParserErrorTester,
     ::testing::Values(
-        std::string ("GET /some/path HTTP 1.0"),
-        std::string ("1234 /some/path HTTP/1.0"),
-        std::string ("/some/path HTTP/1.0"),
-        std::string ("GET /some/path 1.0"),
-        std::string ("GET /some/path HTP/1.0"),
+        std::string ("GET /some/path HTTP/1.0\n"),
+        std::string ("GET /some/path HTTP 1.0\n\n"),
+        std::string ("1234 /some/path HTTP/1.0\n\n"),
+        std::string ("/some/path HTTP/1.0\n\n"),
+        std::string ("GET /some/path 1.0\n\n"),
+        std::string ("GET /some/path HTP/1.0\n\n"),
+        std::string ("GET HTTP/1.1\n\n"),
+        std::string ("\n\n\n\n"),
         std::string ("")
     )
 );
@@ -67,4 +71,25 @@ TEST_P (HttpRequestParserErrorTester, InvalidInitialLines) {
     RequestHarvester parser;
     parser.Write (GetParam ());
     ASSERT_EQ (0u, parser.mRequests.size ());
+}
+
+TEST (HttpRequestParserTester, Headers){
+    {
+        RequestHarvester parser;
+        parser.Write ("GET /some/path HTTP/1.0\nHeader-Name: Header-Value\n\n" );
+        ASSERT_EQ (std::string ("Header-Value"), parser.mRequests[0].mHeaders["Header-Name"]);
+    }
+    {
+        RequestHarvester parser;
+        parser.Write ("GET /some/path HTTP/1.0\nHeader-Name: Header-Value\nHeader-Name-123: Header-Value-123\n\n" );
+        ASSERT_EQ (std::string ("Header-Value"), parser.mRequests[0].mHeaders["Header-Name"]);
+        ASSERT_EQ (std::string ("Header-Value-123"), parser.mRequests[0].mHeaders["Header-Name-123"]);
+    }
+}
+
+
+TEST (HttpRequestParserTester, Bodies){
+    RequestHarvester parser;
+    parser.Write ("GET /some/path HTTP/1.0\nContent-Length: 10\n\n0123456789" );
+    ASSERT_EQ (std::string ("0123456789"), parser.mRequests[0].mBody);
 }

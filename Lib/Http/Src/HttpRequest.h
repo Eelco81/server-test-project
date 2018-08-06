@@ -2,6 +2,7 @@
 #ifndef _HTTP_REQUEST_H
 #define _HTTP_REQUEST_H_
 
+#include <cstdint>
 #include <string>
 #include <map>
 
@@ -19,6 +20,7 @@ struct Request {
     Version mVersion;
     HeaderMap mHeaders;
     std::string mPath;
+    std::string mBody;
 };
 
 class RequestParser {
