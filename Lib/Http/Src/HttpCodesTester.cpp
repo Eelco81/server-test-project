@@ -22,7 +22,7 @@ TEST (HttpCodesTester, StringToMethod) {
 }
 
 TEST (HttpCodesTester, VersionToString) {
-    ASSERT_EQ ("-", VersionToString (Version::UNKNOWN_VERSION));
+    ASSERT_EQ ("x.x", VersionToString (Version::UNKNOWN_VERSION));
     ASSERT_EQ ("1.0", VersionToString (Version::V10));
     ASSERT_EQ ("1.1", VersionToString (Version::V11));
 }
@@ -31,4 +31,16 @@ TEST (HttpCodesTester, StringToVersion) {
     ASSERT_EQ (Version::UNKNOWN_VERSION, StringToVersion ("-"));
     ASSERT_EQ (Version::V10, StringToVersion ("1.0"));
     ASSERT_EQ (Version::V11, StringToVersion ("1.1"));
+}
+
+TEST (HttpCodesTester, CodeToString) {
+    ASSERT_EQ (std::string ("Unknown"), CodeToString (Code::UNKNOWN_CODE));
+    ASSERT_EQ (std::string ("OK"), CodeToString (Code::OK)); 
+    ASSERT_EQ (std::string ("Created"), CodeToString (Code::CREATED)); 
+    ASSERT_EQ (std::string ("Accepted"), CodeToString (Code::ACCEPTED)); 
+    ASSERT_EQ (std::string ("Bad Request"), CodeToString (Code::BAD_REQUEST)); 
+    ASSERT_EQ (std::string ("Forbidden"), CodeToString (Code::FORBIDDEN));
+    ASSERT_EQ (std::string ("Not Found"), CodeToString (Code::NOT_FOUND)); 
+    ASSERT_EQ (std::string ("Internal Server Error"), CodeToString (Code::INTERNAL_SERVER_ERROR));
+    ASSERT_EQ (std::string ("Not Implemented"), CodeToString (Code::NOT_IMPLEMENTED));
 }

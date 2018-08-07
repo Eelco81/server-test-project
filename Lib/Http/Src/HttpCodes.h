@@ -28,12 +28,19 @@ enum Version : uint8_t {
 std::string VersionToString (Version inVersion);
 Version StringToVersion (const std::string& inString);
 
-enum ResponseCode : uint32_t {
+enum Code : uint32_t {
+    UNKNOWN_CODE = 0x00,
     OK = 200u,
-    CLIENT_ERROR = 400u,
+    CREATED = 201u,
+    ACCEPTED = 202u,
+    BAD_REQUEST = 400u,
+    FORBIDDEN = 403u,
     NOT_FOUND = 404u,
-    SERVER_ERROR = 500u
+    INTERNAL_SERVER_ERROR = 500u,
+    NOT_IMPLEMENTED = 501u
 };
+
+std::string CodeToString (Code inCode);
 
 } // end namespace HTTP
 

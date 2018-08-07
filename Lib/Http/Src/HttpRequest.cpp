@@ -65,7 +65,7 @@ void HTTP::RequestParser::Write (const std::string& inData) {
             }
             case kProcessBody : {
                 if (request.mBody.size () < bodySize) {
-                    request.mBody += line;
+                    request.mBody += line + "\n";
                 }
                 if (request.mBody.size () >= bodySize) {
                     HandleRequest (request);
@@ -73,7 +73,6 @@ void HTTP::RequestParser::Write (const std::string& inData) {
                 }
                 break;
             }
-            
         }
     }
 }

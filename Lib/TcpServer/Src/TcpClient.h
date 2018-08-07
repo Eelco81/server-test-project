@@ -32,6 +32,7 @@ public:
     void Stop ();
     bool IsConnected () const;
     bool Send (const std::vector<uint8_t>& inBuffer);
+    bool Send (const uint8_t* inData, std::size_t inSize);
     int GetId () const;
 
 public: // todo: this should be private

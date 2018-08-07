@@ -37,7 +37,8 @@ INSTANTIATE_TEST_CASE_P (HttpRequestParserSuccessTester, HttpRequestParserSucces
         std::make_tuple (std::string ("DELETE /some/path HTTP/1.0\n\n"), HTTP::Method::DELETE, HTTP::Version::V10 ),
         std::make_tuple (std::string ("DELETE /some/path HTTP/1.1\n\n"), HTTP::Method::DELETE, HTTP::Version::V11 ),
         std::make_tuple (std::string ("DELETE /some/path HTTP/2.0\n\n"), HTTP::Method::DELETE, HTTP::Version::UNKNOWN_VERSION ),
-        std::make_tuple (std::string ("OTHER /some/path HTTP/1.1\n\n"), HTTP::Method::UNKNOWN_METHOD, HTTP::Version::V11 )
+        std::make_tuple (std::string ("OTHER /some/path HTTP/1.1\n\n"), HTTP::Method::UNKNOWN_METHOD, HTTP::Version::V11 ),
+        std::make_tuple (std::string ("\nBLABLA\nBLABLA\nGET /some/path HTTP/1.0\n\n"), HTTP::Method::GET, HTTP::Version::V10 )
     )
 );
 
@@ -49,6 +50,20 @@ TEST_P (HttpRequestParserSuccessTester, ParseInitialLine) {
     ASSERT_EQ (std::string ("/some/path"), parser.mRequests[0].mPath);
     ASSERT_EQ (0u, parser.mRequests[0].mHeaders.size ());
     ASSERT_EQ (std::string (""), parser.mRequests[0].mBody);
+}
+
+TEST_P (HttpRequestParserSuccessTester, ParseMultipleMessages) {
+    RequestHarvester parser;
+    const auto message (std::get<0> (GetParam ()));
+    parser.Write (message + message + message + message + message);
+    ASSERT_EQ (5u, parser.mRequests.size());
+    for (auto request : parser.mRequests) {
+        ASSERT_EQ (std::get<1> (GetParam ()), request.mMethod);
+        ASSERT_EQ (std::get<2> (GetParam ()), request.mVersion);
+        ASSERT_EQ (std::string ("/some/path"), request.mPath);
+        ASSERT_EQ (0u, request.mHeaders.size ());
+        ASSERT_EQ (std::string (""), request.mBody);
+    }
 }
 
 class HttpRequestParserErrorTester : public ::testing::TestWithParam<std::string> {};
@@ -85,11 +100,14 @@ TEST (HttpRequestParserTester, Headers){
         ASSERT_EQ (std::string ("Header-Value"), parser.mRequests[0].mHeaders["Header-Name"]);
         ASSERT_EQ (std::string ("Header-Value-123"), parser.mRequests[0].mHeaders["Header-Name-123"]);
     }
+    //todo: parametrize this test, add failure cases.
 }
-
 
 TEST (HttpRequestParserTester, Bodies){
     RequestHarvester parser;
-    parser.Write ("GET /some/path HTTP/1.0\nContent-Length: 10\n\n0123456789" );
-    ASSERT_EQ (std::string ("0123456789"), parser.mRequests[0].mBody);
+    parser.Write ("GET /some/path HTTP/1.0\nContent-Length: 20\n\n0123456789\n0123456789\n");
+    ASSERT_EQ (std::string ("0123456789\n0123456789\n"), parser.mRequests[0].mBody);
+    //todo: parametrize this test, add failure cases.
 }
+
+//todo: process requests that span over multiple messages

@@ -88,3 +88,7 @@ int TCP::Client::GetId () const {
 bool TCP::Client::Send (const std::vector<uint8_t>& inBuffer) {
     return mSocket->Send (inBuffer) > 0;
 }
+
+bool TCP::Client::Send (const uint8_t* inData, std::size_t inSize) {
+    return mSocket->Send (inData, inSize) > 0;
+}
