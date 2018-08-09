@@ -54,7 +54,7 @@ void HTTP::RequestParser::Write (const std::string& inData) {
             }
             case kProcessHeaders : {
                 if (line == "\r" || line == "") {
-                    const auto contentLength (request.mHeaders.find ("Content-Length"));
+                    const auto contentLength (request.mHeaders.find (Header::CONTENT_LENGTH));
                     if (contentLength == request.mHeaders.end ()) {
                         HandleRequest (request);
                         state = kSearchStart;

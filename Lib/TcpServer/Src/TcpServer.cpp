@@ -28,14 +28,14 @@ namespace {
 
         virtual void Execute () override {
             mSocket.Listen (); 
-            LOGMESSAGE (OS::Log::kInfo, "[TcpServer] Listening at " + mSocket.GetAddress () + ":" + mSocket.GetPortNumber ());
+            LOGMESSAGE (OS::Log::kInfo, "TCP Server listening at " + mSocket.GetAddress () + ":" + mSocket.GetPortNumber ());
             while (mSocket.IsListening ()) {
                 auto clientSocket = std::make_unique <OS::Socket> ("", "");
                 if (mSocket.Accept (*clientSocket)) { // blocking call
                     mServer.RegisterClient (std::move (clientSocket));
                 }
             }
-            LOGMESSAGE (OS::Log::kInfo, "[TcpServer] Stopped at " + mSocket.GetAddress () + ":" + mSocket.GetPortNumber ());
+            LOGMESSAGE (OS::Log::kInfo, "TCP Server stopped at " + mSocket.GetAddress () + ":" + mSocket.GetPortNumber ());
         }
 
         virtual void Kill () override {
@@ -112,7 +112,7 @@ std::size_t TCP::Server::GetClientCount () const {
 
 // called from listener thread
 void TCP::Server::RegisterClient (std::unique_ptr <OS::Socket> inClientSocket) {
-    LOGMESSAGE (OS::Log::kInfo, std::string ("[TcpServer] Registering connected client with id ") + std::to_string (inClientSocket->GetId ()));
+    LOGMESSAGE (OS::Log::kDebug, std::string ("[TcpServer] Registering connected client with id ") + std::to_string (inClientSocket->GetId ()));
     mMutex->Lock ();
     mClients.emplace_back (mFactory->Create (std::move (inClientSocket)));
     mClients.back ()->Start (); // No need to listen to the return value of start
@@ -125,7 +125,7 @@ void TCP::Server::CleanUp () {
     auto remover = [] (const ClientPtr& client) {
         if (!client->IsConnected ()) {
             client->Stop ();
-            LOGMESSAGE (OS::Log::kInfo, std::string ("[TcpServer] Unregistering connected client with id ") + std::to_string (client->GetId ()));
+            LOGMESSAGE (OS::Log::kDebug, std::string ("[TcpServer] Unregistering connected client with id ") + std::to_string (client->GetId ()));
             return true;
         }
         return false;

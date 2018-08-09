@@ -42,6 +42,15 @@ enum Code : uint32_t {
 
 std::string CodeToString (Code inCode);
 
+namespace Header {
+    
+static const std::string CONTENT_LENGTH = "Content-Length";
+static const std::string USER_AGENT = "User-Agent";
+static const std::string LAST_MODIFIED = "Last-Modified";
+static const std::string HOST = "Host";
+
+}
+
 } // end namespace HTTP
 
 #endif // _HTTP_REQUEST_H_

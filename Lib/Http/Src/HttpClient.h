@@ -15,6 +15,9 @@ namespace OS {
 
 namespace HTTP {
     
+struct Request;
+struct Response;
+    
 class Client : public TCP::Client, public RequestParser {
 
 public:
@@ -25,6 +28,8 @@ public:
 public: // todo: this should be private
     virtual void OnReceived (const std::vector<uint8_t>& inBuffer) override;
     virtual void HandleRequest (const Request& inRequest) override;
+public:
+    void SendResponse (const Request& inRequest, const Response& inResponse);
 };
     
 class ClientFactory : public TCP::ClientFactory {

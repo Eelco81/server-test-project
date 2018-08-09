@@ -44,3 +44,10 @@ TEST (HttpCodesTester, CodeToString) {
     ASSERT_EQ (std::string ("Internal Server Error"), CodeToString (Code::INTERNAL_SERVER_ERROR));
     ASSERT_EQ (std::string ("Not Implemented"), CodeToString (Code::NOT_IMPLEMENTED));
 }
+
+TEST (HttpCodesTester, Header) {
+    ASSERT_EQ (std::string ("Content-Length"), Header::CONTENT_LENGTH);
+    ASSERT_EQ (std::string ("User-Agent"), Header::USER_AGENT);
+    ASSERT_EQ (std::string ("Last-Modified"), Header::LAST_MODIFIED);
+    ASSERT_EQ (std::string ("Host"), Header::HOST);
+}

@@ -13,6 +13,7 @@ struct Response {
     using HeaderMap = std::map<std::string,std::string>;
     
     Response ();
+    Response (Code inCode, Version inVersion);
     
     std::string ToString () const;
     

@@ -110,4 +110,5 @@ TEST (HttpRequestParserTester, Bodies){
     //todo: parametrize this test, add failure cases.
 }
 
+//todo: handle multiple messages per test
 //todo: process requests that span over multiple messages
