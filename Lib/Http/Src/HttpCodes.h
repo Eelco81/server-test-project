@@ -1,6 +1,6 @@
 
 
-#ifndef _HTTP_CODES_H
+#ifndef _HTTP_CODES_H_
 #define _HTTP_CODES_H_
 
 #include <cstdint>

@@ -14,6 +14,8 @@ namespace Timing {
     
     std::string ToString (uint64_t inTime);
     
+    std::string ToStdString (uint64_t inTime);
+    
     void Sleep (uint64_t inMilliSeconds);
     
 } // end namespace Timing

@@ -12,6 +12,16 @@ HTTP::Request::Request () :
 {
 }
 
+std::string HTTP::Request::ToString () const {
+    auto request (MethodToString (mMethod) + std::string (" ") + mPath + std::string (" ") + std::string ("HTTP/") + VersionToString (mVersion) + std::string ("\r\n"));
+    for (const auto& pair : mHeaders) {
+        request += pair.first + std::string (": ") + pair.second + std::string ("\r\n");
+    }
+    request += std::string ("\r\n");
+    request += mBody;
+    return request;
+}
+
 void HTTP::RequestParser::Write (const std::string& inData) {
     
     enum State : uint8_t {
@@ -29,7 +39,7 @@ void HTTP::RequestParser::Write (const std::string& inData) {
         
         switch (state) {
             case kSearchStart : {
-                std::regex reInitialLine ("^([A-Z]+)\\s([A-Za-z0-9_/\\-\\.]+)\\sHTTP/([0-9\\.0-9]+)$");
+                std::regex reInitialLine ("^([A-Z]+)\\s([A-Za-z0-9_/\\-\\.]+)\\sHTTP/([0-9\\.0-9]+)");
                 std::smatch matchLine;
                 if (std::regex_search (line, matchLine, reInitialLine)) {
                     request.mMethod = StringToMethod (matchLine[1].str ());
@@ -43,7 +53,7 @@ void HTTP::RequestParser::Write (const std::string& inData) {
                 break;
             }
             case kProcessHeaders : {
-                if (line == "") {
+                if (line == "\r" || line == "") {
                     const auto contentLength (request.mHeaders.find ("Content-Length"));
                     if (contentLength == request.mHeaders.end ()) {
                         HandleRequest (request);
@@ -55,7 +65,7 @@ void HTTP::RequestParser::Write (const std::string& inData) {
                     }
                 }
                 else {
-                    std::regex reHeader ("^(.+)\\s*:\\s*(.+)$");
+                    std::regex reHeader ("^(.+)\\s*:\\s*(.+)\r$");
                     std::smatch matchLine;
                     if (std::regex_search (line, matchLine, reHeader)) {
                         request.mHeaders[matchLine[1].str ()] = matchLine[2].str ();

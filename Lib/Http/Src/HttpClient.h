@@ -7,6 +7,7 @@
 
 #include "TcpClient.h"
 #include "TcpClientFactory.h"
+#include "HttpRequest.h"
 
 namespace OS {
     class Socket;
@@ -14,7 +15,7 @@ namespace OS {
 
 namespace HTTP {
     
-class Client : public TCP::Client {
+class Client : public TCP::Client, public RequestParser {
 
 public:
     Client () = delete;
@@ -23,6 +24,7 @@ public:
     virtual ~Client () {}
 public: // todo: this should be private
     virtual void OnReceived (const std::vector<uint8_t>& inBuffer) override;
+    virtual void HandleRequest (const Request& inRequest) override;
 };
     
 class ClientFactory : public TCP::ClientFactory {

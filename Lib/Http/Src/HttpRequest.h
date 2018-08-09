@@ -16,6 +16,8 @@ struct Request {
     
     Request ();
     
+    std::string ToString () const;
+    
     Method mMethod;
     Version mVersion;
     HeaderMap mHeaders;
