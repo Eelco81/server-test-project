@@ -43,6 +43,7 @@ TEST (HttpCodesTester, CodeToString) {
     ASSERT_EQ (std::string ("Not Found"), CodeToString (Code::NOT_FOUND)); 
     ASSERT_EQ (std::string ("Internal Server Error"), CodeToString (Code::INTERNAL_SERVER_ERROR));
     ASSERT_EQ (std::string ("Not Implemented"), CodeToString (Code::NOT_IMPLEMENTED));
+    ASSERT_EQ (std::string ("HTTP Version Not Supported"), CodeToString (Code::HTTP_VERSION_NOT_SUPPORTED));
 }
 
 TEST (HttpCodesTester, Header) {

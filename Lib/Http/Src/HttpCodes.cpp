@@ -44,6 +44,7 @@ std::string HTTP::CodeToString (HTTP::Code inCode) {
         case Code::NOT_FOUND : return "Not Found";
         case Code::INTERNAL_SERVER_ERROR : return "Internal Server Error";
         case Code::NOT_IMPLEMENTED : return "Not Implemented";
+        case Code::HTTP_VERSION_NOT_SUPPORTED : return "HTTP Version Not Supported";
         default : return "Unknown";
     }
     

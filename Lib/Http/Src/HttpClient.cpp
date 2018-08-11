@@ -24,6 +24,9 @@ void HTTP::Client::OnReceived (const std::vector<uint8_t>& inBuffer) {
 void HTTP::Client::HandleRequest (const HTTP::Request& inRequest) {
     Response response (Code::NOT_FOUND, inRequest.mVersion);
     response.mHeaders[Header::HOST] = "127.0.0.1:1234";
+    if (inRequest.mVersion != Version::V11) {
+        response.mCode = Code::HTTP_VERSION_NOT_SUPPORTED;
+    }
     SendResponse (inRequest, response);
 }
 

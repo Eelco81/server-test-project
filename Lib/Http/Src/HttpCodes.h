@@ -37,7 +37,8 @@ enum Code : uint32_t {
     FORBIDDEN = 403u,
     NOT_FOUND = 404u,
     INTERNAL_SERVER_ERROR = 500u,
-    NOT_IMPLEMENTED = 501u
+    NOT_IMPLEMENTED = 501u,
+    HTTP_VERSION_NOT_SUPPORTED = 505u 
 };
 
 std::string CodeToString (Code inCode);
