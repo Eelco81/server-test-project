@@ -5,16 +5,17 @@
 #include "Log.h"
 #include "HttpClient.h"
 #include "HttpResponse.h"
+#include "HttpEndpoint.h"
+#include "HttpRouter.h"
 
-HTTP::Client::Client (std::string inAddress, std::string inPort) :
-    TCP::Client (inAddress, inPort)
+HTTP::Client::Client (std::unique_ptr <OS::Socket> inSocket, std::shared_ptr<HTTP::Router> inRouter) :
+    TCP::Client (std::move (inSocket)),
+    mRouter (inRouter)
 {
 }
 
-HTTP::Client::Client (std::unique_ptr <OS::Socket> inSocket) :
-    TCP::Client (std::move (inSocket))
-{
-}
+HTTP::Client::~Client () {
+} 
 
 void HTTP::Client::OnReceived (const std::vector<uint8_t>& inBuffer) {
     const std::string input (reinterpret_cast<const char*>(inBuffer.data ()), inBuffer.size());
@@ -23,19 +24,23 @@ void HTTP::Client::OnReceived (const std::vector<uint8_t>& inBuffer) {
 
 void HTTP::Client::HandleRequest (const HTTP::Request& inRequest) {
     Response response (Code::NOT_FOUND, inRequest.mVersion);
-    response.mHeaders[Header::HOST] = "127.0.0.1:1234";
-    if (inRequest.mVersion != Version::V11) {
-        response.mCode = Code::HTTP_VERSION_NOT_SUPPORTED;
-    }
+    mRouter->Dispatch (inRequest, response);
+    response.mHeaders[Header::HOST] =  mSocket->GetAddress () + std::string (":") + mSocket->GetPortNumber();
     SendResponse (inRequest, response);
 }
 
 void HTTP::Client::SendResponse (const HTTP::Request& inRequest, const HTTP::Response& inResponse) {
     LOGMESSAGE (OS::Log::kInfo, std::string ("HTTP/") + VersionToString (inResponse.mVersion) + std::string (" ") + MethodToString (inRequest.mMethod) + std::string (" ") + inRequest.mPath + std::string (" - ") + std::to_string (inResponse.mCode) + std::string (" ") + CodeToString (inResponse.mCode));
     const auto resStr (inResponse.ToString ());
-    TCP::Client::Send (reinterpret_cast<const uint8_t*> (resStr.c_str()), resStr.size());
+    TCP::Client::Send (reinterpret_cast<const uint8_t*> (resStr.c_str ()), resStr.size ());
+}
+
+HTTP::ClientFactory::ClientFactory (std::shared_ptr<HTTP::Router> inRouter) :
+    TCP::ClientFactory::ClientFactory (),
+    mRouter (inRouter)
+{
 }
 
 std::unique_ptr<TCP::Client> HTTP::ClientFactory::Create (std::unique_ptr<OS::Socket> inSocket) const {
-    return std::make_unique<HTTP::Client> (std::move (inSocket));
+    return std::make_unique<HTTP::Client> (std::move (inSocket), mRouter);
 }

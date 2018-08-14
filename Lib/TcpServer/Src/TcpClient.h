@@ -38,8 +38,10 @@ public:
 public: // todo: this should be private
     virtual void OnReceived (const std::vector<uint8_t>& inBuffer) = 0;
     
-private:
+protected:
     std::shared_ptr <OS::Socket> mSocket;
+    
+private:
     std::unique_ptr <OS::Thread> mThread;
 };
 

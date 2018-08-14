@@ -30,7 +30,7 @@ namespace {
             mSocket.Listen (); 
             LOGMESSAGE (OS::Log::kInfo, "TCP Server listening at " + mSocket.GetAddress () + ":" + mSocket.GetPortNumber ());
             while (mSocket.IsListening ()) {
-                auto clientSocket = std::make_unique <OS::Socket> ("", "");
+                auto clientSocket = std::make_unique <OS::Socket> (mSocket.GetAddress (), mSocket.GetPortNumber ());
                 if (mSocket.Accept (*clientSocket)) { // blocking call
                     mServer.RegisterClient (std::move (clientSocket));
                 }
@@ -74,11 +74,11 @@ namespace {
 
 } // end anonymous namespace
 
-TCP::Server::Server (const std::string& inAddress, const std::string& inPort, std::unique_ptr<ClientFactory> inFactory) :
+TCP::Server::Server (const std::string& inAddress, const std::string& inPort, std::shared_ptr<ClientFactory> inFactory) :
     mMutex (std::make_unique <OS::Mutex> ()),
     mListener (std::make_unique <ListenThread> (*this, inAddress, inPort)),
     mCleaner (std::make_unique <CleanupThread> (*this)),
-    mFactory (std::move (inFactory))
+    mFactory (inFactory)
 {
 }
 

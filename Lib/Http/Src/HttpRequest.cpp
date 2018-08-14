@@ -8,7 +8,17 @@
 
 HTTP::Request::Request () :
     mMethod (HTTP::Method::UNKNOWN_METHOD),
-    mVersion (HTTP::Version::UNKNOWN_VERSION)
+    mVersion (HTTP::Version::UNKNOWN_VERSION),
+    mIsValid (true)
+{
+}
+
+// Mainly a convenience constructor for unit tests
+HTTP::Request::Request (HTTP::Method inMethod, const std::string& inPath) :
+    mMethod (inMethod),
+    mVersion (HTTP::Version::V11),
+    mPath (inPath),
+    mIsValid (true)
 {
 }
 
@@ -47,6 +57,7 @@ void HTTP::RequestParser::Write (const std::string& inData) {
                     request.mVersion = StringToVersion (matchLine[3].str ());
                     request.mHeaders.clear();
                     request.mBody = "";
+                    request.mIsValid = true;
                     state = kProcessHeaders;
                     bodySize = 0u;
                 }
@@ -60,8 +71,20 @@ void HTTP::RequestParser::Write (const std::string& inData) {
                         state = kSearchStart;
                     }
                     else {
-                        bodySize = std::stoi (contentLength->second);
-                        state = kProcessBody;
+                        try {
+                           bodySize = std::stoi (contentLength->second);
+                        }
+                        catch (...) {
+                            bodySize = 0;
+                            request.mIsValid = false;
+                        }
+                        if (bodySize == 0) {
+                            HandleRequest (request);
+                            state = kSearchStart;
+                        }
+                        else {
+                            state = kProcessBody;
+                        }
                     }
                 }
                 else {

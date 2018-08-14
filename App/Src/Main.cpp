@@ -7,6 +7,7 @@
 #include "CommandLine.h"
 #include "Socket.h"
 #include "HttpClient.h"
+#include "HttpRouter.h"
 #include "TcpServer.h"
 #include "SupportThread.h"
 
@@ -32,8 +33,9 @@ int main (int argc, char** argv) {
     APP::SupportThread supportThread;
     supportThread.Spawn ();
 
-    auto factory (std::make_unique<HTTP::ClientFactory> ());
-    TCP::Server server (ip, port, std::move (factory));
+    auto router (std::make_shared<HTTP::Router> ());
+    auto factory (std::make_shared<HTTP::ClientFactory> (router));
+    TCP::Server server (ip, port, factory);
     server.Start ();
 
     std::string name;
@@ -46,5 +48,7 @@ int main (int argc, char** argv) {
     
     OS::Network::Done ();
 
+    OS::Log::Instance ().Flush ();
+    
     return 0;
 }

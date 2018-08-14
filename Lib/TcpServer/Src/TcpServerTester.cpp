@@ -54,7 +54,7 @@ class TcpServerTester : public ::testing::Test {
 
 TEST_F (TcpServerTester, DataTransfer) {
     
-    auto factory (std::make_unique<TestClientFactory>());
+    auto factory (std::make_shared<TestClientFactory>());
     TCP::Server server (IP_FOR_TESTING, PORT_FOR_TESTING, std::move (factory));
     
     server.Start();
@@ -79,7 +79,7 @@ TEST_F (TcpServerTester, DataTransfer) {
 
 TEST_F (TcpServerTester, MultipleConnnections) {
     
-    auto factory (std::make_unique<TestClientFactory>());
+    auto factory (std::make_shared<TestClientFactory>());
     TCP::Server server (IP_FOR_TESTING, PORT_FOR_TESTING, std::move (factory));
     
     server.Start();
@@ -111,7 +111,7 @@ TEST_F (TcpServerTester, MultipleConnnections) {
 
 TEST_F (TcpServerTester, ClosingServer) {
     
-    auto factory (std::make_unique<TestClientFactory>());
+    auto factory (std::make_shared<TestClientFactory>());
     TCP::Server server (IP_FOR_TESTING, PORT_FOR_TESTING, std::move (factory));
     
     server.Start ();

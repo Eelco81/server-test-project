@@ -23,7 +23,7 @@ class Server {
 
 public:
     Server () = delete;
-    Server (const std::string& inAddress, const std::string& inPort, std::unique_ptr<ClientFactory> inFactory);
+    Server (const std::string& inAddress, const std::string& inPort, std::shared_ptr<ClientFactory> inFactory);
     virtual ~Server ();
 
 public:
@@ -45,7 +45,7 @@ private:
     std::unique_ptr <OS::Thread> mListener;
     std::unique_ptr <OS::Thread> mCleaner;
 
-    std::unique_ptr <ClientFactory> mFactory;
+    std::shared_ptr <ClientFactory> mFactory;
 };
 
 }

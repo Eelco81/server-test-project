@@ -15,6 +15,7 @@ struct Request {
     using HeaderMap = std::map<std::string,std::string>;
     
     Request ();
+    Request (Method inMethod, const std::string& inPath);
     
     std::string ToString () const;
     
@@ -23,6 +24,7 @@ struct Request {
     HeaderMap mHeaders;
     std::string mPath;
     std::string mBody;
+    bool mIsValid;
 };
 
 class RequestParser {
