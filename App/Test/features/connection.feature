@@ -10,8 +10,14 @@ Feature: Basic routing
      And the received response contains header 'Content-Length: 0'
      And the received response contains all standard headers
 
-  Scenario: Calling the echo endpoint
-    When sending a PUT request on /system/echo
-    Then the received response has code 404
+  Scenario Outline: Calling the echo endpoint
+    When sending an echo request of <byte count in> bytes
+    Then the received response has code <response>
      And the received response contains all standard headers
+     And the received response has a body of size <byte count out>
 
+  Examples: Amphibians
+   | byte count in | byte count out | response |
+   | 10            | 10             | 200      |
+   | 100           | 100            | 200      |
+   | 1000          | 1000           | 200      |

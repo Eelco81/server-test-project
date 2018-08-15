@@ -12,6 +12,10 @@ def step_impl(context, method, route):
     else :
         assert false
 
+@when ('sending an echo request of {bytes:d} bytes')
+def step_impl(context, bytes) :
+    context.response = requests.put(context.url + "/system/echo", data = bytearray([0xFE]*bytes))
+        
 @then('the received response has code {code:d}')
 def step_impl(context, code):
     assert context.response.status_code == code
@@ -31,3 +35,9 @@ def step_impl(context):
     print (context.response.headers.get('Host'))
     assert context.response.headers.get('Host') == context.ip + ":" + context.port
     
+@then('the received response has a body of size {bytes:d}')
+def step_impl(context, bytes):
+    assert len(context.response.content) == bytes
+    #for byte in context.response.content:
+    #    assert byte == 0xFE
+        
