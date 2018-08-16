@@ -1,5 +1,5 @@
 
-#ifndef _HTTP_REQUEST_H
+#ifndef _HTTP_REQUEST_H_
 #define _HTTP_REQUEST_H_
 
 #include <cstdint>
@@ -30,11 +30,23 @@ struct Request {
 class RequestParser {
     
 public:
+    RequestParser ();
+    virtual ~RequestParser ();
     void Write (const std::string& inData);
 
 protected:
     virtual void HandleRequest (const Request& inRequest) = 0;
     
+private:
+    enum State : uint8_t {
+        kSearchStart = 0x00,
+        kProcessHeaders = 0x01,
+        kProcessBody = 0x02
+    };
+    
+    State mState;
+    Request mRequest;
+    std::size_t mBodySize;
 };
 
 } // end namespace HTTP

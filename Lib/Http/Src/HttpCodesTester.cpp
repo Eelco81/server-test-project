@@ -48,6 +48,7 @@ TEST (HttpCodesTester, CodeToString) {
 
 TEST (HttpCodesTester, Header) {
     ASSERT_EQ (std::string ("Content-Length"), Header::CONTENT_LENGTH);
+    ASSERT_EQ (std::string ("Content-Type"), Header::CONTENT_TYPE);
     ASSERT_EQ (std::string ("User-Agent"), Header::USER_AGENT);
     ASSERT_EQ (std::string ("Last-Modified"), Header::LAST_MODIFIED);
     ASSERT_EQ (std::string ("Host"), Header::HOST);

@@ -32,58 +32,57 @@ std::string HTTP::Request::ToString () const {
     return request;
 }
 
+HTTP::RequestParser::RequestParser () :
+    mState (kSearchStart),
+    mBodySize (0u)
+{
+}
+
+HTTP::RequestParser::~RequestParser () {
+}
+
 void HTTP::RequestParser::Write (const std::string& inData) {
-    
-    enum State : uint8_t {
-        kSearchStart = 0x00,
-        kProcessHeaders = 0x01,
-        kProcessBody = 0x02
-    };
-    
-    State state (kSearchStart);
-    Request request;
-    std::size_t bodySize (0u);
     
     std::istringstream iss (inData);
     for (std::string line; std::getline(iss, line); ) {
         
-        switch (state) {
+        switch (mState) {
             case kSearchStart : {
                 std::regex reInitialLine ("^([A-Z]+)\\s([A-Za-z0-9_/\\-\\.]+)\\sHTTP/([0-9\\.0-9]+)");
                 std::smatch matchLine;
                 if (std::regex_search (line, matchLine, reInitialLine)) {
-                    request.mMethod = StringToMethod (matchLine[1].str ());
-                    request.mPath = matchLine[2].str ();
-                    request.mVersion = StringToVersion (matchLine[3].str ());
-                    request.mHeaders.clear();
-                    request.mBody = "";
-                    request.mIsValid = true;
-                    state = kProcessHeaders;
-                    bodySize = 0u;
+                    mRequest.mMethod = StringToMethod (matchLine[1].str ());
+                    mRequest.mPath = matchLine[2].str ();
+                    mRequest.mVersion = StringToVersion (matchLine[3].str ());
+                    mRequest.mHeaders.clear();
+                    mRequest.mBody = "";
+                    mRequest.mIsValid = true;
+                    mBodySize = 0u;
+                    mState = kProcessHeaders;
                 }
                 break;
             }
             case kProcessHeaders : {
                 if (line == "\r" || line == "") {
-                    const auto contentLength (request.mHeaders.find (Header::CONTENT_LENGTH));
-                    if (contentLength == request.mHeaders.end ()) {
-                        HandleRequest (request);
-                        state = kSearchStart;
+                    const auto contentLength (mRequest.mHeaders.find (Header::CONTENT_LENGTH));
+                    if (contentLength == mRequest.mHeaders.end ()) {
+                        HandleRequest (mRequest);
+                        mState = kSearchStart;
                     }
                     else {
                         try {
-                           bodySize = std::stoi (contentLength->second);
+                           mBodySize = std::stoi (contentLength->second);
                         }
                         catch (...) {
-                            bodySize = 0;
-                            request.mIsValid = false;
+                            mBodySize = 0;
+                            mRequest.mIsValid = false;
                         }
-                        if (bodySize == 0) {
-                            HandleRequest (request);
-                            state = kSearchStart;
+                        if (mBodySize == 0) {
+                            HandleRequest (mRequest);
+                            mState = kSearchStart;
                         }
                         else {
-                            state = kProcessBody;
+                            mState = kProcessBody;
                         }
                     }
                 }
@@ -91,18 +90,18 @@ void HTTP::RequestParser::Write (const std::string& inData) {
                     std::regex reHeader ("^(.+)\\s*:\\s*(.+)\r$");
                     std::smatch matchLine;
                     if (std::regex_search (line, matchLine, reHeader)) {
-                        request.mHeaders[matchLine[1].str ()] = matchLine[2].str ();
+                        mRequest.mHeaders[matchLine[1].str ()] = matchLine[2].str ();
                     }
                 }
                 break;
             }
             case kProcessBody : {
-                if (request.mBody.size () < bodySize) {
-                    request.mBody += line + "\n";
+                if (mRequest.mBody.size () < mBodySize) {
+                    mRequest.mBody += line;
                 }
-                if (request.mBody.size () >= bodySize) {
-                    HandleRequest (request);
-                    state = kSearchStart;
+                if (mRequest.mBody.size () >= mBodySize) {
+                    HandleRequest (mRequest);
+                    mState = kSearchStart;
                 }
                 break;
             }

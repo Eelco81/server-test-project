@@ -48,6 +48,7 @@ TEST_P (HttpRequestParserSuccessTester, ParseInitialLine) {
     ASSERT_EQ (std::get<1> (GetParam ()), parser.mRequests[0].mMethod);
     ASSERT_EQ (std::get<2> (GetParam ()), parser.mRequests[0].mVersion);
     ASSERT_EQ (std::string ("/some/path"), parser.mRequests[0].mPath);
+    ASSERT_EQ (1u, parser.mRequests.size ());
     ASSERT_EQ (0u, parser.mRequests[0].mHeaders.size ());
     ASSERT_EQ (std::string (""), parser.mRequests[0].mBody);
     ASSERT_TRUE (parser.mRequests[0].mIsValid);
@@ -94,11 +95,13 @@ TEST (HttpRequestParserTester, Headers){
     {
         RequestHarvester parser;
         parser.Write ("GET /some/path HTTP/1.0\r\nHeader-Name: Header-Value\r\n\r\n" );
+        ASSERT_EQ (1u, parser.mRequests.size ());
         ASSERT_EQ (std::string ("Header-Value"), parser.mRequests[0].mHeaders["Header-Name"]);
     }
     {
         RequestHarvester parser;
         parser.Write ("GET /some/path HTTP/1.0\r\nHeader-Name: Header-Value\r\nHeader-Name-123: Header-Value-123\r\n\r\n" );
+        ASSERT_EQ (1u, parser.mRequests.size ());
         ASSERT_EQ (std::string ("Header-Value"), parser.mRequests[0].mHeaders["Header-Name"]);
         ASSERT_EQ (std::string ("Header-Value-123"), parser.mRequests[0].mHeaders["Header-Name-123"]);
     }
@@ -108,18 +111,28 @@ TEST (HttpRequestParserTester, Headers){
 TEST (HttpRequestParserTester, Bodies){
     {
         RequestHarvester parser;
-        parser.Write ("GET /some/path HTTP/1.0\r\nContent-Length: 20\r\n\r\n0123456789\n0123456789\n");
-        ASSERT_EQ (std::string ("0123456789\n0123456789\n"), parser.mRequests[0].mBody);
+        parser.Write ("GET /some/path HTTP/1.0\r\nContent-Length: 20\r\n\r\n01234567890123456789");
+        ASSERT_EQ (1u, parser.mRequests.size ());
+        ASSERT_EQ (std::string ("01234567890123456789"), parser.mRequests[0].mBody);
+    }
+    {
+        RequestHarvester parser;
+        parser.Write ("GET /some/path HTTP/1.0\r\nContent-Length: 20\r\n\r\n0123456789");
+        parser.Write ("9876543210");
+        ASSERT_EQ (1u, parser.mRequests.size ());
+        ASSERT_EQ (std::string ("01234567899876543210"), parser.mRequests[0].mBody);
     }
     {
         RequestHarvester parser;
         parser.Write ("GET /some/path HTTP/1.0\r\nContent-Length: 0\r\n\r\n");
+        ASSERT_EQ (1u, parser.mRequests.size ());
         ASSERT_EQ (std::string (""), parser.mRequests[0].mBody);
     }
     {
         RequestHarvester parser;
         parser.Write ("GET /some/path HTTP/1.0\r\nContent-Length: ABC\r\n\r\n");
         ASSERT_EQ (std::string (""), parser.mRequests[0].mBody);
+        ASSERT_EQ (1u, parser.mRequests.size ());
         ASSERT_FALSE (parser.mRequests[0].mIsValid);
     }
     //todo: parametrize this test, add failure cases.

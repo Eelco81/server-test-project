@@ -10,6 +10,7 @@
 
 HTTP::Client::Client (std::unique_ptr <OS::Socket> inSocket, std::shared_ptr<HTTP::Router> inRouter) :
     TCP::Client (std::move (inSocket)),
+    HTTP::RequestParser (),
     mRouter (inRouter)
 {
 }
@@ -18,14 +19,14 @@ HTTP::Client::~Client () {
 } 
 
 void HTTP::Client::OnReceived (const std::vector<uint8_t>& inBuffer) {
-    const std::string input (reinterpret_cast<const char*>(inBuffer.data ()), inBuffer.size());
+    const std::string input (reinterpret_cast<const char*>(inBuffer.data ()), inBuffer.size ());
     Write (input);
 }
 
 void HTTP::Client::HandleRequest (const HTTP::Request& inRequest) {
     Response response (Code::NOT_FOUND, inRequest.mVersion);
     mRouter->Dispatch (inRequest, response);
-    response.mHeaders[Header::HOST] =  mSocket->GetAddress () + std::string (":") + mSocket->GetPortNumber();
+    response.mHeaders[Header::HOST] =  mSocket->GetAddress () + std::string (":") + mSocket->GetPortNumber ();
     SendResponse (inRequest, response);
 }
 

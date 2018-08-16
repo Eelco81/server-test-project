@@ -11,8 +11,8 @@
 
 namespace HTTP {
 
-class Request;
-class Response;
+struct Request;
+struct Response;
 class EndPoint;
 
 class Router {
