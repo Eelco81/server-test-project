@@ -11,13 +11,18 @@ Feature: Basic routing
      And the received response contains all standard headers
 
   Scenario Outline: Calling the echo endpoint
-    When sending an echo request of <byte count in> bytes
+    When sending an echo request of <byte count> bytes
     Then the received response has code <response>
      And the received response contains all standard headers
-     And the received response has a body of size <byte count out>
+     And the received response has a body of size <byte count>
 
-  Examples: Amphibians
-   | byte count in | byte count out | response |
-   | 10            | 10             | 200      |
-   | 100           | 100            | 200      |
-   | 1000          | 1000           | 200      |
+  Examples: Binary messages
+    | byte count | response |
+    | 0          | 200      |
+    | 1          | 200      |
+    | 10         | 200      |
+    | 100        | 200      |
+    | 1000       | 200      |
+    | 10000      | 200      |
+    | 100000     | 200      |
+    | 1000000    | 200      |

@@ -43,7 +43,7 @@ TEST_F (HttpClientTester, VerifyProperIntegration) {
     ASSERT_LE (0, client.Receive (buffer)); // blocking call
     
     std::string strRes;
-    strRes.assign (reinterpret_cast<char*> (buffer.data()));
+    strRes.assign (reinterpret_cast<char*> (buffer.data ()));
     ASSERT_THAT (strRes, ::testing::HasSubstr ("HTTP/1.1 404 Not Found"));
     
     client.Close ();

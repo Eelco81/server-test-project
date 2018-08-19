@@ -21,7 +21,7 @@ struct Request {
     
     Method mMethod;
     Version mVersion;
-    HeaderMap mHeaders;
+    HeaderMap mHeaders; //todo: header keys are not case sensitive
     std::string mPath;
     std::string mBody;
     bool mIsValid;

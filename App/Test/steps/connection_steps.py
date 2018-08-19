@@ -38,6 +38,6 @@ def step_impl(context):
 @then('the received response has a body of size {bytes:d}')
 def step_impl(context, bytes):
     assert len(context.response.content) == bytes
-    #for byte in context.response.content:
-    #    assert byte == 0xFE
+    for byte in context.response.content:
+        assert byte == 0xFE
         

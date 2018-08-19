@@ -19,7 +19,7 @@ struct Response {
     
     Code mCode;
     Version mVersion;
-    HeaderMap mHeaders;
+    HeaderMap mHeaders;  //todo: header keys are not case sensitive
     std::string mBody;
 };
 

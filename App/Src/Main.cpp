@@ -7,42 +7,9 @@
 #include "CommandLine.h"
 #include "Socket.h"
 #include "HttpClient.h"
-#include "HttpRouter.h"
-#include "HttpRequest.h"
-#include "HttpResponse.h"
-#include "HttpEndPoint.h"
+#include "SystemRouter.h"
 #include "TcpServer.h"
 #include "SupportThread.h"
-
-namespace {
-
-class EchoEndPoint : public HTTP::EndPoint {
-public:
-    EchoEndPoint () : 
-        HTTP::EndPoint ("/system/echo", HTTP::Method::PUT)
-    {
-    }
-    
-    virtual void Execute (const HTTP::Request& inRequest, HTTP::Response& outResponse) override {
-        outResponse.mCode = HTTP::Code::OK;
-        outResponse.mBody = inRequest.mBody;
-        outResponse.mHeaders[HTTP::Header::CONTENT_LENGTH] = std::to_string (outResponse.mBody.size ());
-        // outResponse.mHeaders[HTTP::Header::CONTENT_TYPE] = inRequest.mHeaders.at (HTTP::Header::CONTENT_TYPE);
-    }
-    
-};
-
-class AppRouter : public HTTP::Router {
-public:
-    AppRouter ():
-        HTTP::Router ()
-    {
-        AddEndPoint (std::make_unique<EchoEndPoint> ());
-    }
-};
-    
-} // end anonymous namespace
-
 
 int main (int argc, char** argv) {
     
@@ -66,7 +33,7 @@ int main (int argc, char** argv) {
     APP::SupportThread supportThread;
     supportThread.Spawn ();
 
-    auto router (std::make_shared<AppRouter> ());
+    auto router (std::make_shared<API::SystemRouter> ());
     auto factory (std::make_shared<HTTP::ClientFactory> (router));
     TCP::Server server (ip, port, factory);
     server.Start ();
