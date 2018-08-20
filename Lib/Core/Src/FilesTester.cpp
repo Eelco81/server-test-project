@@ -31,3 +31,13 @@ TEST (FilesTester, WriteFile) {
     
     ASSERT_TRUE (std::equal (writeBuffer.begin (), writeBuffer.end (), readBuffer.begin ()));
 }
+
+TEST (FilesTester, GetExtension) {
+    
+    ASSERT_EQ (std::string ("txt"), OS::Files::GetExtension ("/home/file.txt"));
+    ASSERT_EQ (std::string ("txt"), OS::Files::GetExtension ("file.txt"));
+    ASSERT_EQ (std::string ("txt"), OS::Files::GetExtension ("./file.txt"));
+    ASSERT_EQ (std::string ("txt"), OS::Files::GetExtension ("C:\\dir\file.txt"));
+    ASSERT_EQ (std::string ("txt1"), OS::Files::GetExtension ("file.txt1"));
+    ASSERT_EQ (std::string ("Txt1"), OS::Files::GetExtension ("file.Txt1"));
+}

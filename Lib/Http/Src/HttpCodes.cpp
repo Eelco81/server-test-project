@@ -1,7 +1,6 @@
 
 #include "HttpCodes.h"
 
-
 std::string HTTP::MethodToString (HTTP::Method inMethod) {
     switch (inMethod) {
         case Method::GET : return "GET";

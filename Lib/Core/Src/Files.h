@@ -11,12 +11,9 @@ namespace OS {
 class Files {
 
 public:
-    Files () = default; 
-    ~Files () = default;
-
-public:
     static bool Read (const std::string& inPath, std::vector<uint8_t>& outBuffer);
-    static bool Write (const std::string& inPath, const std::vector<uint8_t>& outBuffer);
+    static bool Write (const std::string& inPath, const std::vector<uint8_t>& inBuffer);
+    static std::string GetExtension (const std::string& inPath);
 
 };
 

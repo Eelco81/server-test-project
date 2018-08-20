@@ -1,6 +1,7 @@
 
 #include "Files.h"
 
+#include <regex>
 #include <iostream>
 #include <fstream>
 
@@ -38,4 +39,15 @@ bool OS::Files::Write (const std::string& inPath, const std::vector<uint8_t>& in
     }
 
     return false;
+}
+
+std::string OS::Files::GetExtension (const std::string& inPath) {
+    
+    std::regex re ("\\.([A-Za-z0-9]+)$");
+    std::smatch match;
+    if (std::regex_search (inPath, match, re)) {
+        return match[1].str ();
+    }
+    return "";
+
 }
