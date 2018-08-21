@@ -27,7 +27,7 @@ TEST (FilesTester, WriteFile) {
     ASSERT_TRUE (OS::Files::Write (kTestFile, writeBuffer));
     ASSERT_TRUE (OS::Files::Read (kTestFile, readBuffer));
 
-    ASSERT_EQ (writeBuffer.size(), readBuffer.size ());
+    ASSERT_EQ (writeBuffer.size (), readBuffer.size ());
     
     ASSERT_TRUE (std::equal (writeBuffer.begin (), writeBuffer.end (), readBuffer.begin ()));
 }

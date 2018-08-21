@@ -26,3 +26,9 @@ Feature: Basic routing
     | 10000      | 200      |
     | 100000     | 200      |
     | 1000000    | 200      |
+
+  Scenario: Loading the home page
+    When sending a GET request on /home
+    Then the received response has code 200
+     And the received response contains header 'Content-Type: text/html'
+     And the received response contains all standard headers
