@@ -19,7 +19,7 @@ struct Response {
     
     void SetBody (const std::string& inBody, const std::string& inContentType = "text/plain");
     void SetBody (const std::vector<uint8_t>& inBuffer, const std::string& inContentType = "application/octet-stream");
-    const std::string& GetBody() const;
+    const std::string& GetBody () const;
     
     std::string ToString () const;
     

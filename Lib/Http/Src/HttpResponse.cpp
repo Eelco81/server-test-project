@@ -29,7 +29,7 @@ void HTTP::Response::SetBody (const std::vector<uint8_t>& inBuffer, const std::s
     mHeaders[HTTP::Header::CONTENT_TYPE] = inContentType;
 }
 
-const std::string& HTTP::Response::GetBody() const {
+const std::string& HTTP::Response::GetBody () const {
     return mBody;
 }
 
