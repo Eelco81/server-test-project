@@ -29,6 +29,7 @@ void API::FileEndPoint::Execute (const HTTP::Request& inRequest, HTTP::Response&
         
     std::vector<uint8_t> data;
     if (OS::Files::Read (mFileName, data)) {
+  
         outResponse.mCode = HTTP::Code::OK;
         outResponse.mBody.assign (reinterpret_cast<char*> (data.data ()), data.size ());
         outResponse.mHeaders[HTTP::Header::CONTENT_LENGTH] = std::to_string (outResponse.mBody.size ());

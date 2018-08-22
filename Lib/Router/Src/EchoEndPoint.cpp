@@ -2,7 +2,7 @@
 #include "EchoEndPoint.h"
 
 API::EchoEndPoint::EchoEndPoint () : 
-    HTTP::EndPoint ("/system/echo", HTTP::Method::PUT)
+    HTTP::EndPoint ("/api/echo", HTTP::Method::PUT)
 {
 }
 

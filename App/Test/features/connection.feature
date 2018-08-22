@@ -32,3 +32,11 @@ Feature: Basic routing
     Then the received response has code 200
      And the received response contains header 'Content-Type: text/html'
      And the received response contains all standard headers
+ 
+  Scenario: Retrieving the version number
+    When sending a GET request on /api/version
+    Then the received response has code 200
+     And the received response contains header 'Content-Type: application/json'
+     And the received response contains all standard headers
+     And the received response body has json element { version : 0.0.1 }
+     And the received response body has json element { application : HttpServer }

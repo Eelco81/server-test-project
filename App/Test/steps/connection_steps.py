@@ -14,7 +14,7 @@ def step_impl(context, method, route):
 
 @when ('sending an echo request of {bytes:d} bytes')
 def step_impl(context, bytes) :
-    context.response = requests.put(context.url + "/system/echo", data = bytearray([0xFE]*bytes))
+    context.response = requests.put(context.url + "/api/echo", data = bytearray([0xFE]*bytes))
         
 @then('the received response has code {code:d}')
 def step_impl(context, code):
@@ -41,3 +41,7 @@ def step_impl(context, bytes):
     for byte in context.response.content:
         assert byte == 0xFE
         
+@then('the received response body has json element {{ {key} : {value} }}')
+def step_imp(context, key, value):
+    body = context.response.json()
+    assert body[key] == value
