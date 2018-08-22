@@ -30,16 +30,13 @@ void API::FileEndPoint::Execute (const HTTP::Request& inRequest, HTTP::Response&
     std::vector<uint8_t> data;
     if (OS::Files::Read (mFileName, data)) {
   
-        outResponse.mCode = HTTP::Code::OK;
-        outResponse.mBody.assign (reinterpret_cast<char*> (data.data ()), data.size ());
-        outResponse.mHeaders[HTTP::Header::CONTENT_LENGTH] = std::to_string (outResponse.mBody.size ());
-        
         auto type (contentTypes [OS::Files::GetExtension (mFileName)]);
         if (type == "") {
             type = "text/plain";
         }
-        outResponse.mHeaders[HTTP::Header::CONTENT_TYPE] = type;
         
+        outResponse.mCode = HTTP::Code::OK;
+        outResponse.SetBody (data, type);
     }
     else {
         outResponse.mCode = HTTP::Code::INTERNAL_SERVER_ERROR;

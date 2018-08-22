@@ -50,3 +50,34 @@ TEST_P (HttpResponseTester, ContainsUserAgent) {
     HTTP::Response response (std::get<1> (GetParam ()), std::get<2> (GetParam ()));
     EXPECT_THAT ( response.ToString (), ::testing::HasSubstr ("\r\nUser-Agent: HttpServer/0.0.1"));
 }
+
+TEST_F (HttpResponseTester, Bodies) {
+    {
+        HTTP::Response response (HTTP::Code::OK, HTTP::Version::V11);
+        response.SetBody ("HELLO");
+        ASSERT_EQ (std::string ("HELLO"), response.GetBody ());
+        ASSERT_EQ (std::string ("text/plain"), response.mHeaders[HTTP::Header::CONTENT_TYPE]);
+        ASSERT_EQ (std::string ("5"), response.mHeaders[HTTP::Header::CONTENT_LENGTH]);
+    }
+    {
+        HTTP::Response response (HTTP::Code::OK, HTTP::Version::V11);
+        response.SetBody ("HELLO", "application/json");
+        ASSERT_EQ (std::string ("HELLO"), response.GetBody ());
+        ASSERT_EQ (std::string ("application/json"), response.mHeaders[HTTP::Header::CONTENT_TYPE]);
+        ASSERT_EQ (std::string ("5"), response.mHeaders[HTTP::Header::CONTENT_LENGTH]);
+    }
+    {
+        HTTP::Response response (HTTP::Code::OK, HTTP::Version::V11);
+        response.SetBody (std::vector<uint8_t> ({ 0x01, 0x01 }));
+        ASSERT_EQ (std::string ("\x1\x1"), response.GetBody ());
+        ASSERT_EQ (std::string ("application/octet-stream"), response.mHeaders[HTTP::Header::CONTENT_TYPE]);
+        ASSERT_EQ (std::string ("2"), response.mHeaders[HTTP::Header::CONTENT_LENGTH]);
+    }
+    {
+        HTTP::Response response (HTTP::Code::OK, HTTP::Version::V11);
+        response.SetBody (std::vector<uint8_t> ({ 0x01, 0x01 }), "application/json");
+        ASSERT_EQ (std::string ("\x1\x1"), response.GetBody ());
+        ASSERT_EQ (std::string ("application/json"), response.mHeaders[HTTP::Header::CONTENT_TYPE]);
+        ASSERT_EQ (std::string ("2"), response.mHeaders[HTTP::Header::CONTENT_LENGTH]);
+    }
+}

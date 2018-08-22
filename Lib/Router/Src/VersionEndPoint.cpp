@@ -14,14 +14,11 @@ API::VersionEndPoint::VersionEndPoint () :
 API::VersionEndPoint::~VersionEndPoint () = default;
 
 void API::VersionEndPoint::Execute (const HTTP::Request& inRequest, HTTP::Response& outResponse) {
-    outResponse.mCode = HTTP::Code::OK;
     
     json j;
     j["application"] = OS::Version::GetApplicationName ();
     j["version"] = OS::Version::GetApplicationVersion ();
     
-    outResponse.mBody = j.dump ();
-    
-    outResponse.mHeaders[HTTP::Header::CONTENT_TYPE] = "application/json";
-    outResponse.mHeaders[HTTP::Header::CONTENT_LENGTH] = std::to_string (outResponse.mBody.size ());
+    outResponse.mCode = HTTP::Code::OK;
+    outResponse.SetBody (j.dump (), "application/json");
 }
