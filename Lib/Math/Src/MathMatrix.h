@@ -17,7 +17,6 @@ public:
     
 public:
     T Get (std::size_t inRow, std::size_t inCol) const;
-    void Set (std::size_t inRow, std::size_t inCol, T inValue);
     
 public:
     T operator() (std::size_t inRow, std::size_t inCol) const;
@@ -41,14 +40,12 @@ private:
 template <std::size_t M, std::size_t K, std::size_t N, typename T = double>
 Matrix<M,N,T> operator* (const Matrix<M,K,T>& inLhs, const Matrix<K,N,T>& inRhs) {
     
-    Matrix<M,N,T> mat;
+    Matrix<M,N,T> mat (0);
     for (std::size_t i (0u); i < M; i++) {
         for (std::size_t j (0u); j < N; j++) {
-            T value (0);
             for (std::size_t k (0u); k < K; k++) {
-                value += inLhs.Get (i, k) * inRhs.Get (k, j);
+                mat(i,j) += inLhs(i,k) * inRhs(k,j);
             }
-            mat.Set (i, j, value);
         }
     }
     return mat;
