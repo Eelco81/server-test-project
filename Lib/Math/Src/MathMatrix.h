@@ -16,9 +16,6 @@ public:
     virtual ~Matrix ();
     
 public:
-    T Get (std::size_t inRow, std::size_t inCol) const;
-    
-public:
     T operator() (std::size_t inRow, std::size_t inCol) const;
     T& operator() (std::size_t inRow, std::size_t inCol);
     

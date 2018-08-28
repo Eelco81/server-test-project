@@ -21,11 +21,6 @@ template<std::size_t Nrows, std::size_t Ncols, typename T>
 MATH::Matrix<Nrows,Ncols,T>::~Matrix () = default;
 
 template<std::size_t Nrows, std::size_t Ncols, typename T>
-T MATH::Matrix<Nrows,Ncols,T>::Get (std::size_t inRow, std::size_t inCol) const {
-    return mData[inRow + inCol * Nrows];
-}
-
-template<std::size_t Nrows, std::size_t Ncols, typename T>
 T MATH::Matrix<Nrows,Ncols,T>::operator() (std::size_t inRow, std::size_t inCol) const {
     return mData[inRow + inCol * Nrows];
 }
@@ -42,7 +37,7 @@ MATH::Matrix<Nrows,Ncols,T> MATH::Matrix<Nrows,Ncols,T>::operator+ (const MATH::
     
     for (std::size_t i (0u); i < Nrows; i++) {
         for (std::size_t j (0u); j < Ncols; j++) {
-            mat(i,j) = Get(i,j) + inMatrix(i,j);
+            mat(i,j) = (*this)(i,j) + inMatrix(i,j);
         }
     }
     
@@ -56,7 +51,7 @@ MATH::Matrix<Nrows,Ncols,T> MATH::Matrix<Nrows,Ncols,T>::operator+ (T inValue) c
     
     for (std::size_t i (0u); i < Nrows; i++) {
         for (std::size_t j (0u); j < Ncols; j++) {
-            mat(i,j) = Get(i,j) + inValue;
+            mat(i,j) = (*this)(i,j) + inValue;
         }
     }
     
@@ -70,7 +65,7 @@ MATH::Matrix<Nrows,Ncols,T> MATH::Matrix<Nrows,Ncols,T>::operator- (const MATH::
     
     for (std::size_t i (0u); i < Nrows; i++) {
         for (std::size_t j (0u); j < Ncols; j++) {
-            mat(i,j) = Get(i,j) - inMatrix(i,j);
+            mat(i,j) = (*this)(i,j) - inMatrix(i,j);
         }
     }
     
@@ -89,7 +84,7 @@ MATH::Matrix<Nrows,Ncols,T> MATH::Matrix<Nrows,Ncols,T>::operator* (T inValue) c
     
     for (std::size_t i (0u); i < Nrows; i++) {
         for (std::size_t j (0u); j < Ncols; j++) {
-            mat(i,j) = Get(i,j) * inValue;
+            mat(i,j) = (*this)(i,j) * inValue;
         }
     }
     
@@ -103,7 +98,7 @@ MATH::Matrix<Nrows,Ncols,T> MATH::Matrix<Nrows,Ncols,T>::operator/ (T inValue) c
     
     for (std::size_t i (0u); i < Nrows; i++) {
         for (std::size_t j (0u); j < Ncols; j++) {
-            mat(i,j) = Get(i,j) / inValue;
+            mat(i,j) = (*this)(i,j) / inValue;
         }
     }
     
