@@ -13,7 +13,8 @@ MATH::Matrix<Nrows,Ncols,T>::Matrix (T inValue) :
 }
 
 template<std::size_t Nrows, std::size_t Ncols, typename T>
-MATH::Matrix<Nrows,Ncols,T>::Matrix (const MATH::Matrix<Nrows,Ncols,T>& inMatrix) {
+MATH::Matrix<Nrows,Ncols,T>::Matrix (const MATH::Matrix<Nrows,Ncols,T>& inMatrix) 
+{
     std::copy (inMatrix.mData.begin (), inMatrix.mData.end (), std::back_inserter (mData));
 }
 

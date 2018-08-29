@@ -16,8 +16,8 @@ public:
     virtual ~Matrix ();
     
 public:
-    T operator() (std::size_t inRow, std::size_t inCol) const;
-    T& operator() (std::size_t inRow, std::size_t inCol);
+    T operator() (std::size_t inRow, std::size_t inCol = 0u) const;
+    T& operator() (std::size_t inRow, std::size_t inCol = 0u);
     
     Matrix operator+ (const Matrix& inMatrix) const;
     Matrix operator+ (T inValue) const;
@@ -29,8 +29,7 @@ public:
     bool operator== (const Matrix& inMatrix) const;
     bool operator== (T inValue) const;
     
-    
-private:
+protected:
     std::vector<T> mData;
 };
 
