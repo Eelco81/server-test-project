@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <functional>
 
 template<std::size_t Nrows, std::size_t Ncols, typename T>
 MATH::Matrix<Nrows,Ncols,T>::Matrix () :
@@ -32,74 +33,67 @@ T& MATH::Matrix<Nrows,Ncols,T>::operator() (std::size_t inRow, std::size_t inCol
 }
 
 template<std::size_t Nrows, std::size_t Ncols, typename T>
-MATH::Matrix<Nrows,Ncols,T> MATH::Matrix<Nrows,Ncols,T>::operator+ (const MATH::Matrix<Nrows,Ncols,T>& inMatrix) const {
+MATH::Matrix<Nrows,Ncols,T>& MATH::Matrix<Nrows,Ncols,T>::operator= (const MATH::Matrix<Nrows,Ncols,T>& inMatrix) {
+    std::copy (inMatrix.mData.begin (), inMatrix.mData.end (), mData.begin ()); 
+    return *this;
+}
 
+template<std::size_t Nrows, std::size_t Ncols, typename T>
+MATH::Matrix<Nrows,Ncols,T>& MATH::Matrix<Nrows,Ncols,T>::operator= (T inValue) {
+    std::for_each (mData.begin (), mData.end (), [inValue] (auto& entry) {entry = inValue;}); 
+    return *this;
+}
+
+template<std::size_t Nrows, std::size_t Ncols, typename T>
+MATH::Matrix<Nrows,Ncols,T> MATH::Matrix<Nrows,Ncols,T>::operator+ (const MATH::Matrix<Nrows,Ncols,T>& inMatrix) const {
     Matrix mat;
-    
-    for (std::size_t i (0u); i < Nrows; i++) {
-        for (std::size_t j (0u); j < Ncols; j++) {
-            mat(i,j) = (*this)(i,j) + inMatrix(i,j);
-        }
-    }
-    
+    std::transform (mData.begin (), mData.end (), inMatrix.mData.begin (), mat.mData.begin (), std::plus<T> ()); 
     return mat;
 }
 
 template<std::size_t Nrows, std::size_t Ncols, typename T>
 MATH::Matrix<Nrows,Ncols,T> MATH::Matrix<Nrows,Ncols,T>::operator+ (T inValue) const {
-
     Matrix mat;
-    
-    for (std::size_t i (0u); i < Nrows; i++) {
-        for (std::size_t j (0u); j < Ncols; j++) {
-            mat(i,j) = (*this)(i,j) + inValue;
-        }
-    }
-    
+    std::transform (mData.begin (), mData.end (), mat.mData.begin (), [inValue] (const auto& entry) {return entry + inValue;}); 
     return mat;
 }
 
 template<std::size_t Nrows, std::size_t Ncols, typename T>
 MATH::Matrix<Nrows,Ncols,T> MATH::Matrix<Nrows,Ncols,T>::operator- (const MATH::Matrix<Nrows,Ncols,T>& inMatrix) const {
- 
     Matrix mat;
-    
-    for (std::size_t i (0u); i < Nrows; i++) {
-        for (std::size_t j (0u); j < Ncols; j++) {
-            mat(i,j) = (*this)(i,j) - inMatrix(i,j);
-        }
-    }
-    
+    std::transform (mData.begin (), mData.end (), inMatrix.mData.begin (), mat.mData.begin (), std::minus<T> ()); 
     return mat;
 }
 
 template<std::size_t Nrows, std::size_t Ncols, typename T>
 MATH::Matrix<Nrows,Ncols,T> MATH::Matrix<Nrows,Ncols,T>::operator- (T inValue) const {
-    return *this + (-inValue);
+    Matrix mat;
+    std::transform (mData.begin (), mData.end (), mat.mData.begin (), [inValue] (const auto& entry) {return entry - inValue;}); 
+    return mat;
 }
 
 template<std::size_t Nrows, std::size_t Ncols, typename T>
 MATH::Matrix<Nrows,Ncols,T> MATH::Matrix<Nrows,Ncols,T>::operator* (T inValue) const {
-
     Matrix mat;
-    
-    for (std::size_t i (0u); i < Nrows; i++) {
-        for (std::size_t j (0u); j < Ncols; j++) {
-            mat(i,j) = (*this)(i,j) * inValue;
-        }
-    }
-    
+    std::transform (mData.begin (), mData.end (), mat.mData.begin (), [inValue] (const auto& entry) {return entry * inValue;}); 
     return mat;
 }
 
 template<std::size_t Nrows, std::size_t Ncols, typename T>
 MATH::Matrix<Nrows,Ncols,T> MATH::Matrix<Nrows,Ncols,T>::operator/ (T inValue) const {
-
     Matrix mat;
+    std::transform (mData.begin (), mData.end (), mat.mData.begin (), [inValue] (const auto& entry) {return entry / inValue;}); 
+    return mat;
+}
+
+template<std::size_t Nrows, std::size_t Ncols, typename T>
+MATH::Matrix<Ncols,Nrows,T> MATH::Matrix<Nrows,Ncols,T>::operator~ () const {
+
+    Matrix<Ncols,Nrows,T> mat;
     
     for (std::size_t i (0u); i < Nrows; i++) {
         for (std::size_t j (0u); j < Ncols; j++) {
-            mat(i,j) = (*this)(i,j) / inValue;
+            mat(j,i) = (*this)(i,j);
         }
     }
     

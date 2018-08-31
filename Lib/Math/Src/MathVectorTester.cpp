@@ -37,6 +37,18 @@ TYPED_TEST (VectorTester, MatrixVectorMultiplication) {
     MATH::Matrix<10u,5u,TypeParam> A (1);
     MATH::Vector<5u,TypeParam> b (2);
     
-    const auto result (A * b);
+    const MATH::Vector<10u,TypeParam> result (A * b);
     ASSERT_EQ (result, (TypeParam)10);
+}
+
+TEST (VectorTester, MatrixVectorSolver) {
+    
+    MATH::Matrix<2,2> A;
+    A(0,0) = 1.0;
+    A(1,1) = 2.0;
+    
+    const MATH::Vector<2> b (2);
+    
+    const auto c (A / b);
+    
 }

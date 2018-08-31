@@ -14,17 +14,20 @@ public:
     Matrix (T inValue);
     Matrix (const Matrix& inMatrix);
     virtual ~Matrix ();
-    
+
 public:
     T operator() (std::size_t inRow, std::size_t inCol = 0u) const;
     T& operator() (std::size_t inRow, std::size_t inCol = 0u);
     
+    Matrix& operator= (const Matrix& inMatrix);
+    Matrix& operator= (T inValue);
     Matrix operator+ (const Matrix& inMatrix) const;
     Matrix operator+ (T inValue) const;
     Matrix operator- (const Matrix& inMatrix) const;
     Matrix operator- (T inValue) const;
     Matrix operator* (T inValue) const;
     Matrix operator/ (T inValue) const;
+    Matrix<Ncols,Nrows,T> operator~ () const;
     
     bool operator== (const Matrix& inMatrix) const;
     bool operator== (T inValue) const;
@@ -46,6 +49,17 @@ Matrix<M,N,T> operator* (const Matrix<M,K,T>& inLhs, const Matrix<K,N,T>& inRhs)
     }
     return mat;
 }
+
+
+template <std::size_t N, std::size_t K, typename T = double>
+Matrix<N,K,T> operator/ (const Matrix<N,N,T>& inLhs, const Matrix<N,K,T>& inRhs) {
+    
+    auto Q (inLhs);
+    
+    Matrix<N,K,T> mat;
+    return mat;
+}
+
 
 }
 
