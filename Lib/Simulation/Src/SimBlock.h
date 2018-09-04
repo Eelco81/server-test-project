@@ -6,7 +6,6 @@
 #include <vector>
 #include <string>
 #include <memory>
-#include <algorithm>
 
 namespace SIM {
 
@@ -22,49 +21,23 @@ public:
     virtual void Terminate () {}
 
 public:
-    std::weak_ptr<Port> GetInPort (const std::string& inName) {
-        auto it = std::find_if (mInputs.begin (), mInputs.end (), [inName](const auto& it) {
-            return it->GetName () == inName;
-        });
-        return *it;
-    }
+    std::weak_ptr<Port> GetInPort (const std::string& inName);
+    std::weak_ptr<Port> GetOutPort (const std::string& inName);
     
-    std::weak_ptr<Port> GetOutPort (const std::string& inName) {
-        auto it = std::find_if (mOutputs.begin (), mOutputs.end (), [inName](const auto& it) {
-            return it->GetName () == inName;
-        });
-        return *it;
-    }
-    
-    /*
-    template<typename T>
-    std::weak_ptr<TypedPort<T>> GetInPort (const std::string& inName) {
-        auto it = std::find_if (mInputs.begin (), mInputs.end (), [inName](const auto& it) {
-            return it->GetName () == inName;
-        });
-        return std::dynamic_pointer_cast<TypedPort<T>> (*it);
-    }
-    
-    template<typename T>
-    std::weak_ptr<TypedPort<T>> GetOutPort (const std::string& inName) {
-        auto it = std::find_if (mOutputs.begin (), mOutputs.end (), [inName](const auto& it) {
-            return it->GetName () == inName;
-        });
-        return std::dynamic_pointer_cast<TypedPort<T>> (*it);
-    }
-    */
 protected:
+    
     template<typename T>
     void AddInPort (T* inValuePtr, const std::string& inName) {
         mInputs.emplace_back (std::make_shared<TypedPort<T>> (inName, inValuePtr));
     }
     
     template<typename T>
-void AddOutPort (T* inValuePtr, const std::string& inName) {
+    void AddOutPort (T* inValuePtr, const std::string& inName) {
         mOutputs.emplace_back (std::make_shared<TypedPort<T>> (inName, inValuePtr));
     }
     
 protected:
+    
     std::vector<std::shared_ptr<Port>> mInputs;
     std::vector<std::shared_ptr<Port>> mOutputs;
     std::string mName;

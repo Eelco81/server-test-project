@@ -51,5 +51,14 @@ TEST (SimBlockTester, DataTransfer) {
     ASSERT_FALSE (block2.mInput);
     ASSERT_FALSE (block1.mOutput);
     ASSERT_FALSE (block2.mOutput);
+}
 
+TEST (SimBlockTester, NonExistingInputPorts) {
+    TestBlock block;
+    ASSERT_EQ (nullptr, block.GetInPort ("NotExisting").lock ());
+}
+
+TEST (SimBlockTester, NonExistingOutputPorts) {
+    TestBlock block;
+    ASSERT_EQ (nullptr, block.GetOutPort ("NotExisting").lock ());
 }

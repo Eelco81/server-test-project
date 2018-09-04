@@ -22,32 +22,6 @@ protected:
 
 };
 
-/*
-template <typename T>
-class TypedConnector : public Connector {
-
-public:
-    TypedConnector (std::weak_ptr<TypedPort<T>> inSource, std::weak_ptr<TypedPort<T>> inTarget) :
-        Connector (),
-        mSource (inSource),
-        mTarget (inTarget)
-    {
-    }
-    virtual ~TypedConnector () = default;
-    
-    virtual void Transfer () override {
-        auto source (mSource.lock ());
-        auto target (mTarget.lock ());
-        if (source && target) {
-            *target = *source;
-        }
-    }
-
-protected:
-    std::weak_ptr<TypedPort<T>> mSource;
-    std::weak_ptr<TypedPort<T>> mTarget;
-};
-*/
 }
 
 #endif // _SIM_CONNECTOR_H_

@@ -36,6 +36,71 @@ TYPED_TEST (SimConnectorTester, Transfer) {
     ASSERT_EQ (value2, (TypeParam)1);
 }
 
+TYPED_TEST (SimConnectorTester, NonExistingSourcePorts) {
+    
+    auto port1 = std::shared_ptr<SIM::TypedPort<TypeParam>> (nullptr);
+    auto port2 = std::make_shared<SIM::TypedPort<TypeParam>> ("port2");
+    
+    try {
+        SIM::Connector connector (port1, port2);
+    }
+    catch (std::exception& e) {
+        ASSERT_EQ (std::string ("Cannot connect ports, non existing source port"), e.what ());
+        return;
+    }
+    
+    ASSERT_FALSE (true);
+}
+
+TYPED_TEST (SimConnectorTester, NonExistingTargetPorts) {
+    
+    auto port1 = std::make_shared<SIM::TypedPort<TypeParam>> ("port1");
+    auto port2 = std::shared_ptr<SIM::TypedPort<TypeParam>> (nullptr);
+    
+    try {
+        SIM::Connector connector (port1, port2);
+    }
+    catch (std::exception& e) {
+        ASSERT_EQ (std::string ("Cannot connect ports, non existing target port"), e.what ());
+        return;
+    }
+    
+    ASSERT_FALSE (true);
+}
+
+TEST (SimConnectorTester, NonMatchingTypes) {
+    
+    auto port1 = std::make_shared<SIM::TypedPort<bool>> ("port1");
+    auto port2 = std::make_shared<SIM::TypedPort<double>> ("port2");
+
+    try {
+        SIM::Connector connector (port1, port2);
+    }
+    catch (std::exception& e) {
+        ASSERT_EQ (std::string ("Cannot connect port1 to port2, the types do not match"), e.what ());
+        return;
+    }
+    
+    ASSERT_FALSE (true);
+}
+
+
+TEST (SimConnectorTester, NonSupportedTypes) {
+    
+    auto port1 = std::make_shared<SIM::TypedPort<MATH::Matrix<2,2>>> ("port1");
+    auto port2 = std::make_shared<SIM::TypedPort<MATH::Matrix<2,2>>> ("port2");
+
+    try {
+        SIM::Connector connector (port1, port2);
+    }
+    catch (std::exception& e) {
+        ASSERT_EQ (std::string ("Cannot connect port1 to port2, unknown port type"), e.what ());
+        return;
+    }
+    
+    ASSERT_FALSE (true);
+}
+
 TEST (SimConnectorTester, ListedConnectors) {
     
     bool b1 (true);
@@ -72,5 +137,4 @@ TEST (SimConnectorTester, ListedConnectors) {
     ASSERT_EQ (b2, true);
     ASSERT_EQ (u2, 1u);
     ASSERT_EQ (d2, 1.0);
-    
 }
