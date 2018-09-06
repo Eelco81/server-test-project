@@ -10,6 +10,10 @@ SIM::Block::Block (const std::string& inName) :
 
 SIM::Block::~Block () = default;
 
+const std::string& SIM::Block::GetName () const {
+    return mName;
+}
+
 std::weak_ptr<SIM::Port> SIM::Block::GetInPort (const std::string& inName) {
     auto it = std::find_if (mInputs.begin (), mInputs.end (), [inName](const auto& it) {
         return it->GetName () == inName;

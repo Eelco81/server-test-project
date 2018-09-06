@@ -45,7 +45,7 @@ TYPED_TEST (SimConnectorTester, NonExistingSourcePorts) {
         SIM::Connector connector (port1, port2);
     }
     catch (std::exception& e) {
-        ASSERT_EQ (std::string ("Cannot connect ports, non existing source port"), e.what ());
+        ASSERT_EQ (std::string ("Non existing source port"), e.what ());
         return;
     }
     
@@ -61,7 +61,7 @@ TYPED_TEST (SimConnectorTester, NonExistingTargetPorts) {
         SIM::Connector connector (port1, port2);
     }
     catch (std::exception& e) {
-        ASSERT_EQ (std::string ("Cannot connect ports, non existing target port"), e.what ());
+        ASSERT_EQ (std::string ("Non existing target port"), e.what ());
         return;
     }
     
@@ -77,7 +77,7 @@ TEST (SimConnectorTester, NonMatchingTypes) {
         SIM::Connector connector (port1, port2);
     }
     catch (std::exception& e) {
-        ASSERT_EQ (std::string ("Cannot connect port1 to port2, the types do not match"), e.what ());
+        ASSERT_EQ (std::string ("Types do not match"), e.what ());
         return;
     }
     
@@ -94,7 +94,7 @@ TEST (SimConnectorTester, NonSupportedTypes) {
         SIM::Connector connector (port1, port2);
     }
     catch (std::exception& e) {
-        ASSERT_EQ (std::string ("Cannot connect port1 to port2, unknown port type"), e.what ());
+        ASSERT_EQ (std::string ("Unknown port type"), e.what ());
         return;
     }
     

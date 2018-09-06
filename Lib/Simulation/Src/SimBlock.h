@@ -12,6 +12,7 @@ namespace SIM {
 class Block {
 
 public:
+
     Block (const std::string& inName);
     virtual ~Block ();
     
@@ -21,6 +22,8 @@ public:
     virtual void Terminate () {}
 
 public:
+
+    const std::string& GetName () const;
     std::weak_ptr<Port> GetInPort (const std::string& inName);
     std::weak_ptr<Port> GetOutPort (const std::string& inName);
     

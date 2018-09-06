@@ -28,8 +28,17 @@ public:
     virtual ~TypedImplementation () = default;
     
     virtual void Transfer () override {
+        
         auto source (mSource.lock ());
+        if (!source) {
+            throw SIM::Exception ("Source port no longer exists");
+        }
+        
         auto target (mTarget.lock ());
+        if (!target) {
+            throw SIM::Exception ("Target port no longer exists");
+        }
+        
         if (source && target) {
             *target = *source;
         }
@@ -58,12 +67,12 @@ SIM::Connector::Connector (std::weak_ptr<SIM::Port> inSource, std::weak_ptr<SIM:
     
     auto source (inSource.lock ());
     if (!source) {
-        throw Exception ("Cannot connect ports, non existing source port");
+        throw Exception ("Non existing source port");
     }
     
     auto target (inTarget.lock ());
     if (!target) {
-        throw Exception ("Cannot connect ports, non existing target port");
+        throw Exception ("Non existing target port");
     }
     
     const auto sourceType (source->GetType ());
@@ -83,11 +92,11 @@ SIM::Connector::Connector (std::weak_ptr<SIM::Port> inSource, std::weak_ptr<SIM:
             case Port::INT64  : mImpl = std::move (TypedImplementation<int64_t>::Create (source, target)); break;
             case Port::FLOAT  : mImpl = std::move (TypedImplementation<float>::Create (source, target)); break;
             case Port::DOUBLE : mImpl = std::move (TypedImplementation<double>::Create (source, target)); break;
-            default : throw Exception (std::string ("Cannot connect ") + source->GetName () + std::string(" to ") + target->GetName () + std::string (", unknown port type"));
+            default : throw Exception ("Unknown port type");
         }
     }
     else {
-        throw Exception (std::string ("Cannot connect ") + source->GetName () + std::string(" to ") + target->GetName () + std::string (", the types do not match"));
+        throw Exception ("Types do not match");
     }
 
 }
@@ -98,5 +107,7 @@ void SIM::Connector::Transfer () {
     if (mImpl) {
         mImpl->Transfer ();
     }
+    else {
+        throw Exception ("Unintialized connector");
+    }
 }
-

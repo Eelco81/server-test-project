@@ -4,28 +4,19 @@
 #include "SimBlock.h"
 #include "SimConnector.h"
 
-#include "MathMatrix.h"
-
 namespace {
 
 class TestBlock : public SIM::Block {
-
 public: 
     TestBlock () : 
-        Block ("Test"),
-        mInput (true),
-        mOutput (false)
+        Block ("Test")
     {
         AddInPort (&mInput, "input");
         AddOutPort (&mOutput, "output");
     }
-    virtual ~TestBlock () {
-    }
-
 public:
-    bool mInput;
-    bool mOutput;
-
+    bool mInput = true;
+    bool mOutput = false;
 };
 
 }
