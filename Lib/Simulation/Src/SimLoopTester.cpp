@@ -1,0 +1,130 @@
+
+#include "gmock/gmock.h"
+
+#include "SimLoop.h"
+#include "SimBlock.h"
+#include "SimConnector.h"
+
+#include <memory>
+
+namespace {
+
+class TestBlock : public SIM::Block {
+public: 
+    TestBlock (const std::string& inName) : 
+        Block (inName)
+    {
+        AddInPort (&mInput, "input");
+        AddOutPort (&mOutput, "output");
+    }
+public:
+    bool mInput = true;
+    bool mOutput = false;
+};
+
+}
+
+class SimLoopNameTester : public ::testing::TestWithParam<std::string> {};
+
+INSTANTIATE_TEST_CASE_P (SimLoopNameTester, SimLoopNameTester,
+    ::testing::Values(
+        "Not Allowed Name",
+        "Not_Allowed_Name",
+        "Not,Allowed,Name",
+        "Not.Allowed.Name",
+        "Not*Allowed*Name",
+        "Not^Allowed^Name",
+        "Not@Allowed@Name",
+        "Not#Allowed#Name",
+        "Not!Allowed!Name",
+        "Not?Allowed?Name",
+        "Not:Allowed:Name"
+    )
+);
+
+TEST_P (SimLoopNameTester, IllegalNames) {
+    
+    try {
+        SIM::Loop loop;
+        loop.AddBlock (std::make_unique<SIM::Block> (GetParam ()));
+        ASSERT_FALSE (true);
+    }
+    catch (std::exception& e) {
+        ASSERT_EQ (std::string ("Cannot add block <") + GetParam () + std::string(">, the name does not meet requirements"), e.what ());
+    }
+}
+
+TEST (SimLoopTester, NonUniqueNames) {
+    
+    try {
+        SIM::Loop loop;
+        loop.AddBlock (std::make_unique<SIM::Block> ("Block"));
+        loop.AddBlock (std::make_unique<SIM::Block> ("Block"));
+        ASSERT_FALSE (true);
+    }
+    catch (std::exception& e) {
+        ASSERT_EQ (std::string ("Cannot add block <Block>, the name is not unique"), e.what ());
+    }
+}
+
+TEST (SimLoopTester, IllegalPaths) {
+    
+    try {
+        SIM::Loop loop;
+        loop.Connect ("Blah.Blah.Blah.Blah", "Blah");
+        ASSERT_FALSE (true);
+    }
+    catch (std::exception& e) {
+        ASSERT_EQ (std::string ("Cannot connect <Blah.Blah.Blah.Blah> to <Blah>: Illegal path <Blah.Blah.Blah.Blah>"), e.what ());
+    }
+}
+
+TEST (SimLoopTester, NonExistingSourceBlocks) {
+    
+    try {
+        SIM::Loop loop;
+        loop.AddBlock (std::make_unique<TestBlock> ("Block"));
+        loop.Connect ("IDoNotExist.out.output", "Block.in.input");
+        ASSERT_FALSE (true);
+    }
+    catch (std::exception& e) {
+        ASSERT_EQ (std::string ("Cannot connect <IDoNotExist.out.output> to <Block.in.input>: Non-existing block <IDoNotExist>"), e.what ());
+    }
+}
+
+TEST (SimLoopTester, NonExistingTargetBlocks) {
+    
+    try {
+        SIM::Loop loop;
+        loop.AddBlock (std::make_unique<TestBlock> ("Block"));
+        loop.Connect ("Block.out.output", "IDoNotExist.in.input");
+        ASSERT_FALSE (true);
+    }
+    catch (std::exception& e) {
+        ASSERT_EQ (std::string ("Cannot connect <Block.out.output> to <IDoNotExist.in.input>: Non-existing block <IDoNotExist>"), e.what ());
+    }
+}
+
+TEST (SimLoopTester, SuccesfulConfiguration) {
+    
+    const std::vector<std::string> names = {
+        "block1",
+        "block2",
+        "block3",
+        "block4",
+        "block5"
+    };
+    
+    SIM::Loop loop;
+    
+    for (const auto& name : names) {
+        loop.AddBlock (std::make_unique<TestBlock> (name));
+    }
+    
+    loop.Connect ("block1.out.output", "block2.in.input");
+    loop.Connect ("block2.out.output", "block3.in.input");
+    loop.Connect ("block3.out.output", "block4.in.input");
+    loop.Connect ("block4.out.output", "block5.in.input");
+    
+    
+}
