@@ -10,6 +10,8 @@ namespace {
     const std::string settingsTag ("settings");
     const std::string nameTag ("name");
     const std::string typeTag ("type");
+    const std::string sourceTag ("source");
+    const std::string targetTag ("target");
 }
 
 std::unique_ptr<SIM::Loop> SIM::Factory::Create (const json& inConfig) {
@@ -33,10 +35,33 @@ std::unique_ptr<SIM::Loop> SIM::Factory::Create (const json& inConfig) {
         }
         const std::string type (config[typeTag].get<std::string> ());
         
-        auto block = std::make_unique<Block> (name);
+        json settings ({});
+        if (config.find (settingsTag) != config.end ()) {
+            settings = config [settingsTag];
+        }
         
-        block->Configure (config["settings"]);
+        auto block = CreateBlock (name, type);
+        block->Configure (settings);
+        
         loop->AddBlock (std::move (block));
+    }
+    
+    if (inConfig.find (connectorsTag) == inConfig.end () || !inConfig[connectorsTag].empty ()) {
+        
+        for (auto& config : inConfig[connectorsTag]) {
+            
+            if (config.find (sourceTag) == config.end () || !config[sourceTag].is_string ()) {
+                throw Exception ("Connector without \"source\" element in config");
+            }
+            const std::string source (config[sourceTag].get<std::string> ());
+            
+            if (config.find (targetTag) == config.end () || !config[targetTag].is_string ()) {
+                throw Exception ("Connector without \"target\" element in config");
+            }
+            const std::string target (config[targetTag].get<std::string> ());
+            
+            loop->Connect (source, target);
+        }
     }
     
     return loop;
