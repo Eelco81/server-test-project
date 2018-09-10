@@ -14,12 +14,13 @@ public:
     TestBlock (const std::string& inName) : 
         Block (inName)
     {
-        AddInPort (&mInput, "input");
-        AddOutPort (&mOutput, "output");
+        AddInPort<bool> ("input");
+        AddOutPort<bool> ("output");
     }
-public:
-    bool mInput = true;
-    bool mOutput = false;
+    MOCK_METHOD0 (Configure, void ());
+    MOCK_METHOD0 (Initialize, void ());
+    MOCK_METHOD0 (Step, void ());
+    MOCK_METHOD0 (Terminate, void ());
 };
 
 }
@@ -105,7 +106,7 @@ TEST (SimLoopTester, NonExistingTargetBlocks) {
     }
 }
 
-TEST (SimLoopTester, SuccesfulConfiguration) {
+TEST (SimLoopTester, RunSuccesfulConfig) {
     
     const std::vector<std::string> names = {
         "block1",
@@ -116,9 +117,15 @@ TEST (SimLoopTester, SuccesfulConfiguration) {
     };
     
     SIM::Loop loop;
-    
     for (const auto& name : names) {
-        loop.AddBlock (std::make_unique<TestBlock> (name));
+        
+        auto block = std::make_unique<TestBlock> (name);
+        
+        EXPECT_CALL (*block, Initialize ()).Times (1);
+        EXPECT_CALL (*block, Step ()).Times (2);
+        EXPECT_CALL (*block, Terminate ()).Times (1);
+        
+        loop.AddBlock (std::move (block));
     }
     
     loop.Connect ("block1.out.output", "block2.in.input");
@@ -126,5 +133,10 @@ TEST (SimLoopTester, SuccesfulConfiguration) {
     loop.Connect ("block3.out.output", "block4.in.input");
     loop.Connect ("block4.out.output", "block5.in.input");
     
-    
+    loop.Initialize ();
+    loop.Update ();
+    loop.Update ();
+    loop.Terminate ();
+
 }
+

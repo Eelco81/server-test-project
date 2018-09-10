@@ -19,7 +19,7 @@ std::weak_ptr<SIM::Port> SIM::Block::GetInPort (const std::string& inName) {
         return it->GetName () == inName;
     });
     if (it == mInputs.end ()) {
-        return std::shared_ptr<Port> (nullptr);
+        return std::weak_ptr<Port> ();
     }
     return *it;
 }
@@ -29,7 +29,7 @@ std::weak_ptr<SIM::Port> SIM::Block::GetOutPort (const std::string& inName) {
         return it->GetName () == inName;
     });
     if (it == mOutputs.end ()) {
-        return std::shared_ptr<Port> (nullptr);
+        return std::weak_ptr<Port> ();
     }
     return *it;
 }

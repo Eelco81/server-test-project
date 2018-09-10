@@ -2,10 +2,14 @@
 #ifndef _SIM_BLOCK_H_
 #define _SIM_BLOCK_H_
 
-#include "SimTypedPort.h"
 #include <vector>
 #include <string>
 #include <memory>
+
+#include <json.hpp>
+using json = nlohmann::json;
+
+#include "SimTypedPort.h"
 
 namespace SIM {
 
@@ -16,7 +20,7 @@ public:
     Block (const std::string& inName);
     virtual ~Block ();
     
-    virtual void Configure () {}
+    virtual void Configure (const json& inConfig) {}
     virtual void Initialize () {}
     virtual void Step () {}
     virtual void Terminate () {}
@@ -35,8 +39,18 @@ protected:
     }
     
     template<typename T>
+    void AddInPort (const std::string& inName) {
+        mInputs.emplace_back (std::make_shared<TypedPort<T>> (inName));
+    }
+    
+    template<typename T>
     void AddOutPort (T* inValuePtr, const std::string& inName) {
         mOutputs.emplace_back (std::make_shared<TypedPort<T>> (inName, inValuePtr));
+    }
+    
+    template<typename T>
+    void AddOutPort (const std::string& inName) {
+        mOutputs.emplace_back (std::make_shared<TypedPort<T>> (inName));
     }
     
 protected:
