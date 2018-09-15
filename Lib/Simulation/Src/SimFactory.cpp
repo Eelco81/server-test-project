@@ -46,7 +46,7 @@ std::unique_ptr<SIM::Loop> SIM::Factory::Create (const json& inConfig) {
         loop->AddBlock (std::move (block));
     }
     
-    if (inConfig.find (connectorsTag) == inConfig.end () || !inConfig[connectorsTag].empty ()) {
+    if (inConfig.find (connectorsTag) != inConfig.end () && !inConfig[connectorsTag].empty ()) {
         
         for (auto& config : inConfig[connectorsTag]) {
             
@@ -66,4 +66,3 @@ std::unique_ptr<SIM::Loop> SIM::Factory::Create (const json& inConfig) {
     
     return loop;
 }
-

@@ -137,6 +137,4 @@ TEST (SimLoopTester, RunSuccesfulConfig) {
     loop.Update ();
     loop.Update ();
     loop.Terminate ();
-
 }
-

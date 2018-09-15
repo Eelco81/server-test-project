@@ -5,19 +5,30 @@
 
 #include "Macros.h"
 #include <atomic>
+#include <memory>
+
+#include <json.hpp>
+using json = nlohmann::json;
+
+namespace APP {
+class PeriodicThread;
+}
 
 namespace SIM {
+
+class Loop;
+class Factory;
 
 class Service {
 
     NO_COPY_CONSTRUCTORS (Service);
     
 public:
-    Service ();
+    Service (std::unique_ptr<Factory> inFactory);
     virtual ~Service ();
     
 public:
-    bool Load ();
+    bool Load (const json& inConfig);
     bool UnLoad ();
     bool IsLoaded () const;
     
@@ -25,7 +36,13 @@ public:
     bool Stop ();
     bool IsRunning () const;
 
+public:
+    bool Trigger ();
+    
 private:
+    std::unique_ptr<Factory> mFactory;
+    std::unique_ptr<APP::PeriodicThread> mRunner;
+    std::unique_ptr<Loop> mLoop;
     std::atomic<bool> mIsLoaded;
     std::atomic<bool> mIsRunning;
 };

@@ -65,7 +65,21 @@ INSTANTIATE_TEST_CASE_P (SimFactoryTester, SimFactoryTester,
                 "type" : "MyType"
             }],
             "connectors":[{ "source": "MySource" }]
-        })", std::string ("Connector without \"target\" element in config"))
+        })", std::string ("Connector without \"target\" element in config")),
+        std::make_tuple (R"({
+            "blocks" : [{
+                "name" : "MyName",
+                "type" : "MyType"
+            }],
+            "connectors":[{ "source": "Blah.out.output", "target": "MyTarget" }]
+        })", std::string ("Cannot connect <Blah.out.output> to <MyTarget>: Non-existing block <Blah>")),
+        std::make_tuple (R"({
+            "blocks" : [{
+                "name" : "MyName",
+                "type" : "MyType"
+            }],
+            "connectors":[{ "source": "MyName.out.output", "target": "Blah.in.input" }]
+        })", std::string ("Cannot connect <MyName.out.output> to <Blah.in.input>: Non-existing block <Blah>"))
     )
 );
 
