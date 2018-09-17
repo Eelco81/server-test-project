@@ -10,6 +10,7 @@
 using json = nlohmann::json;
 
 #include "SimTypedPort.h"
+#include "SimPath.h"
 
 namespace SIM {
 
@@ -28,9 +29,8 @@ public:
 public:
 
     const std::string& GetName () const;
-    std::weak_ptr<Port> GetInPort (const std::string& inName);
-    std::weak_ptr<Port> GetOutPort (const std::string& inName);
-    
+    std::weak_ptr<Port> GetPort (const Path& inPath);
+
 protected:
     
     template<typename T>

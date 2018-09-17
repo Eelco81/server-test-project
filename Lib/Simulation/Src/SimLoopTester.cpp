@@ -138,3 +138,22 @@ TEST (SimLoopTester, RunSuccesfulConfig) {
     loop.Update ();
     loop.Terminate ();
 }
+
+TEST (SimLoopTester, GetPortValue) {
+    
+    SIM::Loop loop;
+    loop.AddBlock (std::make_unique<TestBlock> ("Test"));
+    EXPECT_EQ ("0", loop.GetValue ("Test.in.input"));
+}
+
+TEST (SimLoopTester, IllegalPath) {
+    
+    try {
+        SIM::Loop loop;
+        loop.GetValue ("Test.in.input");
+        ASSERT_FALSE (true);
+    }
+    catch (std::exception& e) {
+        ASSERT_EQ (std::string ("Non-existing block <Test>"), e.what ());
+    }
+}

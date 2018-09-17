@@ -22,7 +22,7 @@ SIM::TypedPort<T>::~TypedPort () {
     if (mHasOwnership) {
         delete mValuePtr;
     }
-} 
+}
 
 template <typename T>
 SIM::TypedPort<T>& SIM::TypedPort<T>::operator= (const TypedPort<T>& inPort) {
@@ -84,59 +84,7 @@ SIM::Port::Type SIM::TypedPort<T>::GetType () const {
     return Port::Type::UNKNOWN;
 }
 
-/* 
-template<>
-SIM::Port::Type SIM::TypedPort<bool>::GetType () const { 
-    return Port::Type::BOOL; 
+template<typename T>
+std::string SIM::TypedPort<T>::GetStringValue () const {
+    return std::to_string (*mValuePtr);
 }
-
-template<>
-SIM::Port::Type SIM::TypedPort<uint8_t>::GetType () const {
-    return Port::Type::UINT8;
-}
-
-template<>
-SIM::Port::Type SIM::TypedPort<uint16_t>::GetType () const {
-    return Port::Type::UINT16;
-}
-
-template<>
-SIM::Port::Type SIM::TypedPort<uint32_t>::GetType () const {
-    return Port::Type::UINT32;
-}
-
-template<>
-SIM::Port::Type SIM::TypedPort<uint64_t>::GetType () const {
-    return Port::Type::UINT64;
-}
-
-template<>
-SIM::Port::Type SIM::TypedPort<int8_t>::GetType () const {
-    return Port::Type::INT8;
-}
-
-template<>
-SIM::Port::Type SIM::TypedPort<int16_t>::GetType () const {
-    return Port::Type::INT16;
-}
-
-template<>
-SIM::Port::Type SIM::TypedPort<int32_t>::GetType () const {
-    return Port::Type::INT32;
-}
-
-template<>
-SIM::Port::Type SIM::TypedPort<int64_t>::GetType () const {
-    return Port::Type::INT64;
-}
-
-template<>
-SIM::Port::Type SIM::TypedPort<float>::GetType () const {
-    return Port::Type::FLOAT;
-}
-
-template<>
-SIM::Port::Type SIM::TypedPort<double>::GetType () const {
-    return Port::Type::DOUBLE;
-}
-*/

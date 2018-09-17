@@ -6,6 +6,8 @@
 #include <vector>
 #include <string>
 
+#include "SimPath.h"
+
 namespace SIM {
 
 class Port;
@@ -25,9 +27,11 @@ public:
     void Update ();
     void Terminate ();
     
+    std::string GetValue (const std::string& inPath) const;
+
 private:
     
-    std::weak_ptr<Port> FindPort (const std::string& inName);
+    std::weak_ptr<Port> FindPort (const Path& inPath) const;
     
     std::vector<std::unique_ptr<Block>> mBlocks;
     std::vector<std::unique_ptr<Connector>> mConnectors;

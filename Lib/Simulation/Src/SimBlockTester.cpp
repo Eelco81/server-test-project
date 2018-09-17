@@ -27,8 +27,8 @@ TEST (SimBlockTester, DataTransfer) {
     TestBlock block2;
     
     SIM::Connector connector (
-        block1.GetOutPort ("output"), 
-        block2.GetInPort ("input")
+        block1.GetPort (SIM::Path ("Test", "output", SIM::Path::OUTPUT)), 
+        block2.GetPort (SIM::Path ("Test", "input", SIM::Path::INPUT))
     ); 
     
     ASSERT_TRUE (block1.mInput);
@@ -46,10 +46,10 @@ TEST (SimBlockTester, DataTransfer) {
 
 TEST (SimBlockTester, NonExistingInputPorts) {
     TestBlock block;
-    ASSERT_EQ (nullptr, block.GetInPort ("NotExisting").lock ());
+    ASSERT_EQ (nullptr, block.GetPort (SIM::Path ("Test", "NotExisting", SIM::Path::INPUT)).lock ());
 }
 
 TEST (SimBlockTester, NonExistingOutputPorts) {
     TestBlock block;
-    ASSERT_EQ (nullptr, block.GetOutPort ("NotExisting").lock ());
+    ASSERT_EQ (nullptr, block.GetPort (SIM::Path ("Test", "NotExisting", SIM::Path::OUTPUT)).lock ());
 }

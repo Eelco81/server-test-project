@@ -1,6 +1,6 @@
 
 #include "SimBlock.h"
-
+#include "SimException.h"
 #include <algorithm>
 
 SIM::Block::Block (const std::string& inName) :
@@ -14,22 +14,26 @@ const std::string& SIM::Block::GetName () const {
     return mName;
 }
 
-std::weak_ptr<SIM::Port> SIM::Block::GetInPort (const std::string& inName) {
-    auto it = std::find_if (mInputs.begin (), mInputs.end (), [inName](const auto& it) {
-        return it->GetName () == inName;
-    });
-    if (it == mInputs.end ()) {
-        return std::weak_ptr<Port> ();
-    }
-    return *it;
-}
+std::weak_ptr<SIM::Port> SIM::Block::GetPort (const Path& inPath) {
     
-std::weak_ptr<SIM::Port> SIM::Block::GetOutPort (const std::string& inName) {
-    auto it = std::find_if (mOutputs.begin (), mOutputs.end (), [inName](const auto& it) {
-        return it->GetName () == inName;
-    });
-    if (it == mOutputs.end ()) {
-        return std::weak_ptr<Port> ();
+    if (inPath.mBlockID != GetName ()) {
+        throw Exception (std::string ("Getting illegal path <") + inPath.ToString () + std::string (". from block <") + GetName () + ">"); 
     }
-    return *it;
+    
+    auto nameIterator = [inPath] (const auto& it) { return it->GetName () == inPath.mPortID; };
+    
+    if (inPath.mType == Path::INPUT) {
+        auto it = std::find_if (mInputs.begin (), mInputs.end (), nameIterator);
+        if (it != mInputs.end ()) {
+            return *it;
+        }
+    }
+    else if (inPath.mType == Path::OUTPUT) {
+        auto it = std::find_if (mOutputs.begin (), mOutputs.end (), nameIterator);
+        if (it != mOutputs.end ()) {
+            return *it;
+        }
+    }
+    
+    return std::weak_ptr<Port> ();
 }

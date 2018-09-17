@@ -9,3 +9,13 @@ void OS::Mutex::Lock () {
 void OS::Mutex::UnLock () {
     mMutex.unlock ();
 }
+
+OS::SingleLock::SingleLock (OS::Mutex& inMutex) :
+    mMutex (inMutex) 
+{
+    mMutex.Lock ();
+}
+
+OS::SingleLock::~SingleLock () {
+    mMutex.UnLock ();
+}

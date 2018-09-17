@@ -47,6 +47,8 @@ SIM::Service::~Service () = default;
 
 bool SIM::Service::Load (const json& inConfig) {
     
+    OS::SingleLock lock (mMutex);
+    
     if (mIsRunning) {
         LOGMESSAGE (OS::Log::kWarning, "Cannot load a running simulation");
         return false;
@@ -70,6 +72,8 @@ bool SIM::Service::Load (const json& inConfig) {
 
 bool SIM::Service::Start () {
     
+    OS::SingleLock lock (mMutex);
+    
     if (!mIsLoaded) {
         LOGMESSAGE (OS::Log::kWarning, "Cannot start an unloaded simulation");
         return false;
@@ -90,6 +94,8 @@ bool SIM::Service::Start () {
 
 bool SIM::Service::Stop () {
     
+    OS::SingleLock lock (mMutex);
+    
     if (!mIsLoaded) {
         LOGMESSAGE (OS::Log::kWarning, "Cannot stop an unloaded simulation");
         return false;
@@ -105,8 +111,24 @@ bool SIM::Service::Stop () {
     
     return true;
 }
-
+bool SIM::Service::GetValue (const std::string& inPath, std::string& outValue) {
+    
+    OS::SingleLock lock (mMutex);
+    
+    try {
+        outValue = mLoop->GetValue (inPath);
+        return true;
+    }
+    catch (std::exception& e) {
+        LOGMESSAGE (OS::Log::kError, e.what ());
+        return false;
+    }
+}
+    
 bool SIM::Service::Trigger () {
+    
+    OS::SingleLock lock (mMutex);
+    
     try {
         mLoop->Update ();
         return true;

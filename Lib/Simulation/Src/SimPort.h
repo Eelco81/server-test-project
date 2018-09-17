@@ -31,6 +31,7 @@ public:
     
     const std::string& GetName () const;
     virtual Type GetType () const = 0;
+    virtual std::string GetStringValue () const = 0;
     
 protected:
     std::string mName;

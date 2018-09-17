@@ -4,6 +4,7 @@
 #include "SimBlock.h"
 #include "SimConnector.h"
 #include "SimException.h"
+#include "SimPath.h"
 
 #include <algorithm>
 #include <regex>
@@ -11,31 +12,16 @@
 SIM::Loop::Loop () = default;
 SIM::Loop::~Loop () = default;
 
-std::weak_ptr<SIM::Port> SIM::Loop::FindPort (const std::string& inName) {
+std::weak_ptr<SIM::Port> SIM::Loop::FindPort (const SIM::Path& inPath) const {
     
-    std::regex reInitialLine ("^([A-Za-z0-9]+).([A-Za-z0-9]+).([A-Za-z0-9]+)$");
-    
-    std::smatch matchLine;
-    if (!std::regex_search (inName, matchLine, reInitialLine)) {
-        throw Exception (std::string ("Illegal path <") + inName + std::string (">"));
-    }
-    
-    const auto blockName (matchLine[1].str ());
-    const auto typeName (matchLine[2].str ());
-    const auto portName (matchLine[3].str ());
-    
-    auto blockIt = std::find_if (mBlocks.cbegin (), mBlocks.cend (), [blockName](const auto& block) { return (block->GetName () == blockName); }); 
+    auto nameFinder = [&](const auto& block) { return (block->GetName () == inPath.mBlockID); };
+    auto blockIt = std::find_if (mBlocks.cbegin (), mBlocks.cend (), nameFinder);
     
     if (blockIt == mBlocks.cend ()) {
-        throw Exception (std::string ("Non-existing block <") + blockName + std::string (">"));
+        throw Exception (std::string ("Non-existing block <") + inPath.mBlockID + std::string (">"));
     }
-    if (typeName == "in") {
-        return (*blockIt)->GetInPort (portName);
-    }
-    else if (typeName == "out") {
-        return (*blockIt)->GetOutPort (portName);
-    }
-    throw Exception (std::string ("Illegal identifier <") + typeName + std::string (">, only in/out allowed"));
+    
+    return (*blockIt)->GetPort (inPath);
 }
 
 void SIM::Loop::AddBlock (std::unique_ptr<Block> inBlock) {
@@ -55,8 +41,10 @@ void SIM::Loop::AddBlock (std::unique_ptr<Block> inBlock) {
 void SIM::Loop::Connect (const std::string& inSource, const std::string& inTarget) {
     
     try {
-        auto sourcePort (FindPort (inSource));
-        auto targetPort (FindPort (inTarget));
+        Path sourcePath (inSource);
+        Path targetPath (inTarget);
+        auto sourcePort (FindPort (sourcePath));
+        auto targetPort (FindPort (targetPath));
         auto connector = std::make_unique<Connector> (sourcePort, targetPort);
         mConnectors.emplace_back (std::move (connector));
     }
@@ -93,4 +81,14 @@ void SIM::Loop::Terminate () {
     for (auto& block : mBlocks) {
         block->Terminate ();
     }
+}
+
+std::string SIM::Loop::GetValue (const std::string& inPath) const {
+    
+    Path path (inPath);
+    auto port (FindPort (path).lock ());
+    if (port) {
+        return port->GetStringValue ();
+    }
+    throw Exception (std::string ("Failed to find path <") + inPath + std::string (">"));
 }

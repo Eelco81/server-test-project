@@ -4,6 +4,7 @@
 #define _SIM_SERVICE_H_
 
 #include "Macros.h"
+#include "Mutex.h"
 #include <atomic>
 #include <memory>
 
@@ -36,6 +37,8 @@ public:
     bool Stop ();
     bool IsRunning () const;
 
+    bool GetValue (const std::string& inPath, std::string& outValue);
+
 public:
     bool Trigger ();
     
@@ -45,6 +48,7 @@ private:
     std::unique_ptr<Loop> mLoop;
     std::atomic<bool> mIsLoaded;
     std::atomic<bool> mIsRunning;
+    OS::Mutex mMutex;
 };
 
 }

@@ -14,6 +14,7 @@ public:
     TestBlock (const std::string& inName) : 
         Block (inName)
     {
+        AddInPort<uint8_t> ("input");
     }
     MOCK_METHOD1 (Configure, void (const json&));
     MOCK_METHOD0 (Initialize, void ());
@@ -40,7 +41,7 @@ TEST (SimServiceTester, Run) {
     auto factory = std::make_unique<TestFactory> ();
     SIM::Service service (std::move (factory));
     
-    auto config = R"({
+    const auto config = R"({
         "blocks" : [{
             "name" : "MyName", 
             "type" : "MyType"
@@ -51,6 +52,10 @@ TEST (SimServiceTester, Run) {
     ASSERT_TRUE (service.Start ());
     
     OS::Timing::Sleep (150u);
+    
+    std::string value;
+    ASSERT_TRUE (service.GetValue ("MyName.in.input", value));
+    EXPECT_EQ (std::string ("0"), value);
     
     ASSERT_TRUE (service.Stop ());
 }

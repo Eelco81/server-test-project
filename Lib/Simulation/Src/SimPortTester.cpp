@@ -4,12 +4,10 @@
 #include "gtest/gtest.h"
 
 #include "SimTypedPort.h"
-#include "MathMatrix.h"
-#include "MathVector.h"
 
 template <typename T> 
 class SimPortTester: public ::testing::Test {}; 
-using DataTypes = ::testing::Types<bool, int8_t, int16_t, int32_t, int64_t, uint8_t, uint16_t, uint32_t, uint64_t, float, double, MATH::Matrix<3u,3u>, MATH::Vector<20u>>;
+using DataTypes = ::testing::Types<bool, int8_t, int16_t, int32_t, int64_t, uint8_t, uint16_t, uint32_t, uint64_t, float, double>;
 TYPED_TEST_CASE (SimPortTester, DataTypes);
 
 TYPED_TEST (SimPortTester, Name) {
@@ -41,6 +39,11 @@ TYPED_TEST (SimPortTester, ValueAssignment) {
     SIM::TypedPort<TypeParam> port ("port");
     port = (TypeParam)1;
     EXPECT_EQ (port.Get (), (TypeParam)1);
+}
+
+TYPED_TEST (SimPortTester, GetStringValue) {
+    SIM::TypedPort<TypeParam> port ("port");
+    EXPECT_NE (port.GetStringValue (), "");
 }
 
 TEST (SimPortTester, TypeBool) {

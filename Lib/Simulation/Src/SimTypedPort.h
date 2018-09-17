@@ -20,7 +20,10 @@ public:
     T Get () const;
     void Set (T inValue);
 
-    virtual Type GetType () const;
+public: 
+    // Port Interface
+    virtual Type GetType () const override;
+    virtual std::string GetStringValue () const override;
     
 protected:
     T* mValuePtr;
