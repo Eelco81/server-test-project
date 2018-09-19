@@ -17,9 +17,9 @@ public:
         AddInPort<uint8_t> ("input");
     }
     MOCK_METHOD1 (Configure, void (const json&));
-    MOCK_METHOD0 (Initialize, void ());
-    MOCK_METHOD0 (Step, void ());
-    MOCK_METHOD0 (Terminate, void ());
+    MOCK_METHOD1 (Initialize, void (double));
+    MOCK_METHOD1 (Step, void (double));
+    MOCK_METHOD1 (Terminate, void (double));
 };
 
 class TestFactory : public SIM::Factory {
@@ -27,9 +27,10 @@ protected :
     std::unique_ptr<SIM::Block> CreateBlock (const std::string& inName, const std::string& inType) override {
         auto block = std::make_unique<TestBlock> (inName);
         EXPECT_CALL (*block, Configure (::testing::_)).Times (1);
-        EXPECT_CALL (*block, Initialize ()).Times (1);
-        EXPECT_CALL (*block, Step ()).Times (2);
-        EXPECT_CALL (*block, Terminate ()).Times (1);
+        EXPECT_CALL (*block, Initialize (0.0)).Times (1);
+        EXPECT_CALL (*block, Step (0.1)).Times (1);
+        EXPECT_CALL (*block, Step (0.2)).Times (1);
+        EXPECT_CALL (*block, Terminate (0.2)).Times (1);
         return block;
     }
 };
@@ -42,6 +43,7 @@ TEST (SimServiceTester, Run) {
     SIM::Service service (std::move (factory));
     
     const auto config = R"({
+        "step": 100,
         "blocks" : [{
             "name" : "MyName", 
             "type" : "MyType"

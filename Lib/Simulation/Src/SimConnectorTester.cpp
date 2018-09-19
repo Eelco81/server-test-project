@@ -84,23 +84,6 @@ TEST (SimConnectorTester, NonMatchingTypes) {
     ASSERT_FALSE (true);
 }
 
-
-TEST (SimConnectorTester, NonSupportedTypes) {
-    
-    auto port1 = std::make_shared<SIM::TypedPort<MATH::Matrix<2,2>>> ("port1");
-    auto port2 = std::make_shared<SIM::TypedPort<MATH::Matrix<2,2>>> ("port2");
-
-    try {
-        SIM::Connector connector (port1, port2);
-    }
-    catch (std::exception& e) {
-        ASSERT_EQ (std::string ("Unknown port type"), e.what ());
-        return;
-    }
-    
-    ASSERT_FALSE (true);
-}
-
 TEST (SimConnectorTester, ListedConnectors) {
     
     bool b1 (true);

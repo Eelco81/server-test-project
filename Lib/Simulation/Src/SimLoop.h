@@ -7,6 +7,7 @@
 #include <string>
 
 #include "SimPath.h"
+#include "SimTimer.h"
 
 namespace SIM {
 
@@ -17,7 +18,7 @@ class Connector;
 class Loop {
 
 public:
-    Loop ();
+    Loop (uint64_t inTimeStamp);
     virtual ~Loop ();
 
     void AddBlock (std::unique_ptr<Block> inBlock);
@@ -28,14 +29,17 @@ public:
     void Terminate ();
     
     std::string GetValue (const std::string& inPath) const;
+    uint64_t GetTimeStamp () const;
+    uint64_t GetTimeStep () const;
 
 private:
-    
     std::weak_ptr<Port> FindPort (const Path& inPath) const;
     
+private:
+    Timer mTimer;
     std::vector<std::unique_ptr<Block>> mBlocks;
     std::vector<std::unique_ptr<Connector>> mConnectors;
-
+    
 };
 
 }

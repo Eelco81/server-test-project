@@ -56,7 +56,7 @@ bool SIM::Service::Load (const json& inConfig) {
     
     try {
         mLoop = mFactory->Create (inConfig);
-        mRunner = std::make_unique<SimulationRunner> (100u, *this);
+        mRunner = std::make_unique<SimulationRunner> (mLoop->GetTimeStep (), *this);
     }
     catch (std::exception& e) {
         LOGMESSAGE (OS::Log::kError, e.what ());
@@ -111,6 +111,7 @@ bool SIM::Service::Stop () {
     
     return true;
 }
+
 bool SIM::Service::GetValue (const std::string& inPath, std::string& outValue) {
     
     OS::SingleLock lock (mMutex);
@@ -124,7 +125,7 @@ bool SIM::Service::GetValue (const std::string& inPath, std::string& outValue) {
         return false;
     }
 }
-    
+
 bool SIM::Service::Trigger () {
     
     OS::SingleLock lock (mMutex);

@@ -22,9 +22,9 @@ public:
     virtual ~Block ();
     
     virtual void Configure (const json& inConfig) {}
-    virtual void Initialize () {}
-    virtual void Step () {}
-    virtual void Terminate () {}
+    virtual void Initialize (double inTime) {}
+    virtual void Step (double inTime) {}
+    virtual void Terminate (double inTime) {}
 
 public:
 

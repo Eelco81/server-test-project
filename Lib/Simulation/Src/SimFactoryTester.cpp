@@ -38,11 +38,14 @@ class SimFactoryTester : public ::testing::TestWithParam<TestParam> {};
 
 INSTANTIATE_TEST_CASE_P (SimFactoryTester, SimFactoryTester,
     ::testing::Values(
-        std::make_tuple (R"({})", std::string ("No blocks defined in config")),
-        std::make_tuple (R"({ "blocks" : [] })", std::string ("No blocks defined in config")),
-        std::make_tuple (R"({ "blocks" : [{}] })", std::string ("Block without \"name\" element in config")),
-        std::make_tuple (R"({ "blocks" : [{ "name": "MyName" }] })", std::string ("Block without \"type\" element in config")),
+        std::make_tuple (R"({})", std::string ("No valid step defined in config")),
+        std::make_tuple (R"({ "step": "blah" })", std::string ("No valid step defined in config")),  
+        std::make_tuple (R"({ "step": 10 })", std::string ("No blocks defined in config")),
+        std::make_tuple (R"({ "step": 10, "blocks" : [] })", std::string ("No blocks defined in config")),
+        std::make_tuple (R"({ "step": 10, "blocks" : [{}] })", std::string ("Block without \"name\" element in config")),
+        std::make_tuple (R"({ "step": 10, "blocks" : [{ "name": "MyName" }] })", std::string ("Block without \"type\" element in config")),
         std::make_tuple (R"({
+            "step": 10,
             "blocks" : [{
                 "name" : "MyName",
                 "type" : "MyType"
@@ -53,6 +56,7 @@ INSTANTIATE_TEST_CASE_P (SimFactoryTester, SimFactoryTester,
             }]
         })", std::string ("Cannot add block <MyName>, the name is not unique")),
         std::make_tuple (R"({
+            "step": 10,
             "blocks" : [{
                 "name" : "MyName",
                 "type" : "MyType"
@@ -60,6 +64,7 @@ INSTANTIATE_TEST_CASE_P (SimFactoryTester, SimFactoryTester,
             "connectors":[{}]
         })", std::string ("Connector without \"source\" element in config")),
         std::make_tuple (R"({
+            "step": 10,
             "blocks" : [{
                 "name" : "MyName",
                 "type" : "MyType"
@@ -67,6 +72,7 @@ INSTANTIATE_TEST_CASE_P (SimFactoryTester, SimFactoryTester,
             "connectors":[{ "source": "MySource" }]
         })", std::string ("Connector without \"target\" element in config")),
         std::make_tuple (R"({
+            "step": 10,
             "blocks" : [{
                 "name" : "MyName",
                 "type" : "MyType"
@@ -74,6 +80,7 @@ INSTANTIATE_TEST_CASE_P (SimFactoryTester, SimFactoryTester,
             "connectors":[{ "source": "Blah.out.output", "target": "MyName.in.input" }]
         })", std::string ("Cannot connect <Blah.out.output> to <MyName.in.input>: Non-existing block <Blah>")),
         std::make_tuple (R"({
+            "step": 10,
             "blocks" : [{
                 "name" : "MyName",
                 "type" : "MyType"

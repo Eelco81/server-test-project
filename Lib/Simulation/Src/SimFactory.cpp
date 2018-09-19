@@ -5,6 +5,7 @@
 #include "SimException.h"
 
 namespace {
+    const std::string stepTag ("step");
     const std::string blocksTag ("blocks");
     const std::string connectorsTag ("connectors");
     const std::string settingsTag ("settings");
@@ -16,7 +17,11 @@ namespace {
 
 std::unique_ptr<SIM::Loop> SIM::Factory::Create (const json& inConfig) {
     
-    auto loop = std::make_unique<Loop> ();
+    if (inConfig.find (stepTag) == inConfig.end () || !inConfig[stepTag].is_number ()) {
+        throw Exception ("No valid step defined in config");
+    }
+    
+    auto loop = std::make_unique<Loop> (inConfig[stepTag].get<uint64_t> ());
     
     if (inConfig.find (blocksTag) == inConfig.end () || inConfig[blocksTag].empty ()) {
         throw Exception ("No blocks defined in config");

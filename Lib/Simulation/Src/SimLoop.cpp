@@ -9,7 +9,11 @@
 #include <algorithm>
 #include <regex>
 
-SIM::Loop::Loop () = default;
+SIM::Loop::Loop (uint64_t inTimeStep) : 
+    mTimer (inTimeStep)
+{
+}
+
 SIM::Loop::~Loop () = default;
 
 std::weak_ptr<SIM::Port> SIM::Loop::FindPort (const SIM::Path& inPath) const {
@@ -55,8 +59,10 @@ void SIM::Loop::Connect (const std::string& inSource, const std::string& inTarge
 
 void SIM::Loop::Initialize () {
     
+    mTimer.Initialize ();
+
     for (auto& block : mBlocks) {
-        block->Initialize ();
+        block->Initialize (mTimer.GetTime ());
     }
     for (auto& connector : mConnectors) {
         connector->Transfer ();
@@ -65,11 +71,13 @@ void SIM::Loop::Initialize () {
 
 void SIM::Loop::Update () {
     
+    mTimer.Tick ();
+    
     // todo: this causes massive delays, blocks and connectors need to be 
     // executed chronoloigically.
     
     for (auto& block : mBlocks) {
-        block->Step ();
+        block->Step (mTimer.GetTime ());
     }
     for (auto& connector : mConnectors) {
         connector->Transfer ();
@@ -79,7 +87,7 @@ void SIM::Loop::Update () {
 void SIM::Loop::Terminate () {
     
     for (auto& block : mBlocks) {
-        block->Terminate ();
+        block->Terminate (mTimer.GetTime ());
     }
 }
 
@@ -91,4 +99,12 @@ std::string SIM::Loop::GetValue (const std::string& inPath) const {
         return port->GetStringValue ();
     }
     throw Exception (std::string ("Failed to find path <") + inPath + std::string (">"));
+}
+
+uint64_t SIM::Loop::GetTimeStamp () const {
+    return mTimer.GetTimeStamp ();
+}
+
+uint64_t SIM::Loop::GetTimeStep () const {
+    return mTimer.GetTimeStep ();
 }
