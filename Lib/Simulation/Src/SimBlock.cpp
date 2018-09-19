@@ -34,6 +34,12 @@ std::weak_ptr<SIM::Port> SIM::Block::GetPort (const Path& inPath) {
             return *it;
         }
     }
+    else if (inPath.mType == Path::PARAMETER) {
+        auto it = std::find_if (mParameters.begin (), mParameters.end (), nameIterator);
+        if (it != mParameters.end ()) {
+            return *it;
+        }
+    }
     
     return std::weak_ptr<Port> ();
 }

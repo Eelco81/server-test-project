@@ -47,6 +47,10 @@ void SIM::Loop::Connect (const std::string& inSource, const std::string& inTarge
     try {
         Path sourcePath (inSource);
         Path targetPath (inTarget);
+        
+        // todo: only allow connections from otuputs to inputs
+        // todo: do not accept multiple connectors to the same input
+        
         auto sourcePort (FindPort (sourcePath));
         auto targetPort (FindPort (targetPath));
         auto connector = std::make_unique<Connector> (sourcePort, targetPort);

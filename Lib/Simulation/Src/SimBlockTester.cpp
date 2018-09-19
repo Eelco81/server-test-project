@@ -13,10 +13,12 @@ public:
     {
         AddInPort (&mInput, "input");
         AddOutPort (&mOutput, "output");
+        AddParPort (&mParameter, "parameter");
     }
 public:
     bool mInput = true;
     bool mOutput = false;
+    bool mParameter = false;
 };
 
 }
@@ -52,4 +54,9 @@ TEST (SimBlockTester, NonExistingInputPorts) {
 TEST (SimBlockTester, NonExistingOutputPorts) {
     TestBlock block;
     ASSERT_EQ (nullptr, block.GetPort (SIM::Path ("Test", "NotExisting", SIM::Path::OUTPUT)).lock ());
+}
+
+TEST (SimBlockTester, NonExistingParameterPorts) {
+    TestBlock block;
+    ASSERT_EQ (nullptr, block.GetPort (SIM::Path ("Test", "NotExisting", SIM::Path::PARAMETER)).lock ());
 }

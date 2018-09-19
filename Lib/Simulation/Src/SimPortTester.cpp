@@ -41,9 +41,22 @@ TYPED_TEST (SimPortTester, ValueAssignment) {
     EXPECT_EQ (port.Get (), (TypeParam)1);
 }
 
-TYPED_TEST (SimPortTester, GetStringValue) {
+TYPED_TEST (SimPortTester, StringValue) {
     SIM::TypedPort<TypeParam> port ("port");
     EXPECT_NE (port.GetStringValue (), "");
+    port.SetStringValue ("1");
+    EXPECT_NE (port.GetStringValue (), "");
+}
+
+TYPED_TEST (SimPortTester, StringValueInvalidString) {
+    SIM::TypedPort<TypeParam> port ("port");
+    try {
+        port.SetStringValue ("blah");
+        ASSERT_TRUE (false);
+    }
+    catch (std::exception& e) {
+        ASSERT_EQ (std::string ("Invalid value string for port <port>"), e.what());
+    }
 }
 
 TEST (SimPortTester, TypeBool) {

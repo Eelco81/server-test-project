@@ -10,7 +10,8 @@ struct Path {
     
     enum Type : uint8_t {
         INPUT = 0x00,
-        OUTPUT = 0x01
+        OUTPUT = 0x01,
+        PARAMETER = 0x02
     };
     
     Path (const std::string& inTarget);

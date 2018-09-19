@@ -114,9 +114,8 @@ bool SIM::Service::Stop () {
 
 bool SIM::Service::GetValue (const std::string& inPath, std::string& outValue) {
     
-    OS::SingleLock lock (mMutex);
-    
     try {
+        OS::SingleLock lock (mMutex);
         outValue = mLoop->GetValue (inPath);
         return true;
     }
@@ -128,15 +127,14 @@ bool SIM::Service::GetValue (const std::string& inPath, std::string& outValue) {
 
 bool SIM::Service::Trigger () {
     
-    OS::SingleLock lock (mMutex);
-    
     try {
+        OS::SingleLock lock (mMutex);
         mLoop->Update ();
         return true;
     }
     catch (std::exception& e) {
         LOGMESSAGE (OS::Log::kError, e.what ());
-        return false;
+        return Stop ();
     }
 }
 

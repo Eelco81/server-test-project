@@ -24,6 +24,7 @@ public:
     // Port Interface
     virtual Type GetType () const override;
     virtual std::string GetStringValue () const override;
+    virtual void SetStringValue (const std::string& inValue) override;
     
 protected:
     T* mValuePtr;

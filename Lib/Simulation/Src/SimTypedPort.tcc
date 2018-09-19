@@ -1,5 +1,6 @@
 
 #include <type_traits>
+#include "SimException.h"
 
 template <typename T>
 SIM::TypedPort<T>::TypedPort (const std::string& inName, T* inValuePtr) : 
@@ -87,4 +88,23 @@ SIM::Port::Type SIM::TypedPort<T>::GetType () const {
 template<typename T>
 std::string SIM::TypedPort<T>::GetStringValue () const {
     return std::to_string (*mValuePtr);
+}
+
+template<typename T>
+void SIM::TypedPort<T>::SetStringValue (const std::string& inValue) {
+    
+    try {
+        if (std::is_same<T,float>::value) {
+            *mValuePtr = std::stof (inValue);
+        }
+        else if (std::is_same<T,double>::value) {
+            *mValuePtr = std::stof (inValue);
+        }
+        else {
+            *mValuePtr = std::stoi (inValue);
+        }
+    }
+    catch (...) {
+        throw Exception (std::string ("Invalid value string for port <") + GetName () + std::string (">"));
+    }
 }

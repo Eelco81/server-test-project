@@ -24,8 +24,11 @@ SIM::Path::Path (const std::string& inTarget) {
     else if (typeName == "out") {
         mType = OUTPUT;
     }
+    else if (typeName == "par") {
+        mType = PARAMETER;
+    }
     else {
-        throw Exception (std::string ("Illegal identifier in path <") + inTarget + std::string (">, only in/out allowed"));
+        throw Exception (std::string ("Illegal identifier in path <") + inTarget + std::string (">, only in/out/par allowed"));
     }
 }
 
@@ -37,5 +40,17 @@ SIM::Path::Path (const std::string& inBlockID, const std::string& inPortID, Type
 }
 
 std::string SIM::Path::ToString () const {
-    return mBlockID + std::string (".") + (mType == INPUT ? "in" : "out") + std::string (".") + mPortID;
+    
+    std::string type ("??");
+    if (mType == INPUT) {
+        type = "in";
+    }
+    else if (mType == OUTPUT) {
+        type = "out";
+    }
+    else if (mType == PARAMETER) {
+        type = "par";
+    }
+    
+    return mBlockID + std::string (".") + type + std::string (".") + mPortID;
 }

@@ -53,10 +53,22 @@ protected:
         mOutputs.emplace_back (std::make_shared<TypedPort<T>> (inName));
     }
     
-protected:
+    template<typename T>
+    void AddParPort (T* inValuePtr, const std::string& inName) {
+        mParameters.emplace_back (std::make_shared<TypedPort<T>> (inName, inValuePtr));
+    }
     
+    template<typename T>
+    void AddParPort (const std::string& inName) {
+        mParameters.emplace_back (std::make_shared<TypedPort<T>> (inName));
+    }
+    
+protected:
     std::vector<std::shared_ptr<Port>> mInputs;
     std::vector<std::shared_ptr<Port>> mOutputs;
+    std::vector<std::shared_ptr<Port>> mParameters;
+    
+    //todo: rather use ID instead of name
     std::string mName;
 
 };

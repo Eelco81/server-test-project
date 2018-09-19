@@ -53,7 +53,7 @@ TEST (SimServiceTester, Run) {
     ASSERT_TRUE (service.Load (config));
     ASSERT_TRUE (service.Start ());
     
-    OS::Timing::Sleep (150u);
+    OS::Timing::Sleep (199u);
     
     std::string value;
     ASSERT_TRUE (service.GetValue ("MyName.in.input", value));
