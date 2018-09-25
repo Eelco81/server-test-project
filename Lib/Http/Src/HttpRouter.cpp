@@ -14,6 +14,7 @@ HTTP::Router::Router () = default;
 HTTP::Router::~Router () = default;
 
 void HTTP::Router::AddEndPoint (std::unique_ptr <HTTP::EndPoint> inEndPoint) {
+    
     std::lock_guard<std::mutex> lockGuard (mMutex);
     mEndPoints.push_back (std::move (inEndPoint));
 }
@@ -32,6 +33,11 @@ void HTTP::Router::Dispatch (const HTTP::Request& inRequest, HTTP::Response& out
     
     if (!inRequest.mIsValid) {
         outResponse.mCode = Code::BAD_REQUEST;
+        return;
+    }
+    
+    if (inRequest.mMethod == Method::UNKNOWN_METHOD) {
+        outResponse.mCode = Code::NOT_FOUND;
         return;
     }
     

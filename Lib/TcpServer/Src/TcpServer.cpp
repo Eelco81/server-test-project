@@ -96,9 +96,10 @@ void TCP::Server::Stop () {
     mListener->Kill ();
     mListener->Join ();
     
-    mMutex->Lock ();
-    std::for_each (mClients.begin (), mClients.end (), [] (ClientPtr& client) { client->Stop (); });
-    mMutex->UnLock ();
+    {
+        OS::SingleLock lock (*mMutex);
+        std::for_each (mClients.begin (), mClients.end (), [] (ClientPtr& client) { client->Stop (); });
+    }
     
     CleanUp ();
     
@@ -112,11 +113,11 @@ std::size_t TCP::Server::GetClientCount () const {
 
 // called from listener thread
 void TCP::Server::RegisterClient (std::unique_ptr <OS::Socket> inClientSocket) {
+    
     LOGMESSAGE (OS::Log::kDebug, std::string ("[TcpServer] Registering connected client with id ") + std::to_string (inClientSocket->GetId ()));
-    mMutex->Lock ();
+    OS::SingleLock lock (*mMutex);
     mClients.emplace_back (mFactory->Create (std::move (inClientSocket)));
     mClients.back ()->Start (); // No need to listen to the return value of start
-    mMutex->UnLock ();
 }
 
 // called from cleaner thread
@@ -131,7 +132,6 @@ void TCP::Server::CleanUp () {
         return false;
     };
 
-    mMutex->Lock ();
+    OS::SingleLock lock (*mMutex);
     mClients.erase (std::remove_if (mClients.begin (), mClients.end (), remover), mClients.end ());
-    mMutex->UnLock ();
 }

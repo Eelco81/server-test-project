@@ -50,7 +50,6 @@ Matrix<M,N,T> operator* (const Matrix<M,K,T>& inLhs, const Matrix<K,N,T>& inRhs)
     return mat;
 }
 
-
 template <std::size_t N, std::size_t K, typename T = double>
 Matrix<N,K,T> operator/ (const Matrix<N,N,T>& inLhs, const Matrix<N,K,T>& inRhs) {
     

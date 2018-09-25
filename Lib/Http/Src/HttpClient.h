@@ -35,7 +35,7 @@ public:
 protected:
     std::shared_ptr<Router> mRouter;
 };
-    
+
 class ClientFactory : public TCP::ClientFactory {
 public:
     ClientFactory (std::shared_ptr<Router> inRouter);

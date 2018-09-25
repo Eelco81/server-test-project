@@ -13,5 +13,3 @@ API::SystemRouter::SystemRouter () :
     AddEndPoint (std::make_unique<EchoEndPoint> ());
     AddEndPoint (std::make_unique<FileEndPoint> ("/home", "./Public/index.html"));
 }
-
-API::SystemRouter::~SystemRouter () = default;

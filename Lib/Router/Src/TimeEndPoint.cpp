@@ -1,5 +1,4 @@
 
-
 #include <json.hpp>
 
 #include "Timing.h"

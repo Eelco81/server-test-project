@@ -88,15 +88,12 @@ MATH::Matrix<Nrows,Ncols,T> MATH::Matrix<Nrows,Ncols,T>::operator/ (T inValue) c
 
 template<std::size_t Nrows, std::size_t Ncols, typename T>
 MATH::Matrix<Ncols,Nrows,T> MATH::Matrix<Nrows,Ncols,T>::operator~ () const {
-
     Matrix<Ncols,Nrows,T> mat;
-    
     for (std::size_t i (0u); i < Nrows; i++) {
         for (std::size_t j (0u); j < Ncols; j++) {
             mat(j,i) = (*this)(i,j);
         }
     }
-    
     return mat;
 }
 

@@ -10,8 +10,7 @@ class SystemRouter : public HTTP::Router {
     
 public:
     SystemRouter ();
-    ~SystemRouter ();
-    
+
 };
 
 }
