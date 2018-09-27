@@ -35,6 +35,7 @@ HTTP::Version HTTP::StringToVersion (const std::string& inString) {
 
 std::string HTTP::CodeToString (HTTP::Code inCode) {
     switch (inCode) {
+        case Code::SWITCHING_PROTOCOLS : return "Switching Protocols";
         case Code::OK : return "OK";
         case Code::CREATED : return "Created";
         case Code::ACCEPTED : return "Accepted";

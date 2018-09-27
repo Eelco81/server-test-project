@@ -7,6 +7,7 @@
 #include "CommandLine.h"
 #include "Socket.h"
 #include "HttpClient.h"
+#include "WebSockClient.h"
 #include "SystemRouter.h"
 #include "TcpServer.h"
 #include "SupportThread.h"
@@ -34,15 +35,20 @@ int main (int argc, char** argv) {
     supportThread.Spawn ();
 
     auto router (std::make_shared<API::SystemRouter> ());
-    auto factory (std::make_shared<HTTP::ClientFactory> (router));
-    TCP::Server server (ip, port, factory);
-    server.Start ();
+    auto httpFactory (std::make_shared<HTTP::ClientFactory> (router));
+    TCP::Server httpServer (ip, port, httpFactory);
+    httpServer.Start ();
+    
+    auto websockFactory (std::make_shared<RFC6455::ClientFactory> ());
+    TCP::Server websockServer (ip, "2345", websockFactory);
+    websockServer.Start ();
 
     std::string name;
     LOGMESSAGE (OS::Log::kInfo, "Quit the app using ENTER on the command line.");
     std::getline (std::cin, name);
     
-    server.Stop ();
+    websockServer.Stop ();
+    httpServer.Stop ();
 
     supportThread.Kill ();
     supportThread.Join ();

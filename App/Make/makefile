@@ -4,7 +4,7 @@ SOURCEDIR       = ./../Src
 LIBDIR          = ./../../Lib
 TOOLDIR         = ./../../Tools
 SOURCES         = $(wildcard $(SOURCEDIR)/*.cpp)
-DEPENDENCIES    = Router Http TcpServer AppUtils Core
+DEPENDENCIES    = Websockets Router Http TcpServer Simulation AppUtils Core
 LINKS           = -lpthread
 TARGET          = serveraplication
 

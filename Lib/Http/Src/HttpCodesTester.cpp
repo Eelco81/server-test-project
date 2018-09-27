@@ -35,6 +35,7 @@ TEST (HttpCodesTester, StringToVersion) {
 
 TEST (HttpCodesTester, CodeToString) {
     ASSERT_EQ (std::string ("Unknown"), CodeToString (Code::UNKNOWN_CODE));
+    ASSERT_EQ (std::string ("Switching Protocols"), CodeToString (Code::SWITCHING_PROTOCOLS)); 
     ASSERT_EQ (std::string ("OK"), CodeToString (Code::OK)); 
     ASSERT_EQ (std::string ("Created"), CodeToString (Code::CREATED)); 
     ASSERT_EQ (std::string ("Accepted"), CodeToString (Code::ACCEPTED)); 

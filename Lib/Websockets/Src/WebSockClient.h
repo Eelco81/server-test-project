@@ -2,19 +2,27 @@
 #ifndef _RFC6455_CLIENT_H_
 #define _RFC6455_CLIENT_H_
 
+#include <string>
+#include <memory>
+
 #include "TcpClient.h"
+#include "TcpClientFactory.h"
+#include "HttpRequest.h"
+#include "WebSockFrameParser.h"
 
 namespace OS {
     class Socket;
 }
 
 namespace HTTP {
-    struct Request;
+    class Response;
 }
 
 namespace RFC6455 {
 
-class Client : public TCP::Client {
+class Frame;
+
+class Client : public TCP::Client, public HTTP::RequestParser, public FrameParser {
 
 public:
     Client () = delete;
@@ -24,9 +32,15 @@ public:
 public: 
     virtual void OnReceived (const std::vector<uint8_t>& inBuffer) override;
     
-    virtual void HandleMessage (const Message& inMessage) override;
-    virtual void SendMessage (const Message& inMessage);
+    virtual void HandleRequest (const HTTP::Request& inRequest) override;
+    virtual void HandleFrame (const Frame& inFrame) override;
     
+public:
+    void SendResponse (const HTTP::Request& inRequest, const HTTP::Response& inResponse);
+    void SendFrame (const Frame& inFrame);
+    
+private:
+    bool mIsUpgraded;
 };
 
 class ClientFactory : public TCP::ClientFactory {

@@ -29,6 +29,7 @@ Version StringToVersion (const std::string& inString);
 
 enum Code : uint32_t {
     UNKNOWN_CODE = 0x00,
+    SWITCHING_PROTOCOLS = 101u,
     OK = 200u,
     CREATED = 201u,
     ACCEPTED = 202u,

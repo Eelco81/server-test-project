@@ -31,7 +31,7 @@ public:
      */
     virtual void HandleFrame (const Frame& inFrame) = 0;
 
-protected:
+private:
     std::vector<uint8_t> mBuffer;
 
 };
