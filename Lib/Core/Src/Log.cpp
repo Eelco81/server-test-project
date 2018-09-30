@@ -15,7 +15,9 @@ OS::Log::Log () :
 {
 }
 
-OS::Log::~Log () = default;
+OS::Log::~Log () {
+    Flush ();
+}
 
 void OS::Log::Initialize (const std::string& inLevel) {
     auto it = std::find_if (kLevelMap.begin (), kLevelMap.end (), [&inLevel] (const std::pair <Levels, std::string>& inPair) {
@@ -36,18 +38,16 @@ void OS::Log::LogMessage (OS::Log::Levels inLevel, const std::string& inMessage)
         const auto date (OS::Timing::ToString (OS::Timing::Now()));
         const std::string message (date + std::string (" - ") + kLevelMap.at (inLevel) + std::string (" - ") + inMessage);
 
-        mMutex.lock ();
+        SingleLock lock (mMutex);
         mMessages.push (message);
-        mMutex.unlock ();
     }
 }
 
 void OS::Log::Flush () {
     
-    mMutex.lock ();
+    SingleLock lock (mMutex);
     while (mMessages.size () > 0) {
         std::cout << mMessages.front () << std::endl;
         mMessages.pop ();
     }
-    mMutex.unlock ();
 }

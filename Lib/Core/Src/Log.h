@@ -8,6 +8,7 @@
 #include <map>
 
 #include "Macros.h"
+#include "Mutex.h"
 
 #define LOGMESSAGE OS::Log::Instance ().LogMessage
 
@@ -44,7 +45,7 @@ public:
     void Flush ();
 
 private:
-    std::mutex mMutex;
+    Mutex mMutex;
     std::queue <std::string> mMessages;
     
     Levels mLevel;
