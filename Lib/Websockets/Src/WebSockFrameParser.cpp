@@ -18,8 +18,9 @@ void RFC6455::FrameParser::Write (const std::vector<uint8_t>& inBuffer) {
     }
     
     while (1) {
+        
         Frame frame;
-    
+        
         frame.mFin = (mBuffer[0u] & 0b10000000);
         frame.mOpCode = (mBuffer[0u] & 0b00001111);
         frame.mIsMasked = (mBuffer[1u] & 0b10000000);

@@ -26,7 +26,7 @@ public:
     virtual ~Client ();
     
 public: // todo: this should be private
-    virtual void OnReceived (const std::vector<uint8_t>& inBuffer) override;
+    virtual void HandlePacket (const std::vector<uint8_t>& inBuffer) override;
     virtual void HandleRequest (const Request& inRequest) override;
 
 public:

@@ -12,40 +12,41 @@
 
 namespace {
 
-    class ReceiveThread : public OS::Thread {
-        
-    public:
-        ReceiveThread (TCP::Client& inClient, std::shared_ptr<OS::Socket> inSocket) :
-            Thread (std::string ("Client-") + std::to_string (inSocket->GetId ())),
-            mClient (inClient),
-            mSocket (inSocket)
-        {
-        }
+class ReceiveThread : public OS::Thread {
+    
+public:
+    ReceiveThread (TCP::Client& inClient, std::shared_ptr<OS::Socket> inSocket) :
+        Thread (std::string ("Client-") + std::to_string (inSocket->GetId ())),
+        mClient (inClient),
+        mSocket (inSocket)
+    {
+    }
 
-        virtual void Execute () override {
+    virtual void Execute () override {
+        
+        while (mSocket->IsConnected ()) {
             
-            while (mSocket->IsConnected ()) {
-                
-                std::vector<uint8_t> buffer (MAX_BUFFER_SIZE);
-                const auto result (mSocket->Receive (buffer)); // blocking call
-                if (result > 0) {
-                    buffer.resize (result);
-                    mClient.OnReceived (buffer);
-                }
+            std::vector<uint8_t> buffer (MAX_BUFFER_SIZE);
+            const auto result (mSocket->Receive (buffer)); // blocking call
+            if (result > 0) {
+                buffer.resize (result);
+                mClient.HandlePacket (buffer);
             }
-            
-            mSocket->Close ();
-        }
-
-        virtual void Kill () override {
-            mSocket->Close();
         }
         
-    private:
-        TCP::Client& mClient;
-        std::shared_ptr<OS::Socket> mSocket;
-    };
-}
+        mSocket->Close ();
+    }
+
+    virtual void Kill () override {
+        mSocket->Close();
+    }
+    
+private:
+    TCP::Client& mClient;
+    std::shared_ptr<OS::Socket> mSocket;
+};
+
+} // end anonymous namespace
 
 TCP::Client::Client (std::string inAddress, std::string inPort) :
     mSocket (std::make_shared<OS::Socket> (inAddress, inPort))
@@ -75,6 +76,10 @@ bool TCP::Client::Start () {
 void TCP::Client::Stop () {
     mThread->Kill ();
     mThread->Join ();
+}
+
+void TCP::Client::Quit () {
+    mThread->Kill ();
 }
 
 bool TCP::Client::IsConnected () const {

@@ -20,7 +20,7 @@ public:
        TCP::Client (std::move (inSocket)) 
     {
     }
-    void OnReceived (const std::vector<uint8_t>& inBuffer) override {
+    void HandlePacket (const std::vector<uint8_t>& inBuffer) override {
         Send (inBuffer);
     }
 };
@@ -31,7 +31,7 @@ public:
        TCP::Client (inAddress, inPort) 
     {
     }
-    void OnReceived (const std::vector<uint8_t>& inBuffer) override {
+    void HandlePacket (const std::vector<uint8_t>& inBuffer) override {
         std::copy (inBuffer.begin (), inBuffer.end (), std::back_inserter (mData));
     }
     std::vector<uint8_t> mData = {};

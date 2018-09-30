@@ -17,7 +17,7 @@ HTTP::Client::Client (std::unique_ptr <OS::Socket> inSocket, std::shared_ptr<HTT
 
 HTTP::Client::~Client () = default;
 
-void HTTP::Client::OnReceived (const std::vector<uint8_t>& inBuffer) {
+void HTTP::Client::HandlePacket (const std::vector<uint8_t>& inBuffer) {
     const std::string input (reinterpret_cast<const char*>(inBuffer.data ()), inBuffer.size ());
     Write (input);
 }

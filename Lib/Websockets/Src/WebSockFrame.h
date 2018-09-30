@@ -4,6 +4,7 @@
 
 #include <cstdint>
 #include <vector>
+#include <string>
 
 namespace RFC6455 {
 
@@ -41,6 +42,11 @@ struct Frame {
      * Create a buffer out of the data
      */
     std::vector<uint8_t> ToBuffer () const;
+    
+    /**
+     * Create a log message summarizing the packet
+     */
+    std::string ToMessage () const;
     
     /**
      * Data members

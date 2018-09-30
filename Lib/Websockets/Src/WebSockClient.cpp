@@ -18,7 +18,7 @@ RFC6455::Client::Client (std::unique_ptr <OS::Socket> inSocket) :
 
 RFC6455::Client::~Client () = default;
 
-void RFC6455::Client::OnReceived (const std::vector<uint8_t>& inBuffer) {
+void RFC6455::Client::HandlePacket (const std::vector<uint8_t>& inBuffer) {
     if (!mIsUpgraded) {
         const std::string input (reinterpret_cast<const char*>(inBuffer.data ()), inBuffer.size ());
         HTTP::RequestParser::Write (input);
@@ -55,7 +55,7 @@ void RFC6455::Client::HandleRequest (const HTTP::Request& inRequest) {
 }
 
 void RFC6455::Client::HandleFrame (const RFC6455::Frame& inFrame) {
-    LOGMESSAGE (OS::Log::kInfo, std::string ("RFC6455 FIN[") + std::to_string (inFrame.mFin) + std::string ("] OpCode [") + std::to_string (inFrame.mOpCode) + std::string ("]"));
+    LOGMESSAGE (OS::Log::kTrace, std::string ("Received ") + inFrame.ToMessage ());
     
     if (inFrame.mOpCode == Frame::OpCode::PING) {
         Frame frame;
@@ -68,7 +68,7 @@ void RFC6455::Client::HandleFrame (const RFC6455::Frame& inFrame) {
         frame.mFin = true;
         frame.mOpCode = Frame::OpCode::CLOSE;
         SendFrame (frame);
-        //Stop();//why crash?
+        Quit ();
     }
     else {
         SendFrame (inFrame);
@@ -83,6 +83,7 @@ void RFC6455::Client::SendResponse (const HTTP::Request& inRequest, const HTTP::
 }
 
 void RFC6455::Client::SendFrame (const RFC6455::Frame& inFrame) {
+    LOGMESSAGE (OS::Log::kTrace, std::string ("Send ") + inFrame.ToMessage ());
     TCP::Client::Send (inFrame.ToBuffer ());
 }
 

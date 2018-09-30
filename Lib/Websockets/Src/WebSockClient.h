@@ -25,24 +25,54 @@ class Frame;
 class Client : public TCP::Client, public HTTP::RequestParser, public FrameParser {
 
 public:
+    /**
+     * Deleted default constructor
+     */
     Client () = delete;
+    
+    /**
+     * Constructor
+     */
     Client (std::unique_ptr <OS::Socket> inSocket);
+    
+    /**
+     * Virtual destructor
+     */
     virtual ~Client ();
     
-public: 
-    virtual void OnReceived (const std::vector<uint8_t>& inBuffer) override;
+    /**
+     * Process an incoming TCP Packet (from TCP::Client)
+     */
+    virtual void HandlePacket (const std::vector<uint8_t>& inBuffer) override;
     
+    /**
+     * Process an incoming handshake HTTP Request (from HTTP::RequestParser)
+     */
     virtual void HandleRequest (const HTTP::Request& inRequest) override;
+    
+    /**
+     * Process an incoming RFC6455 Frame (from RFC6455::FrameParser)
+     */
     virtual void HandleFrame (const Frame& inFrame) override;
     
-public:
-    void SendResponse (const HTTP::Request& inRequest, const HTTP::Response& inResponse);
+    /**
+     * Send a frame over the RFC6455 connection
+     */
     void SendFrame (const Frame& inFrame);
+
+private:
+    /**
+     * Sends the websocket handshake response 
+     */
+    void SendResponse (const HTTP::Request& inRequest, const HTTP::Response& inResponse);
     
 private:
     bool mIsUpgraded;
 };
 
+/**
+ * Factory implementation
+ */
 class ClientFactory : public TCP::ClientFactory {
 public:
     std::unique_ptr<TCP::Client> Create (std::unique_ptr<OS::Socket> inSocket) const override;
