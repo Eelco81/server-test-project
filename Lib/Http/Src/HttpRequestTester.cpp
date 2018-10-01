@@ -2,10 +2,11 @@
 #include <string>
 #include "gtest/gtest.h"
 #include "HttpRequest.h"
+#include "HttpRequestDecoder.h"
 
 namespace {
 
-class RequestHarvester : public HTTP::RequestParser {
+class RequestHarvester : public HTTP::RequestDecoder {
 protected:
     virtual void HandleRequest (const HTTP::Request& inRequest) override {
         mRequests.push_back (inRequest);
@@ -43,23 +44,23 @@ INSTANTIATE_TEST_CASE_P (HttpRequestParserSuccessTester, HttpRequestParserSucces
 );
 
 TEST_P (HttpRequestParserSuccessTester, ParseInitialLine) {
-    RequestHarvester parser;
-    parser.Write (std::get<0> (GetParam ()));
-    ASSERT_EQ (std::get<1> (GetParam ()), parser.mRequests[0].mMethod);
-    ASSERT_EQ (std::get<2> (GetParam ()), parser.mRequests[0].mVersion);
-    ASSERT_EQ (std::string ("/some/path"), parser.mRequests[0].mPath);
-    ASSERT_EQ (1u, parser.mRequests.size ());
-    ASSERT_EQ (0u, parser.mRequests[0].mHeaders.size ());
-    ASSERT_EQ (std::string (""), parser.mRequests[0].mBody);
-    ASSERT_TRUE (parser.mRequests[0].mIsValid);
+    RequestHarvester decoder;
+    decoder.Write (std::get<0> (GetParam ()));
+    ASSERT_EQ (std::get<1> (GetParam ()), decoder.mRequests[0].mMethod);
+    ASSERT_EQ (std::get<2> (GetParam ()), decoder.mRequests[0].mVersion);
+    ASSERT_EQ (std::string ("/some/path"), decoder.mRequests[0].mPath);
+    ASSERT_EQ (1u, decoder.mRequests.size ());
+    ASSERT_EQ (0u, decoder.mRequests[0].mHeaders.size ());
+    ASSERT_EQ (std::string (""), decoder.mRequests[0].mBody);
+    ASSERT_TRUE (decoder.mRequests[0].mIsValid);
 }
 
 TEST_P (HttpRequestParserSuccessTester, ParseMultipleMessages) {
-    RequestHarvester parser;
+    RequestHarvester decoder;
     const auto message (std::get<0> (GetParam ()));
-    parser.Write (message + message + message + message + message);
-    ASSERT_EQ (5u, parser.mRequests.size());
-    for (auto request : parser.mRequests) {
+    decoder.Write (message + message + message + message + message);
+    ASSERT_EQ (5u, decoder.mRequests.size());
+    for (auto request : decoder.mRequests) {
         ASSERT_EQ (std::get<1> (GetParam ()), request.mMethod);
         ASSERT_EQ (std::get<2> (GetParam ()), request.mVersion);
         ASSERT_EQ (std::string ("/some/path"), request.mPath);
@@ -86,54 +87,54 @@ INSTANTIATE_TEST_CASE_P (HttpRequestParserErrorTester, HttpRequestParserErrorTes
 );
 
 TEST_P (HttpRequestParserErrorTester, InvalidInitialLines) {
-    RequestHarvester parser;
-    parser.Write (GetParam ());
-    ASSERT_EQ (0u, parser.mRequests.size ());
+    RequestHarvester decoder;
+    decoder.Write (GetParam ());
+    ASSERT_EQ (0u, decoder.mRequests.size ());
 }
 
 TEST (HttpRequestParserTester, Headers){
     {
-        RequestHarvester parser;
-        parser.Write ("GET /some/path HTTP/1.0\r\nHeader-Name: Header-Value\r\n\r\n" );
-        ASSERT_EQ (1u, parser.mRequests.size ());
-        ASSERT_EQ (std::string ("Header-Value"), parser.mRequests[0].mHeaders["Header-Name"]);
+        RequestHarvester decoder;
+        decoder.Write ("GET /some/path HTTP/1.0\r\nHeader-Name: Header-Value\r\n\r\n" );
+        ASSERT_EQ (1u, decoder.mRequests.size ());
+        ASSERT_EQ (std::string ("Header-Value"), decoder.mRequests[0].mHeaders["Header-Name"]);
     }
     {
-        RequestHarvester parser;
-        parser.Write ("GET /some/path HTTP/1.0\r\nHeader-Name: Header-Value\r\nHeader-Name-123: Header-Value-123\r\n\r\n" );
-        ASSERT_EQ (1u, parser.mRequests.size ());
-        ASSERT_EQ (std::string ("Header-Value"), parser.mRequests[0].mHeaders["Header-Name"]);
-        ASSERT_EQ (std::string ("Header-Value-123"), parser.mRequests[0].mHeaders["Header-Name-123"]);
+        RequestHarvester decoder;
+        decoder.Write ("GET /some/path HTTP/1.0\r\nHeader-Name: Header-Value\r\nHeader-Name-123: Header-Value-123\r\n\r\n" );
+        ASSERT_EQ (1u, decoder.mRequests.size ());
+        ASSERT_EQ (std::string ("Header-Value"), decoder.mRequests[0].mHeaders["Header-Name"]);
+        ASSERT_EQ (std::string ("Header-Value-123"), decoder.mRequests[0].mHeaders["Header-Name-123"]);
     }
     //todo: parametrize this test, add failure cases.
 }
 
 TEST (HttpRequestParserTester, Bodies){
     {
-        RequestHarvester parser;
-        parser.Write ("GET /some/path HTTP/1.0\r\nContent-Length: 20\r\n\r\n01234567890123456789");
-        ASSERT_EQ (1u, parser.mRequests.size ());
-        ASSERT_EQ (std::string ("01234567890123456789"), parser.mRequests[0].mBody);
+        RequestHarvester decoder;
+        decoder.Write ("GET /some/path HTTP/1.0\r\nContent-Length: 20\r\n\r\n01234567890123456789");
+        ASSERT_EQ (1u, decoder.mRequests.size ());
+        ASSERT_EQ (std::string ("01234567890123456789"), decoder.mRequests[0].mBody);
     }
     {
-        RequestHarvester parser;
-        parser.Write ("GET /some/path HTTP/1.0\r\nContent-Length: 20\r\n\r\n0123456789");
-        parser.Write ("9876543210");
-        ASSERT_EQ (1u, parser.mRequests.size ());
-        ASSERT_EQ (std::string ("01234567899876543210"), parser.mRequests[0].mBody);
+        RequestHarvester decoder;
+        decoder.Write ("GET /some/path HTTP/1.0\r\nContent-Length: 20\r\n\r\n0123456789");
+        decoder.Write ("9876543210");
+        ASSERT_EQ (1u, decoder.mRequests.size ());
+        ASSERT_EQ (std::string ("01234567899876543210"), decoder.mRequests[0].mBody);
     }
     {
-        RequestHarvester parser;
-        parser.Write ("GET /some/path HTTP/1.0\r\nContent-Length: 0\r\n\r\n");
-        ASSERT_EQ (1u, parser.mRequests.size ());
-        ASSERT_EQ (std::string (""), parser.mRequests[0].mBody);
+        RequestHarvester decoder;
+        decoder.Write ("GET /some/path HTTP/1.0\r\nContent-Length: 0\r\n\r\n");
+        ASSERT_EQ (1u, decoder.mRequests.size ());
+        ASSERT_EQ (std::string (""), decoder.mRequests[0].mBody);
     }
     {
-        RequestHarvester parser;
-        parser.Write ("GET /some/path HTTP/1.0\r\nContent-Length: ABC\r\n\r\n");
-        ASSERT_EQ (std::string (""), parser.mRequests[0].mBody);
-        ASSERT_EQ (1u, parser.mRequests.size ());
-        ASSERT_FALSE (parser.mRequests[0].mIsValid);
+        RequestHarvester decoder;
+        decoder.Write ("GET /some/path HTTP/1.0\r\nContent-Length: ABC\r\n\r\n");
+        ASSERT_EQ (std::string (""), decoder.mRequests[0].mBody);
+        ASSERT_EQ (1u, decoder.mRequests.size ());
+        ASSERT_FALSE (decoder.mRequests[0].mIsValid);
     }
     //todo: parametrize this test, add failure cases.
 }

@@ -1,6 +1,6 @@
 
-#ifndef _RFC6455_FRAMEPARSER_H_
-#define _RFC6455_FRAMEPARSER_H_
+#ifndef _RFC6455_FRAMEDECODER_H_
+#define _RFC6455_FRAMEDECODER_H_
 
 #include <vector>
 #include <cstdint>
@@ -9,14 +9,14 @@ namespace RFC6455 {
 
 class Frame;
 
-class FrameParser {
+class FrameDecoder {
 
 public:
 
     /**
      * Destructor
      */
-    virtual ~FrameParser ();
+    virtual ~FrameDecoder ();
 
 public:
 
@@ -31,7 +31,7 @@ public:
      */
     virtual void HandleFrame (const Frame& inFrame) = 0;
 
-private:
+protected:
     std::vector<uint8_t> mBuffer;
 
 };
@@ -39,4 +39,4 @@ private:
 
 } // end namespace RFC6455
 
-#endif // _RFC6455_FRAMEPARSER_H_
+#endif // _RFC6455_FRAMEDECODER_H_

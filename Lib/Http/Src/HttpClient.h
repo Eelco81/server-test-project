@@ -7,7 +7,7 @@
 
 #include "TcpClient.h"
 #include "TcpClientFactory.h"
-#include "HttpRequest.h"
+#include "HttpRequestDecoder.h"
 
 namespace OS {
     class Socket;
@@ -15,10 +15,11 @@ namespace OS {
 
 namespace HTTP {
 
+struct Request;
 struct Response;
 class Router;
 
-class Client : public TCP::Client, public RequestParser {
+class Client : public TCP::Client, public RequestDecoder {
 
 public:
     Client () = delete;

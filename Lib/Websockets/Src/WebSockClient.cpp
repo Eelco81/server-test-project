@@ -10,8 +10,8 @@
 
 RFC6455::Client::Client (std::unique_ptr <OS::Socket> inSocket) :
     TCP::Client (std::move (inSocket)),
-    HTTP::RequestParser (),
-    RFC6455::FrameParser (),
+    HTTP::RequestDecoder (),
+    RFC6455::FrameDecoder (),
     mIsUpgraded (false)
 {
 }
@@ -21,10 +21,10 @@ RFC6455::Client::~Client () = default;
 void RFC6455::Client::HandlePacket (const std::vector<uint8_t>& inBuffer) {
     if (!mIsUpgraded) {
         const std::string input (reinterpret_cast<const char*>(inBuffer.data ()), inBuffer.size ());
-        HTTP::RequestParser::Write (input);
+        HTTP::RequestDecoder::Write (input);
     }
     else {
-        RFC6455::FrameParser::Write (inBuffer);
+        RFC6455::FrameDecoder::Write (inBuffer);
     }
 }
 

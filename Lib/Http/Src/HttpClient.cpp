@@ -4,13 +4,14 @@
 #include "Timing.h"
 #include "Log.h"
 #include "HttpClient.h"
+#include "HttpRequest.h"
 #include "HttpResponse.h"
 #include "HttpEndpoint.h"
 #include "HttpRouter.h"
 
 HTTP::Client::Client (std::unique_ptr <OS::Socket> inSocket, std::shared_ptr<HTTP::Router> inRouter) :
     TCP::Client (std::move (inSocket)),
-    HTTP::RequestParser (),
+    HTTP::RequestDecoder (),
     mRouter (inRouter)
 {
 }

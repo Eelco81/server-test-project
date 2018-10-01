@@ -4,6 +4,7 @@
 #include "Timing.h"
 #include "Log.h"
 #include "HttpClient.h"
+#include "HttpRequest.h"
 #include "HttpRouter.h"
 #include "TcpServer.h"
 #include "Socket.h"

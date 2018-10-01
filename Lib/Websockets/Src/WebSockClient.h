@@ -7,8 +7,8 @@
 
 #include "TcpClient.h"
 #include "TcpClientFactory.h"
-#include "HttpRequest.h"
-#include "WebSockFrameParser.h"
+#include "HttpRequestDecoder.h"
+#include "WebSockFrameDecoder.h"
 
 namespace OS {
     class Socket;
@@ -22,7 +22,7 @@ namespace RFC6455 {
 
 class Frame;
 
-class Client : public TCP::Client, public HTTP::RequestParser, public FrameParser {
+class Client : public TCP::Client, public HTTP::RequestDecoder, public FrameDecoder {
 
 public:
     /**
@@ -46,12 +46,12 @@ public:
     virtual void HandlePacket (const std::vector<uint8_t>& inBuffer) override;
     
     /**
-     * Process an incoming handshake HTTP Request (from HTTP::RequestParser)
+     * Process an incoming handshake HTTP Request (from HTTP::RequestDecoder)
      */
     virtual void HandleRequest (const HTTP::Request& inRequest) override;
     
     /**
-     * Process an incoming RFC6455 Frame (from RFC6455::FrameParser)
+     * Process an incoming RFC6455 Frame (from RFC6455::FrameDecoder)
      */
     virtual void HandleFrame (const Frame& inFrame) override;
     

@@ -1,10 +1,10 @@
 
 #include "WebSockFrame.h"
-#include "WebSockFrameParser.h"
+#include "WebSockFrameDecoder.h"
 
-RFC6455::FrameParser::~FrameParser () = default;
+RFC6455::FrameDecoder::~FrameDecoder () = default;
 
-void RFC6455::FrameParser::Write (const std::vector<uint8_t>& inBuffer) {
+void RFC6455::FrameDecoder::Write (const std::vector<uint8_t>& inBuffer) {
     
     // Copy the incoming buffer to the end of the cached buffer
     std::copy (inBuffer.begin (), inBuffer.end (), std::back_inserter (mBuffer));
@@ -20,7 +20,7 @@ void RFC6455::FrameParser::Write (const std::vector<uint8_t>& inBuffer) {
     while (1) {
         
         Frame frame;
-        
+    
         frame.mFin = (mBuffer[0u] & 0b10000000);
         frame.mOpCode = (mBuffer[0u] & 0b00001111);
         frame.mIsMasked = (mBuffer[1u] & 0b10000000);
