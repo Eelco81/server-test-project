@@ -81,6 +81,6 @@ void RFC6455::FrameDecoder::Write (const std::vector<uint8_t>& inBuffer) {
         mBuffer.erase (mBuffer.begin (), mBuffer.begin () + index + payloadSize);
         
         // Handle the frame
-        HandleFrame (frame);
+        Done (frame);
     }
 }

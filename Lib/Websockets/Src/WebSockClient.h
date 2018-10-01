@@ -8,6 +8,7 @@
 #include "TcpClient.h"
 #include "TcpClientFactory.h"
 #include "HttpRequestDecoder.h"
+#include "StringConverter.h"
 #include "WebSockFrameDecoder.h"
 
 namespace OS {
@@ -22,7 +23,7 @@ namespace RFC6455 {
 
 class Frame;
 
-class Client : public TCP::Client, public HTTP::RequestDecoder, public FrameDecoder {
+class Client : public TCP::Client {
 
 public:
     /**
@@ -41,19 +42,14 @@ public:
     virtual ~Client ();
     
     /**
-     * Process an incoming TCP Packet (from TCP::Client)
-     */
-    virtual void HandlePacket (const std::vector<uint8_t>& inBuffer) override;
-    
-    /**
      * Process an incoming handshake HTTP Request (from HTTP::RequestDecoder)
      */
-    virtual void HandleRequest (const HTTP::Request& inRequest) override;
+    virtual void HandleRequest (const HTTP::Request& inRequest);
     
     /**
      * Process an incoming RFC6455 Frame (from RFC6455::FrameDecoder)
      */
-    virtual void HandleFrame (const Frame& inFrame) override;
+    virtual void HandleFrame (const Frame& inFrame);
     
     /**
      * Send a frame over the RFC6455 connection
@@ -68,6 +64,10 @@ private:
     
 private:
     bool mIsUpgraded;
+    OS::PacketToStringConverter mConverter;
+    HTTP::RequestDecoder mRequestDecoder;
+    FrameDecoder mFrameDecoder;
+
 };
 
 /**

@@ -3,19 +3,17 @@
 #define _HTTP_REQUESTDECODER_H_
 
 #include "HttpRequest.h"
+#include "MessageStream.h"
 
 namespace HTTP {
     
-class RequestDecoder {
+class RequestDecoder : public OS::MessageStream<std::string, Request> {
     
 public:
     RequestDecoder ();
     virtual ~RequestDecoder ();
     void Write (const std::string& inData);
 
-protected:
-    virtual void HandleRequest (const Request& inRequest) = 0;
-    
 private:
     enum State : uint8_t {
         kSearchStart = 0x00,

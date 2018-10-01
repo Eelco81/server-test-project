@@ -1,53 +1,83 @@
 
+#include <string>
+
 #include "gtest/gtest.h"
 #include "MessageStream.h"
 
 namespace {
-    
-class Stream : public OS::MessageStream {
+
+class Stream : public OS::MessageStream<std::vector<char>,std::string> {
 public:
-    void Write (const OS::MessageStream::Packet& inMessage) override {
-        Done (inMessage);
+    void Write (const std::vector<char>& inMessage) override {
+        std::string data;
+        data.assign (inMessage.data (), inMessage.data () + inMessage.size ());
+        Done (data);
     }
 };
 
-struct StreamObject {
-    void Save (const OS::MessageStream::Packet& inMessage) {
-        mPacket = inMessage;
+class RevStream : public OS::MessageStream<std::string,std::vector<char>> {
+public:
+    void Write (const std::string& inMessage) override {
+        std::vector<char> data;
+        data.assign (inMessage.data (), inMessage.data () + inMessage.size ());
+        Done (data);
     }
-    OS::MessageStream::Packet mPacket;
 };
 
 } // end anonymous namespace
 
-TEST (MessageStreamTester, StreamWithLambda) {
+TEST (MessageStreamTester, PipeToLambda) {
     
-    const OS::MessageStream::Packet source (25u, 0xFE);
-    OS::MessageStream::Packet target;
+    const std::vector<char> source = { 'h', 'e', 'l', 'l', 'o' };
+    std::string target;
     
-    auto callback = [&](const OS::MessageStream::Packet& inPacket) {
-        target = inPacket;
+    auto callback = [&](const std::string& newdata) {
+        target = newdata;
     };
     
     Stream stream;
-    stream.AddCallback (callback);
+    stream.Pipe (callback);
     stream.Write (source);
     
-    ASSERT_TRUE (std::equal (source.begin (), source.end (), target.begin ()));
+    ASSERT_EQ (std::string ("hello"), target.data ());
 }
 
-TEST (MessageStreamTester, StreamWithObject) {
+TEST (MessageStreamTester, PipeToObject) {
     
-    const OS::MessageStream::Packet source (25u, 0xFE);
+    struct StreamObject {
+        void Save (const std::string& inMessage) {
+            mPacket = inMessage;
+        }
+        std::string mPacket;
+    };
+
+    const std::vector<char> source = { 'h', 'e', 'l', 'l', 'o' };
     
     StreamObject object;
-    auto callback = std::bind (&StreamObject::Save, &object, std::placeholders::_1);
-    
-    callback (source);
-    
+
     Stream stream;
-    stream.AddCallback (callback);
+    stream.Pipe (&object, &StreamObject::Save);
+    
     stream.Write (source);
     
-    ASSERT_TRUE (std::equal (source.begin (), source.end (), object.mPacket.begin ()));
+    ASSERT_EQ (std::string ("hello"), object.mPacket);
+}
+
+TEST (MessageStreamTester, PipeToStream) {
+    
+    const std::string source = "hello";
+    std::string target;
+    
+    auto callback = [&](const std::string& newdata) {
+        target = newdata;
+    };
+    
+    RevStream revStream;
+    Stream stream;
+    
+    revStream.Pipe (stream).Pipe (callback);
+    
+    revStream.Write (source);
+    
+    ASSERT_EQ (std::string ("hello"), target);
 }

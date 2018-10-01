@@ -13,8 +13,7 @@ HTTP::RequestDecoder::RequestDecoder () :
 {
 }
 
-HTTP::RequestDecoder::~RequestDecoder () {
-}
+HTTP::RequestDecoder::~RequestDecoder () = default;
 
 void HTTP::RequestDecoder::Write (const std::string& inData) {
     
@@ -41,7 +40,7 @@ void HTTP::RequestDecoder::Write (const std::string& inData) {
                 if (line == "\r" || line == "") {
                     const auto contentLength (mRequest.mHeaders.find (Header::CONTENT_LENGTH));
                     if (contentLength == mRequest.mHeaders.end ()) {
-                        HandleRequest (mRequest);
+                        Done (mRequest);
                         mState = kSearchStart;
                     }
                     else {
@@ -53,7 +52,7 @@ void HTTP::RequestDecoder::Write (const std::string& inData) {
                             mRequest.mIsValid = false;
                         }
                         if (mBodySize == 0) {
-                            HandleRequest (mRequest);
+                            Done (mRequest);
                             mState = kSearchStart;
                         }
                         else {
@@ -75,7 +74,7 @@ void HTTP::RequestDecoder::Write (const std::string& inData) {
                     mRequest.mBody += line;
                 }
                 if (mRequest.mBody.size () >= mBodySize) {
-                    HandleRequest (mRequest);
+                    Done (mRequest);
                     mState = kSearchStart;
                 }
                 break;

@@ -4,6 +4,7 @@
 
 #include "Macros.h"
 #include "Thread.h"
+#include "MessageStream.h"
 
 #include <cstdint>
 #include <memory>
@@ -21,6 +22,12 @@ class Client {
 
     NO_COPY_CONSTRUCTORS (Client);
 
+public:
+    /**
+     * Packet definition
+     */
+    using Packet = std::vector<uint8_t>;
+    
 public:
     /**
      * Deleted default constructor
@@ -69,7 +76,7 @@ public:
     /**
      * Send data over the socket.
      */
-    bool Send (const std::vector<uint8_t>& inBuffer);
+    bool Send (const Packet& inBuffer);
     
     /**
      * Send data over the socket.
@@ -81,16 +88,27 @@ public:
      */
      int GetId () const;
 
-public: 
-    /**
-     * Message handler. Called when new data is available.
-     * \todo: this should be private
-     */
-    virtual void HandlePacket (const std::vector<uint8_t>& inBuffer) = 0;
-    
 protected:
     std::shared_ptr <OS::Socket> mSocket;
     std::unique_ptr <OS::Thread> mThread;
+
+public:
+    /**
+     * Message stream for received messages.
+     * \todo: this should be private
+     */
+    inline OS::MessageStream<Packet,Packet>& GetReadStream () { return mReadStream; }
+    
+private:
+    
+    /**
+     * Read stream class
+     */
+    class ReadStream : public OS::MessageStream<Packet,Packet> {
+        void Write (const Packet& inPacket) override;
+    };
+    
+    ReadStream mReadStream;
 };
 
 }

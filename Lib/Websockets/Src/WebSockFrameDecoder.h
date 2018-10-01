@@ -5,31 +5,24 @@
 #include <vector>
 #include <cstdint>
 
+#include "MessageStream.h"
+#include "WebSockFrame.h"
+
 namespace RFC6455 {
-
-class Frame;
-
-class FrameDecoder {
+    
+class FrameDecoder : public OS::MessageStream <std::vector<uint8_t>, Frame>{
 
 public:
-
     /**
      * Destructor
      */
     virtual ~FrameDecoder ();
 
 public:
-
     /**
      * Write buffer to the decoder
      */
-    void Write (const std::vector<uint8_t>& inBuffer);
-
-    /**
-     * This method is called when a frame is decoded from 
-     * the incoming buffer stream.
-     */
-    virtual void HandleFrame (const Frame& inFrame) = 0;
+    void Write (const std::vector<uint8_t>& inBuffer) override;
 
 protected:
     std::vector<uint8_t> mBuffer;

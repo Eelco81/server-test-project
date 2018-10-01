@@ -7,8 +7,15 @@
 namespace {
 
 class RequestHarvester : public HTTP::RequestDecoder {
+
+public: 
+    RequestHarvester () :
+        HTTP::RequestDecoder () 
+    {
+        Pipe (this, &RequestHarvester::HandleRequest);
+    }
 protected:
-    virtual void HandleRequest (const HTTP::Request& inRequest) override {
+    virtual void HandleRequest (const HTTP::Request& inRequest) {
         mRequests.push_back (inRequest);
     }
 public:

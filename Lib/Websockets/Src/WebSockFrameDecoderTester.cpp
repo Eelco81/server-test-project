@@ -8,7 +8,12 @@ namespace {
 
 class TestFrameDecoder : public RFC6455::FrameDecoder {
 public:
-    void HandleFrame (const RFC6455::Frame& inFrame) override {
+    TestFrameDecoder () :
+        RFC6455::FrameDecoder () 
+    {
+        Pipe (this, &TestFrameDecoder::HandleFrame);
+    }
+    void HandleFrame (const RFC6455::Frame& inFrame) {
         mFrames.emplace_back (inFrame);
     }
     std::vector<RFC6455::Frame> mFrames;

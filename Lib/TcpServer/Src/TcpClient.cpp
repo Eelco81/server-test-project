@@ -30,7 +30,7 @@ public:
             const auto result (mSocket->Receive (buffer)); // blocking call
             if (result > 0) {
                 buffer.resize (result);
-                mClient.HandlePacket (buffer);
+                mClient.GetReadStream ().Write (buffer);
             }
         }
         
@@ -47,6 +47,10 @@ private:
 };
 
 } // end anonymous namespace
+
+void TCP::Client::ReadStream::Write (const Packet& inPacket) {
+    Done (inPacket);
+};
 
 TCP::Client::Client (std::string inAddress, std::string inPort) :
     mSocket (std::make_shared<OS::Socket> (inAddress, inPort))

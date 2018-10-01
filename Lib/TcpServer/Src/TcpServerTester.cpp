@@ -19,9 +19,9 @@ public:
     EchoClient (std::unique_ptr<OS::Socket> inSocket) :
        TCP::Client (std::move (inSocket)) 
     {
-    }
-    void HandlePacket (const std::vector<uint8_t>& inBuffer) override {
-        Send (inBuffer);
+        GetReadStream ().Pipe ([this] (const std::vector<uint8_t>& inBuffer) {
+            this->Send (inBuffer);
+        });
     }
 };
 
@@ -30,8 +30,9 @@ public:
     HarvestClient (std::string inAddress, std::string inPort) :
        TCP::Client (inAddress, inPort) 
     {
+        GetReadStream ().Pipe (this, &HarvestClient::HandlePacket);
     }
-    void HandlePacket (const std::vector<uint8_t>& inBuffer) override {
+    void HandlePacket (const std::vector<uint8_t>& inBuffer) {
         std::copy (inBuffer.begin (), inBuffer.end (), std::back_inserter (mData));
     }
     std::vector<uint8_t> mData = {};

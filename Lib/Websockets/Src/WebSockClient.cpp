@@ -9,28 +9,17 @@
 #include "sha1.hpp"
 
 RFC6455::Client::Client (std::unique_ptr <OS::Socket> inSocket) :
-    TCP::Client (std::move (inSocket)),
-    HTTP::RequestDecoder (),
-    RFC6455::FrameDecoder (),
-    mIsUpgraded (false)
+    TCP::Client (std::move (inSocket))
 {
+    GetReadStream ().Pipe (mConverter).Pipe (mRequestDecoder).Pipe (this, &Client::HandleRequest);
 }
 
 RFC6455::Client::~Client () = default;
 
-void RFC6455::Client::HandlePacket (const std::vector<uint8_t>& inBuffer) {
-    if (!mIsUpgraded) {
-        const std::string input (reinterpret_cast<const char*>(inBuffer.data ()), inBuffer.size ());
-        HTTP::RequestDecoder::Write (input);
-    }
-    else {
-        RFC6455::FrameDecoder::Write (inBuffer);
-    }
-}
-
 void RFC6455::Client::HandleRequest (const HTTP::Request& inRequest) {
     HTTP::Response response (HTTP::Code::BAD_REQUEST, inRequest.mVersion);
     
+    bool isUpgraded (false);
     if (inRequest.mHeaders.at ("Connection") == "Upgrade" && inRequest.mHeaders.at ("Upgrade") == "websocket") {
         
         const auto key (inRequest.mHeaders.at ("Sec-WebSocket-Key"));
@@ -43,14 +32,16 @@ void RFC6455::Client::HandleRequest (const HTTP::Request& inRequest) {
         response.mHeaders["Connection"] = "Upgrade";
         response.mHeaders["Upgrade"] = "websocket";
         response.mHeaders["Sec-WebSocket-Accept"] = std::string (base64);
-        
-        mIsUpgraded = true;
+
+        GetReadStream ().Clear ().Pipe (mFrameDecoder).Pipe (this, &Client::HandleFrame);
+
+        isUpgraded = true;
     }
     
     SendResponse (inRequest, response);
     
-    if (!mIsUpgraded) {
-        Stop ();
+    if (!isUpgraded) {
+        Quit ();
     }
 }
 
@@ -68,7 +59,7 @@ void RFC6455::Client::HandleFrame (const RFC6455::Frame& inFrame) {
         frame.mFin = true;
         frame.mOpCode = Frame::OpCode::CLOSE;
         SendFrame (frame);
-        Quit ();
+        GetReadStream ().Clear (); // do not process further messages
     }
     else {
         SendFrame (inFrame);

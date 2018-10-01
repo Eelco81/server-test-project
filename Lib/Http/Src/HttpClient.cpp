@@ -11,17 +11,12 @@
 
 HTTP::Client::Client (std::unique_ptr <OS::Socket> inSocket, std::shared_ptr<HTTP::Router> inRouter) :
     TCP::Client (std::move (inSocket)),
-    HTTP::RequestDecoder (),
     mRouter (inRouter)
 {
+    GetReadStream ().Pipe (mConverter).Pipe (mDecoder).Pipe (this, &Client::HandleRequest);
 }
 
 HTTP::Client::~Client () = default;
-
-void HTTP::Client::HandlePacket (const std::vector<uint8_t>& inBuffer) {
-    const std::string input (reinterpret_cast<const char*>(inBuffer.data ()), inBuffer.size ());
-    Write (input);
-}
 
 void HTTP::Client::HandleRequest (const HTTP::Request& inRequest) {
     Response response (Code::NOT_FOUND, inRequest.mVersion);
