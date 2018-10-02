@@ -21,8 +21,6 @@ struct Response {
     void SetBody (const std::vector<uint8_t>& inBuffer, const std::string& inContentType = "application/octet-stream");
     const std::string& GetBody () const;
     
-    std::string ToString () const;
-    
     Code mCode;
     Version mVersion;
     HeaderMap mHeaders;  //todo: header keys are not case sensitive

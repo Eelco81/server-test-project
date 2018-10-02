@@ -50,7 +50,6 @@ public:
      */
     virtual ~Client ();
 
-public:
     /**
      * Start the client (messages on the port will be processed).
      */
@@ -76,12 +75,7 @@ public:
     /**
      * Send data over the socket.
      */
-    bool Send (const Packet& inBuffer);
-    
-    /**
-     * Send data over the socket.
-     */
-    bool Send (const uint8_t* inData, std::size_t inSize);
+    void Send (const Packet& inBuffer);
     
     /**
      * Get the socket id.
@@ -92,23 +86,26 @@ protected:
     std::shared_ptr <OS::Socket> mSocket;
     std::unique_ptr <OS::Thread> mThread;
 
-public:
+protected:
     /**
      * Message stream for received messages.
-     * \todo: this should be private
      */
     inline OS::MessageStream<Packet,Packet>& GetReadStream () { return mReadStream; }
     
-private:
+    /**
+     * Message stream for sending messages.
+     */
+    inline OS::MessageStream<Packet,Packet>& GetWriteStream () { return mWriteStream; }
     
     /**
      * Read stream class
      */
-    class ReadStream : public OS::MessageStream<Packet,Packet> {
+    class Stream : public OS::MessageStream<Packet,Packet> {
         void Write (const Packet& inPacket) override;
     };
     
-    ReadStream mReadStream;
+    Stream mReadStream;
+    Stream mWriteStream;
 };
 
 }

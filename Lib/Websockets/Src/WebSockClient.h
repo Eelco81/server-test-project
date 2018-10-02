@@ -8,8 +8,10 @@
 #include "TcpClient.h"
 #include "TcpClientFactory.h"
 #include "HttpRequestDecoder.h"
+#include "HttpResponseEncoder.h"
 #include "StringConverter.h"
 #include "WebSockFrameDecoder.h"
+#include "WebSockFrameEncoder.h"
 
 namespace OS {
     class Socket;
@@ -42,31 +44,28 @@ public:
     virtual ~Client ();
     
     /**
-     * Process an incoming handshake HTTP Request (from HTTP::RequestDecoder)
-     */
-    virtual void HandleRequest (const HTTP::Request& inRequest);
-    
-    /**
-     * Process an incoming RFC6455 Frame (from RFC6455::FrameDecoder)
-     */
-    virtual void HandleFrame (const Frame& inFrame);
-    
-    /**
      * Send a frame over the RFC6455 connection
      */
     void SendFrame (const Frame& inFrame);
 
 private:
     /**
-     * Sends the websocket handshake response 
+     * Process an incoming handshake HTTP Request (from HTTP::RequestDecoder)
      */
-    void SendResponse (const HTTP::Request& inRequest, const HTTP::Response& inResponse);
+    virtual void HandleHandshake (const HTTP::Request& inRequest);
+    
+    /**
+     * Process an incoming RFC6455 Frame (from RFC6455::FrameDecoder)
+     */
+    virtual void HandleFrame (const Frame& inFrame);
     
 private:
-    bool mIsUpgraded;
-    OS::PacketToStringConverter mConverter;
+    OS::PacketToStringConverter mToStringConverter;
+    OS::StringToPacketConverter mToPacketConverter;
     HTTP::RequestDecoder mRequestDecoder;
+    HTTP::ResponseEncoder mResponseEncoder;
     FrameDecoder mFrameDecoder;
+    FrameEncoder mFrameEncoder;
 
 };
 

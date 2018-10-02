@@ -8,6 +8,7 @@
 #include "TcpClient.h"
 #include "TcpClientFactory.h"
 #include "HttpRequestDecoder.h"
+#include "HttpResponseEncoder.h"
 #include "StringConverter.h"
 
 namespace OS {
@@ -27,16 +28,15 @@ public:
     Client (std::unique_ptr <OS::Socket> inSocket, std::shared_ptr<HTTP::Router> inRouter);
     virtual ~Client ();
     
-public: // todo: this should be private
+protected: 
     virtual void HandleRequest (const Request& inRequest);
-
-public:
-    void SendResponse (const Request& inRequest, const Response& inResponse);
     
 protected:
     std::shared_ptr<Router> mRouter;
-    OS::PacketToStringConverter mConverter;
+    OS::PacketToStringConverter mToStringConverter;
+    OS::StringToPacketConverter mToPacketConverter;
     RequestDecoder mDecoder;
+    ResponseEncoder mEncoder;
 };
 
 class ClientFactory : public TCP::ClientFactory {

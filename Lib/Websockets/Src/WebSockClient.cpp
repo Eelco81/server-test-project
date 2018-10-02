@@ -11,12 +11,15 @@
 RFC6455::Client::Client (std::unique_ptr <OS::Socket> inSocket) :
     TCP::Client (std::move (inSocket))
 {
-    GetReadStream ().Pipe (mConverter).Pipe (mRequestDecoder).Pipe (this, &Client::HandleRequest);
+    GetReadStream ().Pipe (mToStringConverter).Pipe (mRequestDecoder).Pipe (this, &Client::HandleHandshake);
+    mResponseEncoder.Pipe (mToPacketConverter).Pipe (GetWriteStream ());
+    mFrameEncoder.Pipe (GetWriteStream ());
 }
 
 RFC6455::Client::~Client () = default;
 
-void RFC6455::Client::HandleRequest (const HTTP::Request& inRequest) {
+void RFC6455::Client::HandleHandshake (const HTTP::Request& inRequest) {
+    
     HTTP::Response response (HTTP::Code::BAD_REQUEST, inRequest.mVersion);
     
     bool isUpgraded (false);
@@ -32,20 +35,29 @@ void RFC6455::Client::HandleRequest (const HTTP::Request& inRequest) {
         response.mHeaders["Connection"] = "Upgrade";
         response.mHeaders["Upgrade"] = "websocket";
         response.mHeaders["Sec-WebSocket-Accept"] = std::string (base64);
-
-        GetReadStream ().Clear ().Pipe (mFrameDecoder).Pipe (this, &Client::HandleFrame);
-
+        
         isUpgraded = true;
     }
     
-    SendResponse (inRequest, response);
+    mResponseEncoder.Write (response);
     
+    {
+        using namespace HTTP;
+        LOGMESSAGE (OS::Log::kInfo, std::string ("HTTP/") + VersionToString (response.mVersion) + std::string (" ") + MethodToString (inRequest.mMethod) + std::string (" ") + inRequest.mPath + std::string (" - ") + std::to_string (response.mCode) + std::string (" ") + CodeToString (response.mCode));
+    }
+ 
     if (!isUpgraded) {
         Quit ();
     }
+    else {
+        // Clear the stream, route the pipe through the frame decoder.
+        GetReadStream ().Clear ().Pipe (mFrameDecoder).Pipe (this, &Client::HandleFrame);
+    }
+
 }
 
 void RFC6455::Client::HandleFrame (const RFC6455::Frame& inFrame) {
+    
     LOGMESSAGE (OS::Log::kTrace, std::string ("Received ") + inFrame.ToMessage ());
     
     if (inFrame.mOpCode == Frame::OpCode::PING) {
@@ -62,20 +74,14 @@ void RFC6455::Client::HandleFrame (const RFC6455::Frame& inFrame) {
         GetReadStream ().Clear (); // do not process further messages
     }
     else {
-        SendFrame (inFrame);
+        mFrameEncoder.Write (inFrame);
+        // Absorb the frame
     }
-}
-
-void RFC6455::Client::SendResponse (const HTTP::Request& inRequest, const HTTP::Response& inResponse) {
-    using namespace HTTP;
-    LOGMESSAGE (OS::Log::kInfo, std::string ("HTTP/") + VersionToString (inResponse.mVersion) + std::string (" ") + MethodToString (inRequest.mMethod) + std::string (" ") + inRequest.mPath + std::string (" - ") + std::to_string (inResponse.mCode) + std::string (" ") + CodeToString (inResponse.mCode));
-    const auto resStr (inResponse.ToString ());
-    TCP::Client::Send (reinterpret_cast<const uint8_t*> (resStr.c_str ()), resStr.size ());
 }
 
 void RFC6455::Client::SendFrame (const RFC6455::Frame& inFrame) {
     LOGMESSAGE (OS::Log::kTrace, std::string ("Send ") + inFrame.ToMessage ());
-    TCP::Client::Send (inFrame.ToBuffer ());
+    mFrameEncoder.Write (inFrame);
 }
 
 std::unique_ptr<TCP::Client> RFC6455::ClientFactory::Create (std::unique_ptr<OS::Socket> inSocket) const {

@@ -15,9 +15,9 @@ namespace {
 class ReceiveThread : public OS::Thread {
     
 public:
-    ReceiveThread (TCP::Client& inClient, std::shared_ptr<OS::Socket> inSocket) :
+    ReceiveThread (OS::MessageStream<std::vector<uint8_t>,std::vector<uint8_t>>& inStream, std::shared_ptr<OS::Socket> inSocket) :
         Thread (std::string ("Client-") + std::to_string (inSocket->GetId ())),
-        mClient (inClient),
+        mStream (inStream),
         mSocket (inSocket)
     {
     }
@@ -30,7 +30,7 @@ public:
             const auto result (mSocket->Receive (buffer)); // blocking call
             if (result > 0) {
                 buffer.resize (result);
-                mClient.GetReadStream ().Write (buffer);
+                mStream.Write (buffer);
             }
         }
         
@@ -42,13 +42,13 @@ public:
     }
     
 private:
-    TCP::Client& mClient;
+    OS::MessageStream<std::vector<uint8_t>, std::vector<uint8_t>>& mStream;
     std::shared_ptr<OS::Socket> mSocket;
 };
 
 } // end anonymous namespace
 
-void TCP::Client::ReadStream::Write (const Packet& inPacket) {
+void TCP::Client::Stream::Write (const Packet& inPacket) {
     Done (inPacket);
 };
 
@@ -56,13 +56,17 @@ TCP::Client::Client (std::string inAddress, std::string inPort) :
     mSocket (std::make_shared<OS::Socket> (inAddress, inPort))
 {
     mSocket->Initialize ();
-    mThread = std::make_unique<ReceiveThread> (*this, mSocket);
+    mThread = std::make_unique<ReceiveThread> (GetReadStream (), mSocket);
+    GetWriteStream ().Pipe (this, &Client::Send);
+    //GetWriteStream ().Pipe (mSocket.get (), &OS::Socket::Send);
 }
 
 TCP::Client::Client (std::unique_ptr <OS::Socket> inSocket) :
     mSocket (std::move (inSocket)),
-    mThread (std::make_unique<ReceiveThread> (*this, mSocket))
+    mThread (std::make_unique<ReceiveThread> (GetReadStream (), mSocket))
 {
+    GetWriteStream ().Pipe (this, &Client::Send);
+    //GetWriteStream ().Pipe (mSocket.get (), &OS::Socket::Send);
 }
 
 TCP::Client::~Client () {
@@ -94,10 +98,6 @@ int TCP::Client::GetId () const {
     return mSocket->GetId ();
 }
 
-bool TCP::Client::Send (const std::vector<uint8_t>& inBuffer) {
-    return mSocket->Send (inBuffer) > 0;
-}
-
-bool TCP::Client::Send (const uint8_t* inData, std::size_t inSize) {
-    return mSocket->Send (inData, inSize) > 0;
+void TCP::Client::Send (const std::vector<uint8_t>& inBuffer) {
+    mSocket->Send (inBuffer);
 }

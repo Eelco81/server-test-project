@@ -19,9 +19,7 @@ public:
     EchoClient (std::unique_ptr<OS::Socket> inSocket) :
        TCP::Client (std::move (inSocket)) 
     {
-        GetReadStream ().Pipe ([this] (const std::vector<uint8_t>& inBuffer) {
-            this->Send (inBuffer);
-        });
+        GetReadStream ().Pipe (GetWriteStream ());
     }
 };
 
@@ -67,7 +65,7 @@ TEST_F (TcpServerTester, DataTransfer) {
     OS::Timing::Sleep (100u);
     
     const std::vector<uint8_t> buffer (1000, 0xFF);
-    EXPECT_TRUE (client.Send (buffer));
+    client.Send (buffer);
     
     OS::Timing::Sleep (100u);
     
