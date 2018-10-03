@@ -74,7 +74,6 @@ void RFC6455::Client::HandleFrame (const RFC6455::Frame& inFrame) {
         GetReadStream ().Clear (); // do not process further messages
     }
     else {
-        mFrameEncoder.Write (inFrame);
         // Absorb the frame
     }
 }

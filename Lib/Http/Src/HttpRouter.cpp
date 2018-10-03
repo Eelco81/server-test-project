@@ -6,6 +6,11 @@
 #include "HttpCodes.h"
 #include "HttpRouter.h"
 
+HTTP::Router::Router () :
+    OS::MessageStream<HTTP::Request, HTTP::Response> ()
+{
+}
+
 HTTP::Router::~Router () = default;
 
 void HTTP::Router::AddEndPoint (HTTP::Router::EndPointPtr inEndPoint) {

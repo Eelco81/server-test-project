@@ -18,6 +18,7 @@ class Router : public OS::MessageStream <Request, Response> {
     
 public:
     using EndPointPtr = std::unique_ptr <EndPoint>;
+    Router ();
     virtual ~Router ();
     
 public:

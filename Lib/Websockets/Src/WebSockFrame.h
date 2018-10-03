@@ -31,12 +31,12 @@ struct Frame {
     /**
      * Decode the payload
      */
-    void Decode ();
+    //void Decode ();
     
     /**
      * Encode the payload
      */
-    void Encode ();
+    //void Encode ();
     
     /**
      * Create a log message summarizing the packet

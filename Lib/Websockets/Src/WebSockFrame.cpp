@@ -9,6 +9,7 @@ RFC6455::Frame::Frame () :
 }
 
 // The inverse of an XOR is itself
+/*
 void RFC6455::Frame::Decode () {
     
     Encode ();
@@ -22,6 +23,7 @@ void RFC6455::Frame::Encode () {
         }
     }
 }
+*/
 
 std::string RFC6455::Frame::GetStatusMessage () const {
     return std::string ("RFC6455 FIN[") + 
