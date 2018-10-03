@@ -4,32 +4,29 @@
 
 #include <memory>
 #include <vector>
-#include <mutex>
 
 #include "Macros.h"
 #include "Mutex.h"
+#include "MessageStream.h"
+#include "HttpRequest.h"
+#include "HttpResponse.h"
+#include "HttpEndpoint.h"
 
 namespace HTTP {
 
-struct Request;
-struct Response;
-class EndPoint;
-
-class Router {
-
-    NO_COPY_CONSTRUCTORS (Router);
+class Router : public OS::MessageStream <Request, Response> {
     
 public:
-    Router ();
+    using EndPointPtr = std::unique_ptr <EndPoint>;
     virtual ~Router ();
-
+    
 public:
-    void Dispatch (const Request& inRequest, Response& outResponse);
-    void AddEndPoint (std::unique_ptr <EndPoint> inEndPoint);
+    void Write (const Request& inRequest) override;
+    void AddEndPoint (EndPointPtr inEndPoint);
 
 private:
-    std::vector <std::unique_ptr <EndPoint>> mEndPoints;
-    std::mutex mMutex;
+    std::vector <EndPointPtr> mEndPoints;
+    OS::Mutex mMutex;
 };
 
 }

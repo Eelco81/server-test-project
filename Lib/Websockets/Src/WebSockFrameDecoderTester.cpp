@@ -21,7 +21,7 @@ public:
 
 } // end anonymous namespace
 
-TEST (WebSockFrameParserTester, ShortMessageFormatNoPayload) {
+TEST (WebSockFrameDecoderTester, ShortMessageFormatNoPayload) {
     
     TestFrameDecoder decoder;
     
@@ -41,7 +41,7 @@ TEST (WebSockFrameParserTester, ShortMessageFormatNoPayload) {
     ASSERT_TRUE (decoder.mFrames[0u].mPayload.empty ());
 }
 
-TEST (WebSockFrameParserTester, ShortMessageFormatWithPayload) {
+TEST (WebSockFrameDecoderTester, ShortMessageFormatWithPayload) {
     
     TestFrameDecoder decoder;
     
@@ -64,7 +64,7 @@ TEST (WebSockFrameParserTester, ShortMessageFormatWithPayload) {
     ASSERT_EQ (0x02, decoder.mFrames[0u].mPayload[1u]);
 }
 
-TEST (WebSockFrameParserTester, ShortMessageFormatWithPayloadAndMask) {
+TEST (WebSockFrameDecoderTester, ShortMessageFormatWithPayloadAndMask) {
     
     TestFrameDecoder decoder;
     
@@ -92,7 +92,7 @@ TEST (WebSockFrameParserTester, ShortMessageFormatWithPayloadAndMask) {
     ASSERT_EQ (0x02, decoder.mFrames[0].mPayload[1u]);
 }
 
-TEST (WebSockFrameParserTester, MediumMessageFormatWithPayload) {
+TEST (WebSockFrameDecoderTester, MediumMessageFormatWithPayload) {
     
     TestFrameDecoder decoder;
     
@@ -116,7 +116,7 @@ TEST (WebSockFrameParserTester, MediumMessageFormatWithPayload) {
     ASSERT_EQ (0x02, decoder.mFrames[0u].mPayload[1u]);
 }
 
-TEST (WebSockFrameParserTester, MediumMessageFormatWithPayloadAndMask) {
+TEST (WebSockFrameDecoderTester, MediumMessageFormatWithPayloadAndMask) {
     
     TestFrameDecoder decoder;
     
@@ -146,7 +146,7 @@ TEST (WebSockFrameParserTester, MediumMessageFormatWithPayloadAndMask) {
 }
 
 
-TEST (WebSockFrameParserTester, LongMessageFormatWithPayload) {
+TEST (WebSockFrameDecoderTester, LongMessageFormatWithPayload) {
     
     TestFrameDecoder decoder;
     
@@ -170,7 +170,7 @@ TEST (WebSockFrameParserTester, LongMessageFormatWithPayload) {
     ASSERT_EQ (0x02, decoder.mFrames[0u].mPayload[1u]);
 }
 
-TEST (WebSockFrameParserTester, LongMessageFormatWithPayloadAndMask) {
+TEST (WebSockFrameDecoderTester, LongMessageFormatWithPayloadAndMask) {
     
     TestFrameDecoder decoder;
     

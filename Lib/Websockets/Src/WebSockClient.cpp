@@ -58,7 +58,7 @@ void RFC6455::Client::HandleHandshake (const HTTP::Request& inRequest) {
 
 void RFC6455::Client::HandleFrame (const RFC6455::Frame& inFrame) {
     
-    LOGMESSAGE (OS::Log::kTrace, std::string ("Received ") + inFrame.ToMessage ());
+    LOGMESSAGE (OS::Log::kTrace, std::string ("Received ") + inFrame.GetStatusMessage ());
     
     if (inFrame.mOpCode == Frame::OpCode::PING) {
         Frame frame;
@@ -80,7 +80,7 @@ void RFC6455::Client::HandleFrame (const RFC6455::Frame& inFrame) {
 }
 
 void RFC6455::Client::SendFrame (const RFC6455::Frame& inFrame) {
-    LOGMESSAGE (OS::Log::kTrace, std::string ("Send ") + inFrame.ToMessage ());
+    LOGMESSAGE (OS::Log::kTrace, std::string ("Send ") + inFrame.GetStatusMessage ());
     mFrameEncoder.Write (inFrame);
 }
 

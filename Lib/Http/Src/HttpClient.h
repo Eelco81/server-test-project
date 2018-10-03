@@ -28,9 +28,6 @@ public:
     Client (std::unique_ptr <OS::Socket> inSocket, std::shared_ptr<HTTP::Router> inRouter);
     virtual ~Client ();
     
-protected: 
-    virtual void HandleRequest (const Request& inRequest);
-    
 protected:
     std::shared_ptr<Router> mRouter;
     OS::PacketToStringConverter mToStringConverter;
