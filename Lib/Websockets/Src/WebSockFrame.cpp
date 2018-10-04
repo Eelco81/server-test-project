@@ -8,23 +8,6 @@ RFC6455::Frame::Frame () :
 {
 }
 
-// The inverse of an XOR is itself
-/*
-void RFC6455::Frame::Decode () {
-    
-    Encode ();
-}
-
-void RFC6455::Frame::Encode () {
-    
-    if (mIsMasked && mMask.size () == 4u) {
-        for (std::size_t i (0u); i < mPayload.size (); i++) {
-            mPayload[i] ^= mMask[i % 4u];
-        }
-    }
-}
-*/
-
 std::string RFC6455::Frame::GetStatusMessage () const {
     return std::string ("RFC6455 FIN[") + 
         std::to_string (mFin) + 

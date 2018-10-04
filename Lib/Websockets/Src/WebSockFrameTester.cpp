@@ -3,6 +3,7 @@
 #include "gtest/gtest.h"
 #include "WebSockFrame.h"
 
+/*
 TEST (WebSockFrameTester, Masking) {
     
     RFC6455::Frame frame;
@@ -20,3 +21,4 @@ TEST (WebSockFrameTester, Masking) {
     ASSERT_TRUE (std::all_of (frame.mPayload.begin(), frame.mPayload.end(), [](auto& val) { return val == 0xAB; }));
     
 }
+*/

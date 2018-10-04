@@ -13,7 +13,6 @@ RFC6455::Client::Client (std::unique_ptr <OS::Socket> inSocket) :
 {
     GetReadStream ().Pipe (mToStringConverter).Pipe (mRequestDecoder).Pipe (this, &Client::HandleHandshake);
     mResponseEncoder.Pipe (mToPacketConverter).Pipe (GetWriteStream ());
-    mFrameEncoder.Pipe (GetWriteStream ());
 }
 
 RFC6455::Client::~Client () = default;
@@ -51,36 +50,46 @@ void RFC6455::Client::HandleHandshake (const HTTP::Request& inRequest) {
     }
     else {
         // Clear the stream, route the pipe through the frame decoder.
-        GetReadStream ().Clear ().Pipe (mFrameDecoder).Pipe (this, &Client::HandleFrame);
+        GetReadStream ().Clear ().Pipe (mFrameDecoder).Pipe (this, &Client::HandleReceivedFrame);
+        mResponseEncoder.Clear ();
+        
+        mPayloadStringEncoder.Pipe (mFrameEncoder).Pipe (GetWriteStream ());
+        mPayloadBinaryEncoder.Pipe (mFrameEncoder);
+        
+        // \todo: the follwoing echo lines are for debugging only
+        mPayloadStringDecoder.Pipe (mPayloadStringEncoder);
+        mPayloadBinaryDecoder.Pipe (mPayloadBinaryEncoder);
     }
-
 }
 
-void RFC6455::Client::HandleFrame (const RFC6455::Frame& inFrame) {
-    
-    LOGMESSAGE (OS::Log::kTrace, std::string ("Received ") + inFrame.GetStatusMessage ());
+void RFC6455::Client::HandleReceivedFrame (const RFC6455::Frame& inFrame) {
     
     if (inFrame.mOpCode == Frame::OpCode::PING) {
         Frame frame;
         frame.mFin = true;
         frame.mOpCode = Frame::OpCode::PONG;
-        SendFrame (frame);
+        mFrameEncoder.Write (frame);
     }
     else if (inFrame.mOpCode == Frame::OpCode::CLOSE) {
         Frame frame;
         frame.mFin = true;
         frame.mOpCode = Frame::OpCode::CLOSE;
-        SendFrame (frame);
+        mFrameEncoder.Write (frame);
         GetReadStream ().Clear (); // do not process further messages
+        Quit ();
     }
     else {
-        // Absorb the frame
+        mPayloadStringDecoder.Write (inFrame);
+        mPayloadBinaryDecoder.Write (inFrame);
     }
 }
 
-void RFC6455::Client::SendFrame (const RFC6455::Frame& inFrame) {
-    LOGMESSAGE (OS::Log::kTrace, std::string ("Send ") + inFrame.GetStatusMessage ());
-    mFrameEncoder.Write (inFrame);
+void RFC6455::Client::SendData (const std::vector<uint8_t>& inData) {
+    mPayloadBinaryEncoder.Write (inData);
+}
+
+void RFC6455::Client::SendData (const std::string& inData) {
+    mPayloadStringEncoder.Write (inData);
 }
 
 std::unique_ptr<TCP::Client> RFC6455::ClientFactory::Create (std::unique_ptr<OS::Socket> inSocket) const {

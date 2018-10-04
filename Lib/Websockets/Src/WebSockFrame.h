@@ -29,16 +29,6 @@ struct Frame {
     Frame ();
     
     /**
-     * Decode the payload
-     */
-    //void Decode ();
-    
-    /**
-     * Encode the payload
-     */
-    //void Encode ();
-    
-    /**
      * Create a log message summarizing the packet
      */
     std::string GetStatusMessage () const;

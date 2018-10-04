@@ -1,5 +1,5 @@
 
-
+#include "Log.h"
 #include "WebSockFrame.h"
 #include "WebSockFrameEncoder.h"
 
@@ -35,4 +35,6 @@ void RFC6455::FrameEncoder::Write (const RFC6455::Frame& inFrame) {
     std::copy (inFrame.mPayload.begin (), inFrame.mPayload.end (), std::back_inserter (buffer));
     
     Done (buffer);
+    
+    LOGMESSAGE (OS::Log::kTrace, std::string ("Encoded ") + inFrame.GetStatusMessage ());
 }

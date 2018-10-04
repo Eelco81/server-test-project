@@ -12,6 +12,8 @@
 #include "StringConverter.h"
 #include "WebSockFrameDecoder.h"
 #include "WebSockFrameEncoder.h"
+#include "WebSockPayloadDecoder.h"
+#include "WebSockPayloadEncoder.h"
 
 namespace OS {
     class Socket;
@@ -44,9 +46,14 @@ public:
     virtual ~Client ();
     
     /**
-     * Send a frame over the RFC6455 connection
+     * Send data over the RFC6455 connection
      */
-    void SendFrame (const Frame& inFrame);
+    void SendData (const std::vector<uint8_t>& inData);
+
+    /**
+     * Send data over the RFC6455 connection
+     */
+    void SendData (const std::string& inData);
 
 private:
     /**
@@ -57,7 +64,7 @@ private:
     /**
      * Process an incoming RFC6455 Frame (from RFC6455::FrameDecoder)
      */
-    virtual void HandleFrame (const Frame& inFrame);
+    virtual void HandleReceivedFrame (const Frame& inFrame);
     
 private:
     OS::PacketToStringConverter mToStringConverter;
@@ -66,7 +73,11 @@ private:
     HTTP::ResponseEncoder mResponseEncoder;
     FrameDecoder mFrameDecoder;
     FrameEncoder mFrameEncoder;
-
+    PayloadStringDecoder mPayloadStringDecoder;
+    PayloadBinaryDecoder mPayloadBinaryDecoder;
+    PayloadStringEncoder mPayloadStringEncoder;
+    PayloadBinaryEncoder mPayloadBinaryEncoder;
+    
 };
 
 /**
