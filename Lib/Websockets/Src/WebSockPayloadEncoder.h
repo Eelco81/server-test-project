@@ -13,6 +13,9 @@ namespace RFC6455 {
 class PayloadStringEncoder : public OS::MessageStream<std::string, Frame> {
 
 public:
+    /**
+     * Send TEXT data to the encoder
+     */
     void Write (const std::string& inData) override;
 
 };
@@ -20,6 +23,9 @@ public:
 class PayloadBinaryEncoder : public OS::MessageStream<std::vector<uint8_t>, Frame> {
 
 public:
+    /**
+     * Send BINARY data to the encoder
+     */
     void Write (const std::vector<uint8_t>& inData) override;
 
 };

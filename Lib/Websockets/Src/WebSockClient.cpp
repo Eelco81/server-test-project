@@ -65,8 +65,7 @@ void RFC6455::Client::HandleHandshake (const HTTP::Request& inRequest) {
 void RFC6455::Client::HandleReceivedFrame (const RFC6455::Frame& inFrame) {
     
     if (inFrame.mOpCode == Frame::OpCode::PING) {
-        Frame frame;
-        frame.mFin = true;
+        Frame frame (inFrame);
         frame.mOpCode = Frame::OpCode::PONG;
         mFrameEncoder.Write (frame);
     }

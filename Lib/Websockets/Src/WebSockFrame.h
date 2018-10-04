@@ -29,6 +29,11 @@ struct Frame {
     Frame ();
     
     /**
+     * Copy constructor
+     */
+    Frame (const Frame& inFrame);
+    
+    /**
      * Create a log message summarizing the packet
      */
     std::string GetStatusMessage () const;

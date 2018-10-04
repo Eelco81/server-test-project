@@ -20,8 +20,11 @@ int main (int argc, char** argv) {
     std::string ip ("127.0.0.1");
     commandLine.HasOption ("ip", ip);
 
-    std::string port ("1234");
+    std::string port ("1703");
     commandLine.HasOption ("port", port);
+    
+    std::string websockport ("1704");
+    commandLine.HasOption ("websockport", websockport);
 
     std::string logLevel ("INFO");
     commandLine.HasOption ("loglevel", logLevel);
@@ -40,7 +43,7 @@ int main (int argc, char** argv) {
     httpServer.Start ();
     
     auto websockFactory (std::make_shared<RFC6455::ClientFactory> ());
-    TCP::Server websockServer (ip, "2345", websockFactory);
+    TCP::Server websockServer (ip, websockport, websockFactory);
     websockServer.Start ();
 
     std::string name;

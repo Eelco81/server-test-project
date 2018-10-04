@@ -8,6 +8,15 @@ RFC6455::Frame::Frame () :
 {
 }
 
+RFC6455::Frame::Frame (const Frame& inFrame) :
+    mFin (inFrame.mFin),
+    mOpCode (inFrame.mOpCode),
+    mIsMasked (inFrame.mIsMasked)
+{
+    mMask.assign (inFrame.mMask.begin (), inFrame.mMask.end ());
+    mPayload.assign (inFrame.mPayload.begin (), inFrame.mPayload.end ());
+}
+
 std::string RFC6455::Frame::GetStatusMessage () const {
     return std::string ("RFC6455 FIN[") + 
         std::to_string (mFin) + 

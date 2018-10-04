@@ -39,7 +39,7 @@ void RFC6455::FrameDecoder::Write (const std::vector<uint8_t>& inBuffer) {
                 return;
             }
             // Decode the payload size
-            payloadSize = ((std::size_t)mBuffer[index] >> 8) + (std::size_t)mBuffer[index + 1u];
+            payloadSize = ((std::size_t)mBuffer[index] << 8) + (std::size_t)mBuffer[index + 1u];
             index += 2u;
         }
         
@@ -51,14 +51,14 @@ void RFC6455::FrameDecoder::Write (const std::vector<uint8_t>& inBuffer) {
                 return;
             }
             // Decode the payload size
-            payloadSize = ((std::size_t)mBuffer[index     ] >> 56) + 
-                          ((std::size_t)mBuffer[index + 1u] >> 48) + 
-                          ((std::size_t)mBuffer[index + 2u] >> 40) + 
-                          ((std::size_t)mBuffer[index + 3u] >> 32) + 
-                          ((std::size_t)mBuffer[index + 4u] >> 24) + 
-                          ((std::size_t)mBuffer[index + 5u] >> 16) + 
-                          ((std::size_t)mBuffer[index + 6u] >>  8) + 
-                          ((std::size_t)mBuffer[index + 7u] >>  0);
+            payloadSize = ((std::size_t)mBuffer[index     ] << 56) + 
+                          ((std::size_t)mBuffer[index + 1u] << 48) + 
+                          ((std::size_t)mBuffer[index + 2u] << 40) + 
+                          ((std::size_t)mBuffer[index + 3u] << 32) + 
+                          ((std::size_t)mBuffer[index + 4u] << 24) + 
+                          ((std::size_t)mBuffer[index + 5u] << 16) + 
+                          ((std::size_t)mBuffer[index + 6u] <<  8) + 
+                          ((std::size_t)mBuffer[index + 7u] <<  0);
             index += 8u;
         }
         
