@@ -32,6 +32,17 @@
             <fileset dir="./External/gmock/googletest-release-1.7.0"/>
         </move>
         
+        <mkdir dir ="./External/sha1"/>
+        
+        <exec command="wget https://raw.githubusercontent.com/983/SHA1/master/sha1.hpp" dir="./Download" />
+        <move file="./Download/sha1.hpp" todir="./External/sha1" />
+        
+        <mkdir dir ="./External/nlohman"/>
+        
+        <exec command="wget https://github.com/nlohmann/json/releases/download/v3.3.0/json.hpp" dir="./Download" />
+        <move file="./Download/json.hpp" todir="./External/nlohman" />
+        
+        
     </target>
     
     <!-- Build the binary -->

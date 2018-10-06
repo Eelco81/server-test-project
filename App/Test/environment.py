@@ -3,7 +3,7 @@ from subprocess import Popen, PIPE
 import time
 
 def before_feature(context, feature):
-    context.port = "1703"
+    context.port = "1702"
     context.websockport = "1704" 
     context.ip = "127.0.0.1"
     context.url = "http://" + context.ip + ":" + context.port
