@@ -35,7 +35,7 @@ public:
                 mServer.RegisterClient (std::move (clientSocket));
             }
         }
-        LOGMESSAGE (OS::Log::kInfo, "TCP Server stopped at " + mSocket.GetAddress () + ":" + mSocket.GetPortNumber ());
+        LOGINFO << "TCP Server stopped at " << mSocket.GetAddress () << ":" << mSocket.GetPortNumber ();
     }
 
     virtual void Kill () override {
@@ -114,7 +114,7 @@ std::size_t TCP::Server::GetClientCount () const {
 // called from listener thread
 void TCP::Server::RegisterClient (std::unique_ptr <OS::Socket> inClientSocket) {
     
-    LOGMESSAGE (OS::Log::kDebug, std::string ("[TcpServer] Registering connected client with id ") + std::to_string (inClientSocket->GetId ()));
+    LOGDEBUG << "[TcpServer] Registering connected client with id "  << inClientSocket->GetId ();
     OS::SingleLock lock (*mMutex);
     mClients.emplace_back (mFactory->Create (std::move (inClientSocket)));
     mClients.back ()->Start (); // No need to listen to the return value of start
@@ -126,7 +126,7 @@ void TCP::Server::CleanUp () {
     auto remover = [] (const ClientPtr& client) {
         if (!client->IsConnected ()) {
             client->Stop ();
-            LOGMESSAGE (OS::Log::kDebug, std::string ("[TcpServer] Unregistering connected client with id ") + std::to_string (client->GetId ()));
+            LOGDEBUG << "[TcpServer] Unregistering connected client with id " << client->GetId ();
             return true;
         }
         return false;

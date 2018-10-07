@@ -8,19 +8,14 @@ OS::Thread::Thread (const std::string& inName) :
 {
 }
 
-OS::Thread ::~Thread () {
-    // LOGMESSAGE (OS::Log::kDebug, std::string ("[Thread](") + GetName ()  + ") is being destructed");
-}
+OS::Thread ::~Thread () = default;
 
 void OS::Thread::Run () {
-    
-    LOGMESSAGE (OS::Log::kDebug, std::string ("[Thread](") + GetName () + ") started");
+    LOGTRACE << "[Thread](" << GetName () << ") started";
     mStatus = kRunning;
-    
     Execute ();
-    
-    LOGMESSAGE (OS::Log::kDebug, std::string ("[Thread](") + GetName () + ") stopped");
     mStatus = kDone;
+    LOGTRACE << "[Thread](" << GetName () << ") stopped";
 }
 
 void OS::Thread::Spawn () {
@@ -29,10 +24,10 @@ void OS::Thread::Spawn () {
 
 void OS::Thread::Join () {
     if (mImplementation && mImplementation->joinable ()) {
-        LOGMESSAGE (OS::Log::kTrace, std::string ("Joining [Thread](") + GetName ()  + ")");
+        LOGTRACE << "Joining [Thread](" << GetName ()  << ")";
         mImplementation->join ();
     }
     else{
-        LOGMESSAGE (OS::Log::kTrace, std::string ("[Thread](") + GetName ()  + ") cannot be joined!");
+        LOGTRACE << "[Thread](" << GetName () << ") cannot be joined!";
     }
 }

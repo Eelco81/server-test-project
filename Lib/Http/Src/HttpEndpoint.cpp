@@ -7,5 +7,4 @@ HTTP::EndPoint::EndPoint (const std::string& inPath, HTTP::Method inMethod) :
 {
 }
 
-HTTP::EndPoint::~EndPoint () {
-}
+HTTP::EndPoint::~EndPoint () = default;

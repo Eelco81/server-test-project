@@ -42,7 +42,8 @@ void RFC6455::Client::HandleHandshake (const HTTP::Request& inRequest) {
     
     {
         using namespace HTTP;
-        LOGMESSAGE (OS::Log::kInfo, std::string ("HTTP/") + VersionToString (response.mVersion) + std::string (" ") + MethodToString (inRequest.mMethod) + std::string (" ") + inRequest.mPath + std::string (" - ") + std::to_string (response.mCode) + std::string (" ") + CodeToString (response.mCode));
+        LOGINFO << "HTTP/" << VersionToString (response.mVersion) << " " << MethodToString (inRequest.mMethod) 
+                << " " << inRequest.mPath << " - " << response.mCode << " " << CodeToString (response.mCode);
     }
  
     if (!isUpgraded) {

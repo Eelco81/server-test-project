@@ -27,8 +27,6 @@ void RFC6455::FrameDecoder::Write (const std::vector<uint8_t>& inBuffer) {
         frame.mOpCode = (mBuffer[0u] & 0b00001111);
         frame.mIsMasked = (mBuffer[1u] & 0b10000000);
         
-        //std::cout << std::hex << mBuffer[0] << mBuffer[1] << mBuffer[2] << mBuffer[3] << mBuffer[4] << mBuffer[5] << std::dec << std::endl;
-        
         std::size_t payloadSize (mBuffer[1u] & 0b01111111);
 
         // Special case, the payload size is encoded in the next 2 bytes
@@ -72,10 +70,6 @@ void RFC6455::FrameDecoder::Write (const std::vector<uint8_t>& inBuffer) {
             frame.mMask.assign (mBuffer.begin () + index, mBuffer.begin () + index + 4u); 
             index += 4u;
         }
-        
-        
-        // std::cout << std::hex << frame.mMask[0] << frame.mMask[1] << frame.mMask[2] << frame.mMask[3] << std::dec << std::endl;
-        
         
         // The buffer is to small to parse, wait for more data
         if (mBuffer.size () < index + payloadSize) {

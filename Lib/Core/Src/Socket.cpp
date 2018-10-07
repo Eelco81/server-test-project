@@ -24,7 +24,7 @@
 
 namespace {
     std::string ErrorMessage (const std::string& inMethod, int inId) {
-        return std::string ("[Socket](") + std::to_string (inId) + std::string (") CygWin::" + inMethod + " failed");
+        return std::string ("[Socket](") + std::to_string (inId) + std::string (") Gnu::" + inMethod + " failed");
     }
 }
 
@@ -65,7 +65,6 @@ public:
     }
     ~Implementation () {
         Close ();
-        //LOGMESSAGE (OS::Log::kTrace, std::string ("[Socket](") + std::to_string (GetId ()) + std::string (") is being destructed"));
     }
 
 public:
@@ -82,7 +81,7 @@ public:
         mIsListening = false;
         mIsConnected = true;
         mSocketHandle = inSocketHandle;
-        LOGMESSAGE (OS::Log::kDebug, std::string ("[Socket](") + std::to_string (GetId ()) + std::string (") initialized"));
+        LOGDEBUG << "[Socket](" << GetId () << ") initialized";
         return true;
     }
 
@@ -106,14 +105,14 @@ public:
         // Resolve the server address and port
         int res = getaddrinfo (inAddress.c_str (), inPort.c_str (), &hints, &mLatestAddrInfo);
         if (res != 0) {
-            LOGMESSAGE (OS::Log::kDebug, ErrorMessage ("getaddrinfo", GetId()));
+            LOGDEBUG << ErrorMessage ("getaddrinfo", GetId());
             return false;
         }
         
         // Create a SOCKET for connecting to server
         mSocketHandle = socket (mLatestAddrInfo->ai_family, mLatestAddrInfo->ai_socktype, mLatestAddrInfo->ai_protocol);
         if (mSocketHandle == INVALID_SOCKET) {
-            LOGMESSAGE (OS::Log::kDebug, ErrorMessage ("socket", GetId()));
+            LOGDEBUG << ErrorMessage ("socket", GetId());
             return false;
         }
         
@@ -123,11 +122,11 @@ public:
 #else
         if (setsockopt (mSocketHandle, SOL_SOCKET, SO_EXCLUSIVEADDRUSE, reinterpret_cast<char*>(&flag), sizeof(flag)) < 0) {
 #endif
-            LOGMESSAGE (OS::Log::kDebug, ErrorMessage ("setsocketopt", GetId()));
+            LOGDEBUG << ErrorMessage ("setsocketopt", GetId());
             return false;
         }
 
-        LOGMESSAGE (OS::Log::kDebug, "[Socket](" + std::to_string (GetId ()) + ") initialized at " + inAddress + ":" + inPort);
+        LOGDEBUG << "[Socket](" << GetId () << ") initialized at " << inAddress << ":" << inPort;
         return true;
     }
 
@@ -147,7 +146,7 @@ public:
 #else 
             closesocket (mSocketHandle);
 #endif
-            LOGMESSAGE (OS::Log::kDebug, std::string ("[Socket](") + std::to_string (GetId ()) + std::string (") closed"));
+            LOGDEBUG << "[Socket](" << GetId () << ") closed";
         }
 
         mIsConnected = false;
@@ -160,19 +159,19 @@ public:
 
             int result = bind (mSocketHandle, mLatestAddrInfo->ai_addr, (int) mLatestAddrInfo->ai_addrlen);
             if (result == SOCKET_ERROR) {
-                LOGMESSAGE (OS::Log::kDebug, ErrorMessage ("bind", GetId()));
+                LOGDEBUG << ErrorMessage ("bind", GetId());
                 return false;
             }
 
             result = listen (mSocketHandle, SOCKET_MAX_CONNECTIONS);
             if (result == SOCKET_ERROR) {
-                LOGMESSAGE (OS::Log::kDebug, ErrorMessage ("listen", GetId()));
+                LOGDEBUG << ErrorMessage ("listen", GetId());
                 return false;
             }
         }
 
         mIsListening = true;
-        LOGMESSAGE (OS::Log::kDebug, std::string ("[Socket](") + std::to_string (GetId ()) + std::string (") listening..."));
+        LOGDEBUG << "[Socket](" << GetId () << ") listening...";
         return true;
     }
 
@@ -184,12 +183,12 @@ public:
 
         SOCKET_HANDLE clientSocket = accept (mSocketHandle, NULL, NULL);
         if (clientSocket <= 0) {
-            LOGMESSAGE (OS::Log::kDebug, ErrorMessage ("accept", GetId()));
+            LOGDEBUG << ErrorMessage ("accept", GetId ());
             return false;
         }
         outSocket.Initialize (clientSocket);
 
-        LOGMESSAGE (OS::Log::kDebug, std::string ("[Socket](") + std::to_string (GetId ()) + std::string (") accepted socket " + std::to_string (outSocket.GetId ())));
+        LOGDEBUG << "[Socket](" << GetId () << ") accepted socket " << outSocket.GetId ();
         return true;
     }
 
@@ -202,11 +201,11 @@ public:
         // Connect to server.
         int res = connect (mSocketHandle, mLatestAddrInfo->ai_addr, (int) mLatestAddrInfo->ai_addrlen);
         if (res == SOCKET_ERROR) {
-            LOGMESSAGE (OS::Log::kDebug, ErrorMessage ("connect", GetId())); 
+            LOGDEBUG << ErrorMessage ("connect", GetId ()); 
             return false;
         }
 
-        LOGMESSAGE (OS::Log::kDebug, std::string ("[Socket](") + std::to_string (GetId ()) + std::string (") connected to server"));
+        LOGDEBUG << "[Socket](" << GetId () << ") connected to server";
         mIsConnected = true;
         return true;
     }
@@ -223,17 +222,17 @@ public:
 
         int result = send (mSocketHandle, inBuffer, inBufferSize, 0);
         if (result == SOCKET_ERROR) {
-            LOGMESSAGE (OS::Log::kDebug, ErrorMessage ("send", GetId()));
+            LOGDEBUG << ErrorMessage ("send", GetId ());
             Close ();
             return -1;
         }
         if (result == 0) {
-            LOGMESSAGE (OS::Log::kDebug, std::string ("[Socket](") + std::to_string (GetId ()) + std::string (") Failed to send any bytes"));
+            LOGDEBUG << "[Socket](" << GetId () << ") Failed to send any bytes";
             Close ();
             return -1;
         }
  
-        LOGMESSAGE (OS::Log::kTrace, std::string ("[Socket](") + std::to_string (GetId ()) + std::string (") Send ") + std::to_string (result) + std::string (" bytes"));
+        LOGTRACE << "[Socket](" << GetId () << ") Send " << result << " bytes";
         return result;
     }
 
@@ -245,17 +244,17 @@ public:
 
         int result = recv (mSocketHandle, ioBuffer, inBufferSize, 0);
         if (result == 0) {
-            LOGMESSAGE (OS::Log::kDebug, std::string ("[Socket](") + std::to_string (GetId ()) + std::string (") Received termination signal"));
+            LOGDEBUG << "[Socket](" << GetId () << ") Received termination signal";
             Close ();
             return -1;
         }
         if (result < 0) {
-            LOGMESSAGE (OS::Log::kDebug, ErrorMessage ("recv", GetId()));
+            LOGDEBUG << ErrorMessage ("recv", GetId());
             Close ();
             return -1;
         }
         
-        LOGMESSAGE (OS::Log::kTrace, std::string ("[Socket](") + std::to_string (GetId ()) + std::string (") Received ") + std::to_string (result) + std::string (" bytes"));
+        LOGTRACE << "[Socket](" << GetId () << ") Received " << result << " bytes";
         return result;
     }
 

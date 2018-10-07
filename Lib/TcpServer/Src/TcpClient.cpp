@@ -53,12 +53,9 @@ void TCP::Client::Stream::Write (const Packet& inPacket) {
 };
 
 TCP::Client::Client (std::string inAddress, std::string inPort) :
-    mSocket (std::make_shared<OS::Socket> (inAddress, inPort))
+    TCP::Client::Client (std::make_unique<OS::Socket> (inAddress, inPort))
 {
     mSocket->Initialize ();
-    mThread = std::make_unique<ReceiveThread> (GetReadStream (), mSocket);
-    GetWriteStream ().Pipe (this, &Client::Send);
-    //GetWriteStream ().Pipe (mSocket.get (), &OS::Socket::Send);
 }
 
 TCP::Client::Client (std::unique_ptr <OS::Socket> inSocket) :
@@ -66,7 +63,6 @@ TCP::Client::Client (std::unique_ptr <OS::Socket> inSocket) :
     mThread (std::make_unique<ReceiveThread> (GetReadStream (), mSocket))
 {
     GetWriteStream ().Pipe (this, &Client::Send);
-    //GetWriteStream ().Pipe (mSocket.get (), &OS::Socket::Send);
 }
 
 TCP::Client::~Client () {

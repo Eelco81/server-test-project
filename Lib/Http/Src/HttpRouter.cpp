@@ -35,7 +35,7 @@ void HTTP::Router::Write (const HTTP::Request& inRequest) {
     else {
         OS::SingleLock lock (mMutex);
         
-        auto endpointIterator = std::find_if (mEndPoints.begin (), mEndPoints.end (), [&inRequest](const std::unique_ptr<EndPoint>& endpoint) {
+        auto endpointIterator = std::find_if (mEndPoints.begin (), mEndPoints.end (), [&inRequest](const auto& endpoint) {
             return endpoint->GetPath () == inRequest.mPath && endpoint->GetMethod () == inRequest.mMethod;
         });
         
@@ -51,6 +51,7 @@ void HTTP::Router::Write (const HTTP::Request& inRequest) {
     
     Done (response);
     
-    LOGMESSAGE (OS::Log::kInfo, std::string ("HTTP/") + VersionToString (response.mVersion) + std::string (" ") + MethodToString (inRequest.mMethod) + std::string (" ") + inRequest.mPath + std::string (" - ") + std::to_string (response.mCode) + std::string (" ") + CodeToString (response.mCode));
+    LOGINFO << "HTTP/" << VersionToString (response.mVersion) << " " << MethodToString (inRequest.mMethod) 
+            << " " << inRequest.mPath << " - " << response.mCode << " " << CodeToString (response.mCode);
 
 }

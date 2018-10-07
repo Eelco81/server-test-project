@@ -11,7 +11,7 @@
 
 OS::Log::Log () :
     mLevel (kInfo),
-    kLevelMap ({ { kFatal, "FATAL" }, { kError, "ERROR" }, { kWarning, "WARN " }, { kInfo, "INFO " }, { kDebug, "DEBUG" }, { kTrace, "TRACE" } })
+    kLevelMap ({ {kNone, "NONE" }, { kFatal, "FATAL" }, { kError, "ERROR" }, { kWarning, "WARN " }, { kInfo, "INFO " }, { kDebug, "DEBUG" }, { kTrace, "TRACE" } })
 {
 }
 
@@ -34,6 +34,10 @@ void OS::Log::Initialize (OS::Log::Levels inLevel) {
 
 void OS::Log::LogMessage (OS::Log::Levels inLevel, const std::string& inMessage) {
 
+    if (mLevel == Levels::kNone) {
+        return;
+    }
+    
     if (inLevel <= mLevel) {
         const auto date (OS::Timing::ToString (OS::Timing::Now()));
         const std::string message (date + std::string (" - ") + kLevelMap.at (inLevel) + std::string (" - ") + inMessage);
