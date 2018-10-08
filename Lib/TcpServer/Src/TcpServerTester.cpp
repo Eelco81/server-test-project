@@ -72,8 +72,6 @@ TEST_F (TcpServerTester, DataTransfer) {
     EXPECT_EQ (buffer.size (), client.mData.size ());
     EXPECT_TRUE (std::equal (buffer.begin (), buffer.end (), client.mData.begin ()));
 
-    client.Stop (); 
-    server.Stop ();
 }
 
 TEST_F (TcpServerTester, MultipleConnnections) {
@@ -101,10 +99,6 @@ TEST_F (TcpServerTester, MultipleConnnections) {
     }
     
     OS::Timing::Sleep (2000u); // Make sure cleaner ticked once
-    EXPECT_EQ (0u, server.GetClientCount ());
-    
-    server.Stop ();
-    
     EXPECT_EQ (0u, server.GetClientCount ());
 }
 

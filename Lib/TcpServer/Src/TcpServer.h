@@ -5,10 +5,10 @@
 #include <vector>
 #include <memory>
 #include "Macros.h"
+#include "Socket.h"
 
 namespace OS {
     class Thread;
-    class Socket;
     class Mutex;
 }
 
@@ -54,13 +54,13 @@ public:
     std::size_t GetClientCount () const;
     
     /**
-     & This function is called by the listener thread
+     * This function is called by the listener thread
      * // todo: this should be private
      */
-    void RegisterClient (std::unique_ptr <OS::Socket> inClientSocket);
+    void WaitForConnections ();
     
     /**
-     & This function is called by the cleanup thread
+     * This function is called by the cleanup thread
      * // todo: this should be private
      */
     bool CleanUp ();
@@ -72,6 +72,7 @@ private:
     std::unique_ptr <OS::Thread> mListener;
     std::unique_ptr <OS::Thread> mCleaner;
     std::shared_ptr <ClientFactory> mFactory;
+    OS::Socket mSocket;
 
 };
 

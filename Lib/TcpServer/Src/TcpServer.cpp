@@ -3,57 +3,21 @@
 
 #include "Mutex.h"
 #include "Log.h"
-#include "Socket.h"
-#include "Thread.h"
 #include "TriggerThread.h"
+#include "HoldingThread.h"
 
 #include "TcpServer.h"
 #include "TcpClient.h"
 #include "TcpClientFactory.h"
 
-namespace {
-
-class ListenThread : public OS::Thread {
-    
-public:
-    ListenThread (TCP::Server& inServer, const std::string& inAddress, const std::string& inPort) :
-        Thread ("ServerListener"),
-        mServer (inServer),
-        mSocket (inAddress, inPort)
-    {
-        mSocket.Initialize ();
-    }
-    ~ListenThread () = default;
-
-    virtual void Execute () override {
-        mSocket.Listen (); 
-        LOGINFO << "TCP Server listening at " << mSocket.GetAddress () << ":" << mSocket.GetPortNumber ();
-        while (mSocket.IsListening ()) {
-            auto clientSocket = std::make_unique <OS::Socket> (mSocket.GetAddress (), mSocket.GetPortNumber ());
-            if (mSocket.Accept (*clientSocket)) { // blocking call
-                mServer.RegisterClient (std::move (clientSocket));
-            }
-        }
-        LOGINFO << "TCP Server stopped at " << mSocket.GetAddress () << ":" << mSocket.GetPortNumber ();
-    }
-
-    virtual void Kill () override {
-        mSocket.Close();
-    }
-    
-private:
-    TCP::Server& mServer;
-    OS::Socket mSocket;
-};
-
-} // end anonymous namespace
-
 TCP::Server::Server (const std::string& inAddress, const std::string& inPort, std::shared_ptr<ClientFactory> inFactory) :
     mMutex (std::make_unique <OS::Mutex> ()),
-    mListener (std::make_unique <ListenThread> (*this, inAddress, inPort)),
-    mCleaner (std::make_unique <APP::TriggerThread<Server>> ("CleanupServer", 1000u, this, &Server::CleanUp)),
-    mFactory (inFactory)
+    mListener (std::make_unique <APP::HoldingThread<Server>> ("ServerListener", this, &Server::WaitForConnections)),
+    mCleaner (std::make_unique <APP::TriggerThread<Server>> ("ServerCleaner", 1000u, this, &Server::CleanUp)),
+    mFactory (inFactory),
+    mSocket (inAddress, inPort)
 {
+    mSocket.Initialize ();
 }
 
 TCP::Server::~Server () {
@@ -67,7 +31,7 @@ void TCP::Server::Start () {
 
 void TCP::Server::Stop () {
     
-    mListener->Kill ();
+    mSocket.Close ();
     mListener->Join ();
     
     {
@@ -86,12 +50,25 @@ std::size_t TCP::Server::GetClientCount () const {
 }
 
 // called from listener thread
-void TCP::Server::RegisterClient (std::unique_ptr <OS::Socket> inClientSocket) {
+void TCP::Server::WaitForConnections () {
     
-    LOGDEBUG << "[TcpServer] Registering connected client with id "  << inClientSocket->GetId ();
-    OS::SingleLock lock (*mMutex);
-    mClients.emplace_back (mFactory->Create (std::move (inClientSocket)));
-    mClients.back ()->Start (); // No need to listen to the return value of start
+    LOGINFO << "TCP Server listening at " << mSocket.GetAddress () << ":" << mSocket.GetPortNumber ();
+
+    mSocket.Listen ();
+    while (mSocket.IsListening ()) {
+        
+        auto clientSocket = std::make_unique <OS::Socket> (mSocket.GetAddress (), mSocket.GetPortNumber ());
+        if (mSocket.Accept (*clientSocket)) { // blocking call
+        
+            LOGDEBUG << "[TcpServer] Registering connected client with id "  << clientSocket->GetId ();
+            
+            OS::SingleLock lock (*mMutex);
+            mClients.emplace_back (mFactory->Create (std::move (clientSocket)));
+            mClients.back ()->Start (); // No need to listen to the return value of start
+        }
+    }
+    
+    LOGINFO << "TCP Server stopped at " << mSocket.GetAddress () << ":" << mSocket.GetPortNumber ();
 }
 
 // called from cleaner thread

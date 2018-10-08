@@ -82,6 +82,12 @@ public:
      */
      int GetId () const;
 
+     /**
+      * Wait for incoming data packets
+      * \todo: this should be private
+      */
+    void WaitForData ();
+     
 protected:
     /**
      * Message stream for received messages.
@@ -100,9 +106,9 @@ private:
     class Stream : public OS::MessageStream<Packet,Packet> {
         void Write (const Packet& inPacket) override;
     };
-
-    std::shared_ptr <OS::Socket> mSocket;
+    
     std::unique_ptr <OS::Thread> mThread;
+    std::shared_ptr <OS::Socket> mSocket;
     Stream mReadStream;
     Stream mWriteStream;
 };
