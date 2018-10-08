@@ -1,38 +1,10 @@
 
 #include <exception>
 #include "Log.h"
-#include "PeriodicThread.h"
-#include "Task.h"
+#include "TriggerThread.h"
 #include "SimLoop.h"
 #include "SimFactory.h"
 #include "SimService.h"
-
-namespace {
-
-class SimulationTask : public APP::Task {
-public:
-    SimulationTask (SIM::Service& inService) :
-        APP::Task ("SimulationTask"),
-        mService (inService)
-    {
-    }
-    virtual bool Step () override {
-        return mService.Trigger ();
-    }
-protected:
-    SIM::Service& mService;
-};
-
-class SimulationRunner : public APP::PeriodicThread {
-public: 
-    SimulationRunner (uint64_t inWaitTime, SIM::Service& inService) :
-        APP::PeriodicThread ("SimulationRunner", inWaitTime)
-    {
-        AddTask (std::make_unique<SimulationTask> (inService));
-    }
-};
-
-}
 
 SIM::Service::Service (std::unique_ptr<Factory> inFactory) :
     mFactory (std::move (inFactory)),
@@ -56,7 +28,7 @@ bool SIM::Service::Load (const json& inConfig) {
     
     try {
         mLoop = mFactory->Create (inConfig);
-        mRunner = std::make_unique<SimulationRunner> (mLoop->GetTimeStep (), *this);
+        mRunner = std::make_unique<APP::TriggerThread<Service>> ("SimulationRunner", mLoop->GetTimeStep (), this, &Service::Trigger);
     }
     catch (std::exception& e) {
         LOGMESSAGE (OS::Log::kError, e.what ());
@@ -134,7 +106,7 @@ bool SIM::Service::Trigger () {
     }
     catch (std::exception& e) {
         LOGMESSAGE (OS::Log::kError, e.what ());
-        return Stop ();
+        return false;
     }
 }
 

@@ -95,14 +95,21 @@ private:
 class LogBuffer {
 
 public:
-    LogBuffer (Log::Levels inLevel) :
-        mLevel (inLevel)
-    {
-    }
-    ~LogBuffer () {
-        Log::Instance ().LogMessage (mLevel, mStream.str ());
-    }
+    /**
+     * Constructor
+     */
+    LogBuffer (Log::Levels inLevel);
     
+    /** 
+     * Destructor. This class relies on always being called as r-value.
+     * I.e. 
+     *   LogBuffer (kInfo) << "This is a log line";
+     */
+    ~LogBuffer ();
+    
+    /**
+     * Enable stringstream like operator <<
+     */
     template <typename T>
     LogBuffer& operator<< (const T& inValue) {
         mStream << inValue;
@@ -114,9 +121,6 @@ private:
     Log::Levels mLevel;
 };
 
+} // end namespace OS
 
-
-}
-
-
-#endif
+#endif // _LOG_H_

@@ -55,3 +55,12 @@ void OS::Log::Flush () {
         mMessages.pop ();
     }
 }
+
+OS::LogBuffer::LogBuffer (Log::Levels inLevel) :
+    mLevel (inLevel)
+{
+}
+
+OS::LogBuffer::~LogBuffer () {
+    Log::Instance ().LogMessage (mLevel, mStream.str ());
+}

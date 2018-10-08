@@ -1,8 +1,6 @@
 
 #include "gmock/gmock.h"
-
 #include "Timing.h"
-
 #include "SimBlock.h"
 #include "SimFactory.h"
 #include "SimService.h"

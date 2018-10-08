@@ -24,7 +24,7 @@ void OS::Thread::Spawn () {
 
 void OS::Thread::Join () {
     if (mImplementation && mImplementation->joinable ()) {
-        LOGTRACE << "Joining [Thread](" << GetName ()  << ")";
+        LOGTRACE << "[Thread](" << GetName ()  << ") joining";
         mImplementation->join ();
     }
     else{

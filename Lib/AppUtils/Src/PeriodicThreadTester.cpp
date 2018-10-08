@@ -17,7 +17,7 @@ namespace {
 TEST (PeriodicThreadTester, GetName) {
 
     APP::PeriodicThread thread ("PeriodicThread", 0u);
-    ASSERT_EQ ("PeriodicThread", thread.GetName ());   
+    ASSERT_EQ ("PeriodicThread", thread.GetName ());
 }
 
 TEST (PeriodicThreadTester, TasksInOneThread) {
@@ -40,14 +40,13 @@ TEST (PeriodicThreadTester, TasksInOneThread) {
     thread.AddTask (std::move (task2));
 
     thread.Spawn ();
-    thread.Join ();
 
 }
 
 TEST (PeriodicThreadTester, TasksInMultipleThreads) {
 
     APP::PeriodicThread thread1 ("PeriodicThread1", 1u);
-    APP::PeriodicThread thread2 ("PeriodicThread1", 1u);
+    APP::PeriodicThread thread2 ("PeriodicThread2", 1u);
 
     auto task1 = std::make_unique <TestTask> ("Task1");
     auto task2 = std::make_unique <TestTask> ("Task2");
@@ -67,8 +66,5 @@ TEST (PeriodicThreadTester, TasksInMultipleThreads) {
 
     thread1.Spawn ();
     thread2.Spawn ();
-
-    thread1.Join ();
-    thread2.Join ();
 
 }

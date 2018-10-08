@@ -16,31 +16,67 @@ class Thread {
     NO_COPY_CONSTRUCTORS (Thread);
 
 public:
+    /**
+     * Status
+     */
     enum Status {
         kUnstarted,
         kRunning,
         kDone
     };
 
-public:
+    /**
+     * Deleted default constructor
+     */
     Thread () = delete;
+    
+    /**
+     * Constructor
+     */
     Thread (const std::string& inName);
+    
+    /**
+     * Virtual destructor
+     */
     virtual ~Thread ();
 
-public:
+    /**
+     * Get the threads name
+     */
     inline const std::string& GetName () const { return mName; }
+    
+    /**
+     * Get the threads running status
+     */
     inline Status GetStatus () const  { return mStatus; }
 
-public:
+    /**
+     * Spawn the thread.
+     */
     void Spawn ();
+    
+    /**
+     * Wait for the thread to stop running
+     */
     void Join ();
-
-public:
+    
+    /**
+     * Thread execution function
+     */
     virtual void Execute () = 0;
+    
+    /**
+     * This function must gracefully stop the execution function
+     */
     virtual void Kill() = 0;
+
 private:
+    /**
+     * Internal thread execution function, wraps Execute () with 
+     * some additional bookkeeping and logging
+     */
     void Run ();
-	
+    
 private:
     std::string mName;
     Status mStatus;

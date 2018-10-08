@@ -83,10 +83,6 @@ public:
      int GetId () const;
 
 protected:
-    std::shared_ptr <OS::Socket> mSocket;
-    std::unique_ptr <OS::Thread> mThread;
-
-protected:
     /**
      * Message stream for received messages.
      */
@@ -97,13 +93,16 @@ protected:
      */
     inline OS::MessageStream<Packet,Packet>& GetWriteStream () { return mWriteStream; }
     
+private:
     /**
      * Read stream class
      */
     class Stream : public OS::MessageStream<Packet,Packet> {
         void Write (const Packet& inPacket) override;
     };
-    
+
+    std::shared_ptr <OS::Socket> mSocket;
+    std::unique_ptr <OS::Thread> mThread;
     Stream mReadStream;
     Stream mWriteStream;
 };

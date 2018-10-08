@@ -5,8 +5,7 @@
 #include "Log.h"
 #include "Socket.h"
 #include "Thread.h"
-#include "Task.h"
-#include "PeriodicThread.h"
+#include "TriggerThread.h"
 
 #include "TcpServer.h"
 #include "TcpClient.h"
@@ -24,11 +23,11 @@ public:
     {
         mSocket.Initialize ();
     }
-    ~ListenThread () {}
+    ~ListenThread () = default;
 
     virtual void Execute () override {
         mSocket.Listen (); 
-        LOGMESSAGE (OS::Log::kInfo, "TCP Server listening at " + mSocket.GetAddress () + ":" + mSocket.GetPortNumber ());
+        LOGINFO << "TCP Server listening at " << mSocket.GetAddress () << ":" << mSocket.GetPortNumber ();
         while (mSocket.IsListening ()) {
             auto clientSocket = std::make_unique <OS::Socket> (mSocket.GetAddress (), mSocket.GetPortNumber ());
             if (mSocket.Accept (*clientSocket)) { // blocking call
@@ -47,37 +46,12 @@ private:
     OS::Socket mSocket;
 };
 
-class CleanUpTask : public APP::Task {
-public:
-    CleanUpTask (TCP::Server& inServer) : 
-        Task ("CleanupServerTask"),
-        mServer (inServer) 
-    {
-    }
-    virtual bool Step () override {
-        mServer.CleanUp ();
-        return true;
-    }
-private:
-    TCP::Server& mServer;
-};
-
-class CleanupThread : public APP::PeriodicThread {
-public:
-    CleanupThread (TCP::Server& inServer) :
-        PeriodicThread ("CleanupServer", 1000u)
-    {
-        AddTask (std::make_unique <CleanUpTask> (inServer));
-    }
-    ~CleanupThread () {}
-};
-
 } // end anonymous namespace
 
 TCP::Server::Server (const std::string& inAddress, const std::string& inPort, std::shared_ptr<ClientFactory> inFactory) :
     mMutex (std::make_unique <OS::Mutex> ()),
     mListener (std::make_unique <ListenThread> (*this, inAddress, inPort)),
-    mCleaner (std::make_unique <CleanupThread> (*this)),
+    mCleaner (std::make_unique <APP::TriggerThread<Server>> ("CleanupServer", 1000u, this, &Server::CleanUp)),
     mFactory (inFactory)
 {
 }
@@ -121,7 +95,7 @@ void TCP::Server::RegisterClient (std::unique_ptr <OS::Socket> inClientSocket) {
 }
 
 // called from cleaner thread
-void TCP::Server::CleanUp () {
+bool TCP::Server::CleanUp () {
 
     auto remover = [] (const ClientPtr& client) {
         if (!client->IsConnected ()) {
@@ -134,4 +108,6 @@ void TCP::Server::CleanUp () {
 
     OS::SingleLock lock (*mMutex);
     mClients.erase (std::remove_if (mClients.begin (), mClients.end (), remover), mClients.end ());
+
+    return true;
 }

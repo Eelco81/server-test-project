@@ -18,14 +18,29 @@ class PeriodicThread : public OS::Thread {
     NO_COPY_CONSTRUCTORS (PeriodicThread);
 
 public:
-    PeriodicThread () = delete;
+    /**
+     * Constructor, inWaitTime indicates the frequency at which the thread should run
+     */
     PeriodicThread (const std::string& inName, uint64_t inWaitTime);
+    
+    /**
+     * Virtual destructor
+     */
     virtual ~PeriodicThread (); 
 
-public:
-    bool IsRunning ();
+    /**
+     * Add a task to the periodic thread execution
+     */
     void AddTask (std::unique_ptr<Task> inTask);
+    
+    /**
+     * Thread execution function
+     */
     void Execute () override;
+    
+    /**
+     * Stop after the next wait cycle.
+     */
     void Kill() override;
     
 private:

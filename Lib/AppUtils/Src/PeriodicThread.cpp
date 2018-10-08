@@ -11,10 +11,9 @@ APP::PeriodicThread::PeriodicThread (const std::string& inName, uint64_t inWaitT
 {
 }
 
-APP::PeriodicThread::~PeriodicThread () = default;
-
-bool APP::PeriodicThread::IsRunning () {
-    return mRunning;
+APP::PeriodicThread::~PeriodicThread () {
+    Kill ();
+    Join ();
 }
 
 void APP::PeriodicThread::AddTask (std::unique_ptr<Task> inTask) {
@@ -44,6 +43,6 @@ void APP::PeriodicThread::Execute () {
 
 }
 
-void APP::PeriodicThread::Kill() {
+void APP::PeriodicThread::Kill () {
     mRunning = false;
 }

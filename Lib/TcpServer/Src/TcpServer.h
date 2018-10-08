@@ -63,7 +63,7 @@ public:
      & This function is called by the cleanup thread
      * // todo: this should be private
      */
-    void CleanUp ();
+    bool CleanUp ();
 
 private:
     using ClientPtr = std::unique_ptr <Client>;
@@ -72,8 +72,9 @@ private:
     std::unique_ptr <OS::Thread> mListener;
     std::unique_ptr <OS::Thread> mCleaner;
     std::shared_ptr <ClientFactory> mFactory;
+
 };
 
-}
+} // end namespace TCP
 
-#endif
+#endif // _Server_H_
