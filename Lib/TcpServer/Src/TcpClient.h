@@ -104,6 +104,7 @@ private:
      * Read stream class
      */
     class Stream : public OS::MessageStream<Packet,Packet> {
+    public:
         void Write (const Packet& inPacket) override;
     };
     

@@ -7,19 +7,39 @@
 namespace OS {
 
 class Mutex {
+
 public:
+    /**
+     * Lock the resource
+     */
     void Lock ();
+    
+    /**
+     * Unlock the resource
+     */
     void UnLock ();
+
 private:
     std::mutex mMutex;
+
 };
 
 class SingleLock {
+
 public:
+    /** 
+     * Constructor (lock the resource)
+     */
     SingleLock (Mutex& inMutex);
+    
+    /**
+     * Destructor (unlock the resource)
+     */
     ~SingleLock ();
+
 private:
     Mutex& mMutex;
+
 };
 
 }

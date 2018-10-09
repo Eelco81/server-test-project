@@ -13,7 +13,12 @@ namespace TCP {
 class Client;
 
 class ClientFactory {
+    
 public:
+    /**
+     * Each TCP server implementation should provide a client factory with
+     * this method. Incoming sockets can be linked to TCP clients here.
+     */
     virtual std::unique_ptr<Client> Create (std::unique_ptr<OS::Socket> inSocket) const = 0;
 };
 

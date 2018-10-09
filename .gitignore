@@ -7,8 +7,11 @@
 /Lib/*/Win32/Release*
 /Lib/*/Src/*.o
 /Lib/*/Src/*.TMP
+/Lib/*/Src/*.gcda
+/Lib/*/Src/*.gcno
 /Lib/*/Make/*.a
 /Lib/*/Make/Google*
+/Lib/*/Make/html/*
 /Lib/Core/Test/Files/tmp*
 
 /App/Win32/*.sdf

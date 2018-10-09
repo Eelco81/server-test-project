@@ -48,7 +48,7 @@ void SIM::Loop::Connect (const std::string& inSource, const std::string& inTarge
         Path sourcePath (inSource);
         Path targetPath (inTarget);
         
-        // todo: only allow connections from otuputs to inputs
+        // todo: only allow connections from outputs to inputs
         // todo: do not accept multiple connectors to the same input
         
         auto sourcePort (FindPort (sourcePath));
@@ -78,7 +78,7 @@ void SIM::Loop::Update () {
     mTimer.Tick ();
     
     // todo: this causes massive delays, blocks and connectors need to be 
-    // executed chronoloigically.
+    // executed chronologically.
     
     for (auto& block : mBlocks) {
         block->Step (mTimer.GetTime ());
