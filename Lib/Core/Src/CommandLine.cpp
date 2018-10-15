@@ -38,7 +38,7 @@ void OS::CommandLine::Parse (int inArgc, const char* const* inArgv) {
     }
 }
 
-bool OS::CommandLine::HasOption (const std::string& inKey) {
+bool OS::CommandLine::HasOption (const std::string& inKey)const  {
     Option option;
     if (FindOption (inKey, option)) {
         return true;
@@ -46,7 +46,7 @@ bool OS::CommandLine::HasOption (const std::string& inKey) {
     return false;
 }
 
-bool OS::CommandLine::HasOption (const std::string& inKey, std::string& outValue) {
+bool OS::CommandLine::HasOption (const std::string& inKey, std::string& outValue) const {
     Option option;
     if (FindOption (inKey, option)) {
         if (option.mHasValue) {
@@ -57,7 +57,7 @@ bool OS::CommandLine::HasOption (const std::string& inKey, std::string& outValue
     return false;
 }
 
-bool OS::CommandLine::FindOption (const std::string& inKey, Option& outOption) {
+bool OS::CommandLine::FindOption (const std::string& inKey, Option& outOption) const {
 
     const auto equals ([inKey] (const Option& option) { return option.mKey == inKey; });
     const auto optionIterator (std::find_if (mOptions.begin (), mOptions.end (), equals));

@@ -12,8 +12,8 @@ class CommandLine {
 public: 
 
     void Parse (int inArgc, const char* const* inArgv);
-    bool HasOption (const std::string& inKey);
-    bool HasOption (const std::string& inKey, std::string& outValue);
+    bool HasOption (const std::string& inKey) const;
+    bool HasOption (const std::string& inKey, std::string& outValue) const;
 
 private:
     
@@ -30,7 +30,7 @@ private:
 
     std::vector <Option> mOptions;
 
-    bool FindOption (const std::string& inKey, Option& outOption);
+    bool FindOption (const std::string& inKey, Option& outOption) const;
 };
 
 }
