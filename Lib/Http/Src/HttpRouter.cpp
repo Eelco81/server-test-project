@@ -11,11 +11,11 @@ HTTP::Router::Router () :
 {
 }
 
+HTTP::Router::Router (const Router& inRouter) = default;
 HTTP::Router::~Router () = default;
 
 void HTTP::Router::AddEndPoint (HTTP::Router::EndPointPtr inEndPoint) {
-    OS::SingleLock lock (mMutex);
-    mEndPoints.push_back (std::move (inEndPoint));
+    mEndPoints.push_back (inEndPoint);
 }
 
 void HTTP::Router::Write (const HTTP::Request& inRequest) {
@@ -33,7 +33,6 @@ void HTTP::Router::Write (const HTTP::Request& inRequest) {
         response.mCode = Code::NOT_FOUND;
     }
     else {
-        OS::SingleLock lock (mMutex);
         
         auto endpointIterator = std::find_if (mEndPoints.begin (), mEndPoints.end (), [&inRequest](const auto& endpoint) {
             return endpoint->GetPath () == inRequest.mPath && endpoint->GetMethod () == inRequest.mMethod;
@@ -49,9 +48,9 @@ void HTTP::Router::Write (const HTTP::Request& inRequest) {
         }
     }
     
-    Done (response);
-    
     LOGINFO << "HTTP/" << VersionToString (response.mVersion) << " " << MethodToString (inRequest.mMethod) 
             << " " << inRequest.mPath << " - " << response.mCode << " " << CodeToString (response.mCode);
 
+    Done (response);
+    
 }

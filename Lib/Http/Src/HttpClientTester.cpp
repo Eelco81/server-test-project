@@ -24,7 +24,7 @@ class HttpClientTester : public ::testing::Test {
 
 TEST_F (HttpClientTester, VerifyProperIntegration) {
     
-    auto router (std::make_shared<HTTP::Router> ());
+    HTTP::Router router;
     auto factory (std::make_shared<HTTP::ClientFactory> (router));
     TCP::Server server (IP_FOR_TESTING, PORT_FOR_TESTING, factory);
     

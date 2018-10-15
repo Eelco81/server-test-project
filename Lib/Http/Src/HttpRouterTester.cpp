@@ -37,8 +37,8 @@ TEST (RouterTester, BasicRouting) {
     TestEndPoint* testEndPoint1 = new TestEndPoint ();
     OtherTestEndPoint* testEndPoint2 = new OtherTestEndPoint ();
     
-    router.AddEndPoint (std::unique_ptr <HTTP::EndPoint> (testEndPoint1));
-    router.AddEndPoint (std::unique_ptr <HTTP::EndPoint> (testEndPoint2));
+    router.AddEndPoint (std::shared_ptr <HTTP::EndPoint> (testEndPoint1));
+    router.AddEndPoint (std::shared_ptr <HTTP::EndPoint> (testEndPoint2));
     
     EXPECT_CALL (*testEndPoint1, Execute (::testing::_, ::testing::_)).Times (1);
     EXPECT_CALL (*testEndPoint2, Execute (::testing::_, ::testing::_)).Times (0);
@@ -56,7 +56,7 @@ TEST (RouterTester, 404PathNotFound) {
     HTTP::Response response;
     router.Pipe ([&](const auto& data) { response = data; });
     
-    router.AddEndPoint (std::unique_ptr <HTTP::EndPoint> (new TestEndPoint ()));
+    router.AddEndPoint (std::shared_ptr <HTTP::EndPoint> (new TestEndPoint ()));
     
     const HTTP::Request request (HTTP::Method::GET, std::string ("/not-existing-path"));
     router.Write (request);
@@ -71,7 +71,7 @@ TEST (RouterTester, 404MethodNotFound) {
     HTTP::Response response;
     router.Pipe ([&](const auto& data) { response = data; });
     
-    router.AddEndPoint (std::unique_ptr <HTTP::EndPoint> (new TestEndPoint ()));
+    router.AddEndPoint (std::shared_ptr <HTTP::EndPoint> (new TestEndPoint ()));
     
     const HTTP::Request request (HTTP::Method::DELETE, std::string ("/test"));
     router.Write (request);
@@ -86,7 +86,7 @@ TEST (RouterTester, 404BadRequest) {
     HTTP::Response response;
     router.Pipe ([&](const auto& data) { response = data; });
     
-    router.AddEndPoint (std::unique_ptr <HTTP::EndPoint> (new TestEndPoint ()));
+    router.AddEndPoint (std::shared_ptr <HTTP::EndPoint> (new TestEndPoint ()));
     
     HTTP::Request request (HTTP::Method::GET, std::string ("/test"));
     request.mIsValid = false;

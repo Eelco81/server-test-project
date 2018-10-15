@@ -9,6 +9,7 @@
 #include "TcpClientFactory.h"
 #include "HttpRequestDecoder.h"
 #include "HttpResponseEncoder.h"
+#include "HttpRouter.h"
 #include "StringConverter.h"
 
 namespace OS {
@@ -19,7 +20,6 @@ namespace HTTP {
 
 struct Request;
 struct Response;
-class Router;
 
 class Client : public TCP::Client {
 
@@ -32,7 +32,7 @@ public:
     /**
      * Constructor
      */
-    Client (std::unique_ptr <OS::Socket> inSocket, std::shared_ptr<HTTP::Router> inRouter);
+    Client (std::unique_ptr <OS::Socket> inSocket, const Router& inRouter);
     
     /**
      * Virtual destructor
@@ -43,7 +43,7 @@ protected:
     /**
      * MessageStreams which link ReadStream to the WriteStream
      */
-    std::shared_ptr<Router> mRouter;
+    Router mRouter;
     OS::PacketToStringConverter mToStringConverter;
     OS::StringToPacketConverter mToPacketConverter;
     RequestDecoder mDecoder;
@@ -56,7 +56,7 @@ public:
     /**
      * HTTP ClientFactory
      */
-    ClientFactory (std::shared_ptr<Router> inRouter);
+    ClientFactory (const Router& inRouter);
     
     /**
      * Overloaded create method
@@ -65,9 +65,9 @@ public:
 
 private:
     /**
-     * The router is shared with each create client
+     * The router is copied to each created client
      */
-    std::shared_ptr<Router> mRouter;
+    Router mRouter;
 
 };
 

@@ -13,17 +13,30 @@ class Response;
 
 class EndPoint {
 
-    NO_COPY_CONSTRUCTORS (EndPoint);
-    
 public:
-    EndPoint () = delete;
+    /**
+     * Constructor
+     */
     EndPoint (const std::string& inPath, Method inMethod);
+    
+    /**
+     * Virtual destructor
+     */
     virtual ~EndPoint ();
-
-public:
+    
+    /**
+     * Function to implement. 
+     */
     virtual void Execute (const Request& inRequest, Response& outReponse) = 0;
-
+    
+    /**
+     * Retrieve the path of this endpoint
+     */
     const std::string& GetPath () const { return mPath; }
+    
+    /**
+     * Retrieve the method of this endpoint.
+     */
     Method GetMethod () const { return mMethod; }
 
 private:

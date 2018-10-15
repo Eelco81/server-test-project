@@ -5,14 +5,14 @@
 #include "HttpClient.h"
 #include "HttpRouter.h"
 
-HTTP::Client::Client (std::unique_ptr <OS::Socket> inSocket, std::shared_ptr<HTTP::Router> inRouter) :
+HTTP::Client::Client (std::unique_ptr <OS::Socket> inSocket, const HTTP::Router& inRouter) :
     TCP::Client (std::move (inSocket)),
     mRouter (inRouter)
 {
     GetReadStream ()
         .Pipe (mToStringConverter)
         .Pipe (mDecoder)
-        .Pipe (*mRouter)
+        .Pipe (mRouter)
         .Pipe (mEncoder)
         .Pipe (mToPacketConverter)
         .Pipe (GetWriteStream ());
@@ -20,7 +20,7 @@ HTTP::Client::Client (std::unique_ptr <OS::Socket> inSocket, std::shared_ptr<HTT
 
 HTTP::Client::~Client () = default;
 
-HTTP::ClientFactory::ClientFactory (std::shared_ptr<HTTP::Router> inRouter) :
+HTTP::ClientFactory::ClientFactory (const HTTP::Router& inRouter) :
     TCP::ClientFactory::ClientFactory (),
     mRouter (inRouter)
 {
