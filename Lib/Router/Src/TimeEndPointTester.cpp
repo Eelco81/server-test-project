@@ -7,7 +7,7 @@ TEST (TimeEndPointTester, Get) {
     
     HTTP::Request request;
     HTTP::Response response;
-    API::TimeEndPoint endPoint;
+    API::TimeEndPoint endPoint ("/hello");
     
     endPoint.Execute (request, response);
     

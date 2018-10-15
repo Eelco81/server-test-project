@@ -4,15 +4,15 @@
 
 #include "HttpRouter.h"
 
-namespace API {
+namespace SIM {
+    class Service;
+}
 
 class SystemRouter : public HTTP::Router {
     
 public:
-    SystemRouter ();
+    SystemRouter (std::shared_ptr<SIM::Service> inService);
 
 };
-
-}
 
 #endif // _SYSTEMROUTER_H_

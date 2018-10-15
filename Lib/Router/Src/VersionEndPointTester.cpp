@@ -6,7 +6,7 @@ TEST (VersionEndPointTester, Get) {
     
     HTTP::Request request;
     HTTP::Response response;
-    API::VersionEndPoint endPoint;
+    API::VersionEndPoint endPoint ("/hello");
     
     endPoint.Execute (request, response);
     

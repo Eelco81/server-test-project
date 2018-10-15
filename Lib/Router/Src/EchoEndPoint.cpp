@@ -1,8 +1,8 @@
 
 #include "EchoEndPoint.h"
 
-API::EchoEndPoint::EchoEndPoint () : 
-    HTTP::EndPoint ("/api/echo", HTTP::Method::PUT)
+API::EchoEndPoint::EchoEndPoint (const std::string& inPath) : 
+    HTTP::EndPoint (inPath, HTTP::Method::PUT)
 {
 }
 

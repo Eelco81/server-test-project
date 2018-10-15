@@ -6,8 +6,8 @@
 
 using json = nlohmann::json;
 
-API::VersionEndPoint::VersionEndPoint () : 
-    HTTP::EndPoint ("/api/version", HTTP::Method::GET)
+API::VersionEndPoint::VersionEndPoint (const std::string& inPath) : 
+    HTTP::EndPoint (inPath, HTTP::Method::GET)
 {
 }
 

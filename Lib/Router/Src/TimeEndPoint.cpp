@@ -1,13 +1,12 @@
 
-#include <json.hpp>
-
 #include "Timing.h"
 #include "TimeEndPoint.h"
 
+#include <json.hpp>
 using json = nlohmann::json;
 
-API::TimeEndPoint::TimeEndPoint () : 
-    HTTP::EndPoint ("/api/time", HTTP::Method::GET)
+API::TimeEndPoint::TimeEndPoint (const std::string& inPath) : 
+    HTTP::EndPoint (inPath, HTTP::Method::GET)
 {
 }
 
