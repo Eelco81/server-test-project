@@ -3,13 +3,13 @@
 #define _HTTP_ENDPOINT_H_
 
 #include <string>
+
 #include "Macros.h"
 #include "HttpCodes.h"
+#include "HttpRequest.h"
+#include "HttpResponse.h"
 
 namespace HTTP {
-
-class Request;
-class Response;
 
 class EndPoint {
 

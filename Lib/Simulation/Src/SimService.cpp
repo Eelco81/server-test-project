@@ -9,9 +9,7 @@
 SIM::Service::Service (std::unique_ptr<Factory> inFactory) :
     mFactory (std::move (inFactory)),
     mRunner (nullptr),
-    mLoop (nullptr),
-    mIsLoaded (false),
-    mIsRunning (false)
+    mLoop (nullptr)
 {
 }
 
@@ -21,24 +19,23 @@ bool SIM::Service::Load (const json& inConfig) {
     
     OS::SingleLock lock (mMutex);
     
-    if (mIsRunning) {
+    if (IsRunning ()) {
         LOGMESSAGE (OS::Log::kWarning, "Cannot load a running simulation");
         return false;
     }
     
     try {
         mLoop = mFactory->Create (inConfig);
-        mRunner = std::make_unique<APP::TriggerThread<Service>> ("SimulationRunner", mLoop->GetTimeStep (), this, &Service::Trigger);
     }
     catch (std::exception& e) {
         LOGMESSAGE (OS::Log::kError, e.what ());
         mLoop.reset (nullptr);
         mRunner.reset (nullptr);
-        mIsLoaded = false;
         return false;
     }
-
-    mIsLoaded = true;
+    
+    LOGMESSAGE (OS::Log::kInfo, "Loaded simulation...");
+    
     return true;
 }
 
@@ -46,21 +43,22 @@ bool SIM::Service::Start () {
     
     OS::SingleLock lock (mMutex);
     
-    if (!mIsLoaded) {
+    if (!IsLoaded ()) {
         LOGMESSAGE (OS::Log::kWarning, "Cannot start an unloaded simulation");
         return false;
     }
     
-    if (mIsRunning) {
+    if (IsRunning ()) {
         LOGMESSAGE (OS::Log::kWarning, "Cannot restart a running simulation");
         return false;
     }
     
-    if (mRunner) {
-        mLoop->Initialize ();
-        mRunner->Spawn ();
-    }
+    mRunner = std::make_unique<APP::TriggerThread<Service>> ("SimulationRunner", mLoop->GetTimeStep (), this, &Service::Trigger);
     
+    mLoop->Initialize ();
+    mRunner->Spawn ();
+    
+    LOGMESSAGE (OS::Log::kInfo, "Initialized loop, starting simulation.");
     return true;
 }
 
@@ -68,19 +66,20 @@ bool SIM::Service::Stop () {
     
     OS::SingleLock lock (mMutex);
     
-    if (!mIsLoaded) {
+    if (!IsLoaded ()) {
         LOGMESSAGE (OS::Log::kWarning, "Cannot stop an unloaded simulation");
         return false;
     }
     
-    if (mRunner) {
-        mRunner->Kill ();
-        mRunner->Join ();
-        mLoop->Terminate ();
-        mRunner.reset (nullptr);
-        mLoop.reset (nullptr);
+    if (!IsRunning ()) {
+        LOGMESSAGE (OS::Log::kWarning, "Cannot stop a stopped simulation");
+        return false;
     }
     
+    mRunner.reset (nullptr);
+    mLoop.reset (nullptr);
+    
+    LOGMESSAGE (OS::Log::kInfo, "Stopped simulation.");
     return true;
 }
 
@@ -111,9 +110,9 @@ bool SIM::Service::Trigger () {
 }
 
 bool SIM::Service::IsLoaded () const {
-    return mIsLoaded;
-}
+    return mLoop.get () != nullptr;
+} 
 
 bool SIM::Service::IsRunning () const {
-    return mIsRunning;
+    return mRunner.get () != nullptr;
 }

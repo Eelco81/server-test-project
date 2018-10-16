@@ -14,7 +14,9 @@ SIM::Loop::Loop (uint64_t inTimeStep) :
 {
 }
 
-SIM::Loop::~Loop () = default;
+SIM::Loop::~Loop () {
+    Terminate ();
+}
 
 std::weak_ptr<SIM::Port> SIM::Loop::FindPort (const SIM::Path& inPath) const {
     

@@ -8,7 +8,7 @@
 #include "HttpEndPoint.h"
 
 namespace SIM {
-    class Service;
+    class IService;
 }
 
 namespace API {
@@ -19,7 +19,7 @@ public:
     /**
      * Constructor
      */
-    SimEndPoint (const std::string& inPath, HTTP::Method inMethod, std::shared_ptr<SIM::Service> inService);
+    SimEndPoint (const std::string& inPath, HTTP::Method inMethod, std::shared_ptr<SIM::IService> inService);
     
     /**
      * Virtual Destructor
@@ -27,7 +27,7 @@ public:
     virtual ~SimEndPoint ();
 
 protected:
-    std::shared_ptr<SIM::Service> mService;
+    std::shared_ptr<SIM::IService> mService;
 };
 
 class SimLoadEndPoint : public SimEndPoint {
@@ -36,7 +36,7 @@ public:
     /**
      * Constructor
      */
-    SimLoadEndPoint (std::shared_ptr<SIM::Service> inService);
+    SimLoadEndPoint (const std::string& inPath, std::shared_ptr<SIM::IService> inService);
     
     /**
      * Virtual destructor
@@ -55,7 +55,7 @@ public:
     /**
      * Constructor
      */
-    SimStartEndPoint (std::shared_ptr<SIM::Service> inService);
+    SimStartEndPoint (const std::string& inPath, std::shared_ptr<SIM::IService> inService);
     
     /**
      * Virtual destructor
@@ -74,7 +74,7 @@ public:
     /**
      * Constructor
      */
-    SimStopEndPoint (std::shared_ptr<SIM::Service> inService);
+    SimStopEndPoint (const std::string& inPath, std::shared_ptr<SIM::IService> inService);
     
     /**
      * Virtual destructor

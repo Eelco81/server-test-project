@@ -48,14 +48,25 @@ TEST (SimServiceTester, Run) {
         }]
     })"_json;
     
+    ASSERT_FALSE (service.Start ());
+    ASSERT_FALSE (service.Stop ());
+    
     ASSERT_TRUE (service.Load (config));
+    
+    ASSERT_FALSE (service.Stop ());
+    
     ASSERT_TRUE (service.Start ());
     
-    OS::Timing::Sleep (199u);
+    ASSERT_FALSE (service.Start ());
+    ASSERT_FALSE (service.Load (config));
+    
+    OS::Timing::Sleep (150u);
     
     std::string value;
     ASSERT_TRUE (service.GetValue ("MyName.in.input", value));
     EXPECT_EQ (std::string ("0"), value);
     
     ASSERT_TRUE (service.Stop ());
+    
+    ASSERT_FALSE (service.Stop ());
 }

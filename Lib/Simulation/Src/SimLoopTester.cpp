@@ -143,7 +143,7 @@ TEST (SimLoopTester, RunSuccesfulConfig) {
     loop.Update ();
     ASSERT_EQ (200u, loop.GetTimeStamp ());
     
-    loop.Terminate ();
+    // loop.Terminate () called in destructor
 }
 
 TEST (SimLoopTester, GetPortValue) {
