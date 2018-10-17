@@ -10,36 +10,8 @@
 #include "TcpServer.h"
 #include "SupportThread.h"
 #include "SimService.h"
-#include "SimFactory.h"
-#include "SimBlock.h"
-
+#include "SimComFactory.h"
 #include "Router.h"
-
-namespace {
-
-class DummyBlock : public SIM::Block {
-public:
-    DummyBlock (const std::string& inName) : 
-        SIM::Block (inName)
-    {
-        AddOutPort<double> (&mOutput, "value");
-    }
-    ~DummyBlock () = default;
-    void Step (double mTime) {
-        mOutput = std::sin (mTime);
-        LOGTRACE << "TICK " << mTime << " " << mOutput;
-    }
-private:
-    double mOutput;
-};
-
-class DummyFactory : public SIM::Factory {
-    std::unique_ptr<SIM::Block> CreateBlock (const std::string& inName, const std::string& inType) {
-        return std::make_unique <DummyBlock> (inName);
-    };
-};
-
-} // end anonymous namespace
 
 void Application::Run (const OS::CommandLine& inCommandLine) {
 
@@ -57,7 +29,7 @@ void Application::Run (const OS::CommandLine& inCommandLine) {
     APP::SupportThread supportThread;
     supportThread.Spawn ();
 
-    auto service = std::make_shared<SIM::Service> (std::make_unique<DummyFactory> ());
+    auto service = std::make_shared<SIM::Service> (std::make_unique<SIM::COM::Factory> ());
 
     SystemRouter router (service);
     auto httpFactory (std::make_shared<HTTP::ClientFactory> (router));

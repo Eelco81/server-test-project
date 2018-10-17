@@ -23,7 +23,6 @@ class Factory;
 class IService {
 public: 
     virtual bool Load (const json& inConfig) = 0;
-    virtual bool UnLoad () = 0;
     virtual bool IsLoaded () const  = 0;
     virtual bool Start () = 0;
     virtual bool Stop ()  = 0;
@@ -33,16 +32,15 @@ public:
 class Service : public IService {
 
     NO_COPY_CONSTRUCTORS (Service);
-    
+
 public:
     Service (std::unique_ptr<Factory> inFactory);
     virtual ~Service ();
-    
+
 public:
     bool Load (const json& inConfig) override;
-    bool UnLoad () override;
     bool IsLoaded () const override;
-    
+
     bool Start () override;
     bool Stop () override;
     bool IsRunning () const override;
@@ -51,14 +49,15 @@ public:
 
 public:
     bool Trigger ();
-    
+
 private:
     std::unique_ptr<Factory> mFactory;
     std::unique_ptr<APP::PeriodicThread> mRunner;
     std::unique_ptr<Loop> mLoop;
     OS::Mutex mMutex;
+
 };
 
-}
+} // end namespace SIM
 
 #endif // _SIM_SERVICE_H_
