@@ -17,6 +17,7 @@ public:
     MOCK_METHOD0 (UnLoad, bool ());
     MOCK_CONST_METHOD0 (IsRunning, bool ());
     MOCK_CONST_METHOD0 (IsLoaded, bool ());
+    MOCK_CONST_METHOD0 (GetPaths, std::vector<std::string> ());
 };
 
 }
@@ -156,4 +157,26 @@ TEST (SimulationEndpointsTester, StopNotRunningSim) {
     endPoint.Execute (request, response);
     
     ASSERT_EQ (HTTP::Code::NOT_MODIFIED, response.mCode);
+}
+
+TEST (SimulationEndpointsTester, GetPaths) {
+    
+    const std::vector<std::string> paths = {"port1", "port2"};
+    
+    auto service = std::make_shared<MockService> ();
+    
+    EXPECT_CALL (*service, IsLoaded ()).WillOnce (::testing::Return (true));
+    EXPECT_CALL (*service, GetPaths ()).WillOnce (::testing::Return (paths));
+    
+    API::SimGetPathsEndPoint endPoint ("/hello", service);
+    
+    HTTP::Request request;
+    HTTP::Response response;
+    
+    endPoint.Execute (request, response);
+    
+    ASSERT_EQ (HTTP::Code::OK, response.mCode);
+    
+    ASSERT_EQ ("{\"ports\":[\"port1\",\"port2\"]}", response.GetBody ());
+    
 }

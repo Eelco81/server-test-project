@@ -27,29 +27,64 @@ public:
     virtual bool Start () = 0;
     virtual bool Stop ()  = 0;
     virtual bool IsRunning () const = 0;
+    virtual std::vector<std::string> GetPaths () const = 0;
 };
 
 class Service : public IService {
-
+    
     NO_COPY_CONSTRUCTORS (Service);
-
+    
 public:
+    /**
+     * Constructor
+     */
     Service (std::unique_ptr<Factory> inFactory);
+    
+    /**
+     * Destructor
+     */
     virtual ~Service ();
-
-public:
+    
+    /**
+     * Load the simulation service.
+     */
     bool Load (const json& inConfig) override;
+    
+    /**
+     * Verify if thhe simulation service is loaded.
+     */
     bool IsLoaded () const override;
-
+    
+    /**
+     * Start the simulation.
+     */
     bool Start () override;
+    
+    /**
+     * Stop the simulation.
+     */
     bool Stop () override;
+    
+    /**
+     * Verify if thhe simulation service is running.
+     */
     bool IsRunning () const override;
-
+    
+    /**
+     * Retrieve value from the running simulation.
+     */
     bool GetValue (const std::string& inPath, std::string& outValue);
-
-public:
+    
+    /**
+     * Get all valid paths inside the simulation
+     */
+    std::vector<std::string> GetPaths () const override;
+    
+    /**
+     * Trigger call of the service.
+     */
     bool Trigger ();
-
+    
 private:
     std::unique_ptr<Factory> mFactory;
     std::unique_ptr<APP::PeriodicThread> mRunner;

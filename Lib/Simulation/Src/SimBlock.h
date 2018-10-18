@@ -17,20 +17,52 @@ namespace SIM {
 class Block {
 
 public:
-
+    /**
+     * Constructor
+     */
     Block (const std::string& inName);
+    
+    /**
+     * Virtual destructor
+     */
     virtual ~Block ();
     
+    /**
+     * Empty configure function, to be overloaded
+     */
     virtual void Configure (const json& inConfig) {}
+    
+    /**
+     * Empty initialize function, to be overloaded
+     */
     virtual void Initialize (double inTime) {}
+    
+    /**
+     * Empty step function, to be overloaded
+     */
     virtual void Step (double inTime) {}
+    
+    /**
+     * Empty terminate function, to be overloaded
+     */
     virtual void Terminate (double inTime) {}
 
 public:
-
+    /**
+     * Get block name
+     */
     const std::string& GetName () const;
+    
+    /**
+     * Derive weak pointer to a specific path
+     */
     std::weak_ptr<Port> GetPort (const Path& inPath);
-
+    
+    /**
+     * Get all paths to existing ports
+     */
+    std::vector<Path> GetAllPorts () const;
+    
 protected:
     
     template<typename T>

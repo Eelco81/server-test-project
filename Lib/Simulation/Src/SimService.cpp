@@ -96,6 +96,13 @@ bool SIM::Service::GetValue (const std::string& inPath, std::string& outValue) {
     }
 }
 
+std::vector<std::string> SIM::Service::GetPaths () const {
+    if (IsLoaded ()) {
+        return mLoop->GetPaths ();
+    }
+    return {};
+}
+
 bool SIM::Service::Trigger () {
     
     try {
@@ -104,7 +111,7 @@ bool SIM::Service::Trigger () {
         return true;
     }
     catch (std::exception& e) {
-        LOGMESSAGE (OS::Log::kError, e.what ());
+        LOGMESSAGE (OS::Log::kError, std::string ("Simulation killed: ") + e.what ());
         return false;
     }
 }

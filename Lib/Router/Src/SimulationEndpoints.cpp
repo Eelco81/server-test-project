@@ -89,3 +89,26 @@ void API::SimStopEndPoint::Execute (const HTTP::Request& inRequest, HTTP::Respon
     outResponse.mCode = HTTP::Code::ACCEPTED;
     mService->Stop ();
 }
+
+/* ---------------------------------------- */
+
+API::SimGetPathsEndPoint::SimGetPathsEndPoint (const std::string& inPath, std::shared_ptr<SIM::IService> inService) :
+    API::SimEndPoint::SimEndPoint (inPath, HTTP::Method::GET, inService)
+{
+}
+
+API::SimGetPathsEndPoint::~SimGetPathsEndPoint () = default;
+
+void API::SimGetPathsEndPoint::Execute (const HTTP::Request& inRequest, HTTP::Response& outResponse) {
+    
+    if (!mService->IsLoaded ()) {
+        outResponse.mCode = HTTP::Code::FORBIDDEN;
+        return;
+    }
+    
+    json j;
+    j["ports"] = mService->GetPaths ();
+    
+    outResponse.mCode = HTTP::Code::OK;
+    outResponse.SetBody (j.dump (), "application/json");
+}

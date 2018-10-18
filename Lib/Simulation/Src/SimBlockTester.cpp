@@ -60,3 +60,11 @@ TEST (SimBlockTester, NonExistingParameterPorts) {
     TestBlock block;
     ASSERT_EQ (nullptr, block.GetPort (SIM::Path ("Test", "NotExisting", SIM::Path::PARAMETER)).lock ());
 }
+
+TEST (SimBlockTester, GetAllPorts) {
+    const auto paths = TestBlock ().GetAllPorts ();
+    ASSERT_EQ (paths.size(), 3u);
+    ASSERT_EQ (std::string ("Test.in.input"), paths[0].ToString ());
+    ASSERT_EQ (std::string ("Test.out.output"), paths[1].ToString ());
+    ASSERT_EQ (std::string ("Test.par.parameter"), paths[2].ToString ());
+}

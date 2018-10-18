@@ -87,6 +87,26 @@ public:
     virtual void Execute (const HTTP::Request& inRequest, HTTP::Response& outResponse) override;
 };
 
+class SimGetPathsEndPoint : public SimEndPoint {
+
+public:
+    /**
+     * Constructor
+     */
+    SimGetPathsEndPoint (const std::string& inPath, std::shared_ptr<SIM::IService> inService);
+    
+    /**
+     * Virtual destructor
+     */
+    virtual ~SimGetPathsEndPoint ();
+
+    /**
+     * Overloaded endpoint exectution
+     */
+    virtual void Execute (const HTTP::Request& inRequest, HTTP::Response& outResponse) override;
+};
+
+
 }
 
 #endif // _SIMULATIONENDPOINTS_H_

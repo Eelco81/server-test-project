@@ -18,6 +18,7 @@ SystemRouter::SystemRouter (std::shared_ptr<SIM::Service> inService) :
     AddEndPoint (std::make_shared<API::FileEndPoint> ("/home", "./Public/index.html"));
 
     AddEndPoint (std::make_shared<API::SimLoadEndPoint> ("/api/simulation/config", inService));
-    AddEndPoint (std::make_shared<API::SimStartEndPoint> ("/api/simulation", inService));
-    AddEndPoint (std::make_shared<API::SimStopEndPoint> ("/api/simulation", inService));
+    AddEndPoint (std::make_shared<API::SimStartEndPoint> ("/api/simulation/runner", inService));
+    AddEndPoint (std::make_shared<API::SimStopEndPoint> ("/api/simulation/runner", inService));
+    AddEndPoint (std::make_shared<API::SimGetPathsEndPoint> ("/api/simulation/ports", inService));
 }

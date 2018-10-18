@@ -43,3 +43,17 @@ std::weak_ptr<SIM::Port> SIM::Block::GetPort (const Path& inPath) {
     
     return std::weak_ptr<Port> ();
 }
+
+std::vector<SIM::Path> SIM::Block::GetAllPorts () const {
+    std::vector<SIM::Path> result;
+    for (const auto& port : mInputs) {
+        result.push_back (Path (mName, port->GetName (), Path::INPUT));
+    }
+    for (const auto& port : mOutputs) {
+        result.push_back (Path (mName, port->GetName (), Path::OUTPUT));
+    }
+    for (const auto& port : mParameters) {
+        result.push_back (Path (mName, port->GetName (), Path::PARAMETER));
+    }
+    return result;
+}

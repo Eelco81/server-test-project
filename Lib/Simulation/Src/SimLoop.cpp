@@ -67,6 +67,9 @@ void SIM::Loop::Initialize () {
     
     mTimer.Initialize ();
 
+    // \todo: this causes massive delays, blocks and connectors need to be 
+    // executed chronologically.
+    
     for (auto& block : mBlocks) {
         block->Initialize (mTimer.GetTime ());
     }
@@ -79,7 +82,7 @@ void SIM::Loop::Update () {
     
     mTimer.Tick ();
     
-    // todo: this causes massive delays, blocks and connectors need to be 
+    // \todo: this causes massive delays, blocks and connectors need to be 
     // executed chronologically.
     
     for (auto& block : mBlocks) {
@@ -105,6 +108,16 @@ std::string SIM::Loop::GetValue (const std::string& inPath) const {
         return port->GetStringValue ();
     }
     throw Exception (std::string ("Failed to find path <") + inPath + std::string (">"));
+}
+
+std::vector<std::string> SIM::Loop::GetPaths () const {
+    std::vector<std::string> result;
+    for (const auto& block : mBlocks) {
+        for (const auto& path : block->GetAllPorts ()) {
+            result.push_back (path.ToString ());
+        }
+    }
+    return result;
 }
 
 uint64_t SIM::Loop::GetTimeStamp () const {

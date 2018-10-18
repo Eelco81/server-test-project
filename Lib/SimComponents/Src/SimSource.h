@@ -25,10 +25,6 @@ private:
 
 };
 
-
 } } // end namespace SIM::COM
 
-
-
 #endif // _SIM_SOURCE_H_
-
