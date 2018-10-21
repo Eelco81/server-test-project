@@ -18,6 +18,20 @@ HTTP::RequestDecoder::~RequestDecoder () = default;
 void HTTP::RequestDecoder::Write (const std::string& inData) {
     
     std::istringstream iss (inData);
+    
+    if (mState == kProcessBody) {
+        std::vector<char> body (mBodySize - mRequest.mBody.size ());
+        iss.read (body.data(), body.size ());
+        if (!iss) {
+            body.resize (iss.gcount ());
+        }
+        std::copy (body.begin (), body.end (), std::back_inserter (mRequest.mBody));
+        if (mRequest.mBody.size () >= mBodySize) {
+            Done (mRequest);
+            mState = kSearchStart;
+        }
+    }
+    
     for (std::string line; std::getline(iss, line); ) {
         
         switch (mState) {
@@ -48,15 +62,27 @@ void HTTP::RequestDecoder::Write (const std::string& inData) {
                            mBodySize = std::stoi (contentLength->second);
                         }
                         catch (...) {
-                            mBodySize = 0;
+                            mBodySize = 0u;
                             mRequest.mIsValid = false;
                         }
-                        if (mBodySize == 0) {
+                        if (mBodySize == 0u) {
                             Done (mRequest);
                             mState = kSearchStart;
                         }
                         else {
-                            mState = kProcessBody;
+                            std::vector<char> body (mBodySize);
+                            iss.read (body.data(), body.size ());
+                            if (!iss) {
+                                body.resize (iss.gcount ());
+                            }
+                            mRequest.mBody.assign (body.data (), body.size ());
+                            if (mRequest.mBody.size () < mBodySize) {
+                                mState = kProcessBody;
+                            }
+                            else {
+                                Done (mRequest);
+                                mState = kSearchStart;
+                            }
                         }
                     }
                 }
@@ -70,14 +96,7 @@ void HTTP::RequestDecoder::Write (const std::string& inData) {
                 break;
             }
             case kProcessBody : {
-                if (mRequest.mBody.size () < mBodySize) {
-                    mRequest.mBody += line;
-                }
-                if (mRequest.mBody.size () >= mBodySize) {
-                    Done (mRequest);
-                    mState = kSearchStart;
-                }
-                break;
+                break; // handled in earlier statement
             }
         }
     }

@@ -125,6 +125,12 @@ TEST (HttpRequestParserTester, Bodies){
     }
     {
         RequestHarvester decoder;
+        decoder.Write ("GET /some/path HTTP/1.0\r\nContent-Length: 22\r\n\r\n0123456789\r\n0123456789");
+        ASSERT_EQ (1u, decoder.mRequests.size ());
+        ASSERT_EQ (std::string ("0123456789\r\n0123456789"), decoder.mRequests[0].mBody);
+    }
+    {
+        RequestHarvester decoder;
         decoder.Write ("GET /some/path HTTP/1.0\r\nContent-Length: 20\r\n\r\n0123456789");
         decoder.Write ("9876543210");
         ASSERT_EQ (1u, decoder.mRequests.size ());
@@ -143,7 +149,7 @@ TEST (HttpRequestParserTester, Bodies){
         ASSERT_EQ (1u, decoder.mRequests.size ());
         ASSERT_FALSE (decoder.mRequests[0].mIsValid);
     }
-    //todo: parametrize this test, add failure cases.
+    // \todo: parametrize this test, add failure cases.
 }
 
 //todo: handle multiple messages per test
