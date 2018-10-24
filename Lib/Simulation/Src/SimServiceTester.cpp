@@ -67,7 +67,7 @@ TEST (SimServiceTester, Run) {
     EXPECT_EQ (std::string ("0"), value);
     
     const auto paths = service.GetPaths ();
-    ASSERT_EQ (std::string ("MyName.in.input"), paths[0]);
+    ASSERT_EQ (std::string ("MyName.in.input"), paths[0].ToString ());
     
     ASSERT_TRUE (service.Stop ());
     

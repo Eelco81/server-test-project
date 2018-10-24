@@ -86,7 +86,27 @@ INSTANTIATE_TEST_CASE_P (SimFactoryTester, SimFactoryTester,
                 "type" : "MyType"
             }],
             "connectors":[{ "source": "MyName.out.output", "target": "Blah.in.input" }]
-        })", std::string ("Cannot connect <MyName.out.output> to <Blah.in.input>: Non-existing block <Blah>"))
+        })", std::string ("Cannot connect <MyName.out.output> to <Blah.in.input>: Non-existing block <Blah>")),
+        std::make_tuple (R"({
+            "step": 10,
+            "blocks" : [{
+                "name" : "MyName",
+                "type" : "MyType"
+            }],
+            "sample" : [
+                12345
+            ]
+        })", std::string ("Sample path is not a string")),
+        std::make_tuple (R"({
+            "step": 10,
+            "blocks" : [{
+                "name" : "MyName",
+                "type" : "MyType"
+            }],
+            "sample" : [
+                "I do not exist"
+            ]
+        })", std::string ("Cannot sample <I do not exist>: Illegal path <I do not exist>"))
     )
 );
 

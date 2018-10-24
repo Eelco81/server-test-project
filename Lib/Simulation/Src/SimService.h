@@ -1,12 +1,14 @@
 
-
 #ifndef _SIM_SERVICE_H_
 #define _SIM_SERVICE_H_
 
-#include "Macros.h"
-#include "Mutex.h"
 #include <atomic>
 #include <memory>
+
+#include "MessageStream.h"
+#include "Macros.h"
+#include "Mutex.h"
+#include "SimPath.h"
 
 #include <json.hpp>
 using json = nlohmann::json;
@@ -27,7 +29,7 @@ public:
     virtual bool Start () = 0;
     virtual bool Stop ()  = 0;
     virtual bool IsRunning () const = 0;
-    virtual std::vector<std::string> GetPaths () const = 0;
+    virtual std::vector<Path> GetPaths () const = 0;
 };
 
 class Service : public IService {
@@ -78,7 +80,7 @@ public:
     /**
      * Get all valid paths inside the simulation
      */
-    std::vector<std::string> GetPaths () const override;
+    std::vector<Path> GetPaths () const override;
     
     /**
      * Trigger call of the service.
@@ -90,7 +92,7 @@ private:
     std::unique_ptr<APP::PeriodicThread> mRunner;
     std::unique_ptr<Loop> mLoop;
     OS::Mutex mMutex;
-
+    OS::ForwardStream<std::vector<std::string>> mSampleStream;
 };
 
 } // end namespace SIM

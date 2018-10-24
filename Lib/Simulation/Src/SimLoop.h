@@ -8,6 +8,7 @@
 
 #include "SimPath.h"
 #include "SimTimer.h"
+#include "SimSampler.h"
 
 namespace SIM {
 
@@ -39,6 +40,11 @@ public:
     void Connect (const std::string& inSource, const std::string& inTarget);
     
     /**
+     * Add to sampler
+     */
+    void AddSample (const std::string& inSource);
+    
+    /**
      * Initialize the loop
      */
     void Initialize ();
@@ -61,7 +67,7 @@ public:
     /**
      * Get all paths
      */
-    std::vector<std::string> GetPaths () const;
+    std::vector<Path> GetPaths () const;
     
     /**
      * Get the current timestamp
@@ -73,6 +79,11 @@ public:
      */
     uint64_t GetTimeStep () const;
 
+    /**
+     * Get the sampler stream
+     */
+    inline Sampler& GetSampler () { return mSampler; }
+    
 private:
     /**
      * Find a port based on a path inside the loop
@@ -81,6 +92,7 @@ private:
     
 private:
     Timer mTimer;
+    Sampler mSampler;
     std::vector<std::unique_ptr<Block>> mBlocks;
     std::vector<std::unique_ptr<Connector>> mConnectors;
     

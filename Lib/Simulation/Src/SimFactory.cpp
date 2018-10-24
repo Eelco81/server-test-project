@@ -8,6 +8,7 @@ namespace {
     const std::string stepTag ("step");
     const std::string blocksTag ("blocks");
     const std::string connectorsTag ("connectors");
+    const std::string sampleTag ("sample"); 
     const std::string settingsTag ("settings");
     const std::string nameTag ("name");
     const std::string typeTag ("type");
@@ -58,16 +59,30 @@ std::unique_ptr<SIM::Loop> SIM::Factory::Create (const json& inConfig) {
             if (config.find (sourceTag) == config.end () || !config[sourceTag].is_string ()) {
                 throw Exception ("Connector without \"source\" element in config");
             }
-            const std::string source (config[sourceTag].get<std::string> ());
+            const auto source (config[sourceTag].get<std::string> ());
             
             if (config.find (targetTag) == config.end () || !config[targetTag].is_string ()) {
                 throw Exception ("Connector without \"target\" element in config");
             }
-            const std::string target (config[targetTag].get<std::string> ());
+            const auto target (config[targetTag].get<std::string> ());
             
             loop->Connect (source, target);
         }
     }
+    
+    if (inConfig.find (sampleTag) != inConfig.end () && !inConfig[sampleTag].empty ()) {
+        
+        for (auto& path : inConfig[sampleTag]) {
+            
+            if (!path.is_string ()) {
+                throw Exception ("Sample path is not a string");
+            }
+            const auto source (path.get<std::string> ());
+            
+            loop->AddSample (source);
+        }
+    }
+    
     
     return loop;
 }

@@ -63,6 +63,17 @@ void SIM::Loop::Connect (const std::string& inSource, const std::string& inTarge
     }
 }
 
+void SIM::Loop::AddSample (const std::string& inSource) {
+    
+    try {
+        Path sourcePath (inSource);
+        mSampler.AddPort (FindPort (sourcePath));
+    }
+    catch (Exception& e) {
+        throw Exception (std:: string ("Cannot sample <") + inSource + std::string (">: ") + e.what ());
+    }
+}
+
 void SIM::Loop::Initialize () {
     
     mTimer.Initialize ();
@@ -76,6 +87,7 @@ void SIM::Loop::Initialize () {
     for (auto& connector : mConnectors) {
         connector->Transfer ();
     }
+    mSampler.Write (mTimer.GetTimeStamp ());
 }
 
 void SIM::Loop::Update () {
@@ -91,13 +103,15 @@ void SIM::Loop::Update () {
     for (auto& connector : mConnectors) {
         connector->Transfer ();
     }
+    mSampler.Write (mTimer.GetTimeStamp ());
 }
-    
+
 void SIM::Loop::Terminate () {
     
     for (auto& block : mBlocks) {
         block->Terminate (mTimer.GetTime ());
     }
+    mSampler.Write (mTimer.GetTimeStamp ());
 }
 
 std::string SIM::Loop::GetValue (const std::string& inPath) const {
@@ -110,12 +124,11 @@ std::string SIM::Loop::GetValue (const std::string& inPath) const {
     throw Exception (std::string ("Failed to find path <") + inPath + std::string (">"));
 }
 
-std::vector<std::string> SIM::Loop::GetPaths () const {
-    std::vector<std::string> result;
+std::vector<SIM::Path> SIM::Loop::GetPaths () const {
+    std::vector<SIM::Path> result;
     for (const auto& block : mBlocks) {
-        for (const auto& path : block->GetAllPorts ()) {
-            result.push_back (path.ToString ());
-        }
+        const auto paths (block->GetAllPorts ());
+        std::copy (paths.begin (), paths.end (), std::back_inserter (result));
     }
     return result;
 }

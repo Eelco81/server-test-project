@@ -66,6 +66,13 @@ private:
 
 };
 
+template <typename T>
+class ForwardStream : public MessageStream<T,T> {
+public:
+    virtual ~ForwardStream () = default;
+    virtual void Write (const T& inMessage) override;
+};
+
 } // end namespace OS
 
 #include "MessageStream.tcc"

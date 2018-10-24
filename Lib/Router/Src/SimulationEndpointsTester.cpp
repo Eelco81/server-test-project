@@ -17,7 +17,7 @@ public:
     MOCK_METHOD0 (UnLoad, bool ());
     MOCK_CONST_METHOD0 (IsRunning, bool ());
     MOCK_CONST_METHOD0 (IsLoaded, bool ());
-    MOCK_CONST_METHOD0 (GetPaths, std::vector<std::string> ());
+    MOCK_CONST_METHOD0 (GetPaths, std::vector<SIM::Path> ());
 };
 
 }
@@ -161,7 +161,7 @@ TEST (SimulationEndpointsTester, StopNotRunningSim) {
 
 TEST (SimulationEndpointsTester, GetPaths) {
     
-    const std::vector<std::string> paths = {"port1", "port2"};
+    const std::vector<SIM::Path> paths = {SIM::Path ("block1", "port1", SIM::Path::INPUT)};
     
     auto service = std::make_shared<MockService> ();
     
@@ -177,6 +177,6 @@ TEST (SimulationEndpointsTester, GetPaths) {
     
     ASSERT_EQ (HTTP::Code::OK, response.mCode);
     
-    ASSERT_EQ ("{\"ports\":[\"port1\",\"port2\"]}", response.GetBody ());
+    ASSERT_EQ ("{\"ports\":[\"block1.in.port1\"]}", response.GetBody ());
     
 }

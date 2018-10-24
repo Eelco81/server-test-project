@@ -26,6 +26,7 @@ bool SIM::Service::Load (const json& inConfig) {
     
     try {
         mLoop = mFactory->Create (inConfig);
+        mLoop->GetSampler ().Pipe (mSampleStream);
     }
     catch (std::exception& e) {
         LOGMESSAGE (OS::Log::kError, e.what ());
@@ -96,7 +97,7 @@ bool SIM::Service::GetValue (const std::string& inPath, std::string& outValue) {
     }
 }
 
-std::vector<std::string> SIM::Service::GetPaths () const {
+std::vector<SIM::Path> SIM::Service::GetPaths () const {
     if (IsLoaded ()) {
         return mLoop->GetPaths ();
     }

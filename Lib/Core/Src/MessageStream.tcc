@@ -16,3 +16,8 @@ OS::MessageStream<Input_t,Output_t>& OS::MessageStream<Input_t,Output_t>::Clear 
     mCallbacks.clear ();
     return *this;
 }
+
+template<typename T>
+void OS::ForwardStream<T>::Write (const T& inMessage) {
+    this->Done (inMessage);
+}

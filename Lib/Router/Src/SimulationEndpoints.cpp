@@ -106,8 +106,12 @@ void API::SimGetPathsEndPoint::Execute (const HTTP::Request& inRequest, HTTP::Re
         return;
     }
     
+    const auto paths (mService->GetPaths ());
+    std::vector<std::string> stringPaths (paths.size ());
+    std::transform (paths.begin (), paths.end (), stringPaths.begin (), [](const auto& path) { return path.ToString (); });
+    
     json j;
-    j["ports"] = mService->GetPaths ();
+    j["ports"] = stringPaths;
     
     outResponse.mCode = HTTP::Code::OK;
     outResponse.SetBody (j.dump (), "application/json");
