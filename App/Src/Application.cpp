@@ -6,7 +6,7 @@
 #include "Version.h"
 #include "Socket.h"
 #include "HttpClient.h"
-#include "WebSockClient.h"
+#include "WebSockServer.h"
 #include "TcpServer.h"
 #include "SupportThread.h"
 #include "SimService.h"
@@ -36,12 +36,14 @@ void Application::Run (const OS::CommandLine& inCommandLine) {
     TCP::Server httpServer (ip, port, httpFactory);
     httpServer.Start ();
 
-    auto websockFactory (std::make_shared<RFC6455::ClientFactory> ());
-    TCP::Server websockServer (ip, websockport, websockFactory);
+    RFC6455::Server websockServer (ip, websockport);
     websockServer.Start ();
 
+    service->GetSampleStream ().Pipe (&websockServer, &RFC6455::Server::BroadCast);
+    
     std::string name;
     LOGMESSAGE (OS::Log::kInfo, "Quit the app using ENTER on the command line.");
     std::getline (std::cin, name);
 
+    service->GetSampleStream ().Clear ();
 }

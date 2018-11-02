@@ -53,7 +53,7 @@ public:
     /**
      * Send data over the RFC6455 connection
      */
-    void SendData (const std::string& inData);
+    virtual void SendData (const std::string& inData) override;
 
 private:
     /**

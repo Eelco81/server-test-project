@@ -65,7 +65,7 @@ public:
      */
     bool CleanUp ();
 
-private:
+protected:
     using ClientPtr = std::unique_ptr <Client>;
     std::vector <ClientPtr> mClients;
     std::unique_ptr <OS::Mutex> mMutex;

@@ -8,7 +8,9 @@
 #include "MessageStream.h"
 #include "Macros.h"
 #include "Mutex.h"
+
 #include "SimPath.h"
+#include "SimSampleStream.h"
 
 #include <json.hpp>
 using json = nlohmann::json;
@@ -87,12 +89,17 @@ public:
      */
     bool Trigger ();
     
+    /**
+     * Get sample stream
+     */
+    inline SampleStream& GetSampleStream () { return mSampleStream; }
+    
 private:
     std::unique_ptr<Factory> mFactory;
     std::unique_ptr<APP::PeriodicThread> mRunner;
     std::unique_ptr<Loop> mLoop;
     OS::Mutex mMutex;
-    OS::ForwardStream<std::vector<std::string>> mSampleStream;
+    SampleStream mSampleStream;
 };
 
 } // end namespace SIM

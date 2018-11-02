@@ -22,20 +22,26 @@ void RFC6455::Client::HandleHandshake (const HTTP::Request& inRequest) {
     HTTP::Response response (HTTP::Code::BAD_REQUEST, inRequest.mVersion);
     
     bool isUpgraded (false);
-    if (inRequest.mHeaders.at ("Connection") == "Upgrade" && inRequest.mHeaders.at ("Upgrade") == "websocket") {
-        
-        const auto key (inRequest.mHeaders.at ("Sec-WebSocket-Key"));
-        const auto keyWithMagicString (key + "258EAFA5-E914-47DA-95CA-C5AB0DC85B11");
-        
-        char base64[SHA1_BASE64_SIZE];
-        sha1 (keyWithMagicString.c_str ()).finalize().print_base64 (base64);
-        
-        response.mCode = HTTP::Code::SWITCHING_PROTOCOLS;
-        response.mHeaders["Connection"] = "Upgrade";
-        response.mHeaders["Upgrade"] = "websocket";
-        response.mHeaders["Sec-WebSocket-Accept"] = std::string (base64);
-        
-        isUpgraded = true;
+
+    try {
+        if (inRequest.mHeaders.at ("Connection") == "Upgrade" && inRequest.mHeaders.at ("Upgrade") == "websocket") {
+            
+            const auto key (inRequest.mHeaders.at ("Sec-WebSocket-Key"));
+            const auto keyWithMagicString (key + "258EAFA5-E914-47DA-95CA-C5AB0DC85B11");
+            
+            char base64[SHA1_BASE64_SIZE];
+            sha1 (keyWithMagicString.c_str ()).finalize().print_base64 (base64);
+            
+            response.mCode = HTTP::Code::SWITCHING_PROTOCOLS;
+            response.mHeaders["Connection"] = "Upgrade";
+            response.mHeaders["Upgrade"] = "websocket";
+            response.mHeaders["Sec-WebSocket-Accept"] = std::string (base64);
+            
+            isUpgraded = true;
+        }
+    } 
+    catch (...) {
+        response.mCode = HTTP::Code::BAD_REQUEST;
     }
     
     mResponseEncoder.Write (response);
@@ -56,10 +62,6 @@ void RFC6455::Client::HandleHandshake (const HTTP::Request& inRequest) {
         
         mPayloadStringEncoder.Pipe (mFrameEncoder).Pipe (GetWriteStream ());
         mPayloadBinaryEncoder.Pipe (mFrameEncoder);
-        
-        // \todo: the follwoing echo lines are for debugging only
-        mPayloadStringDecoder.Pipe (mPayloadStringEncoder);
-        mPayloadBinaryDecoder.Pipe (mPayloadBinaryEncoder);
     }
 }
 

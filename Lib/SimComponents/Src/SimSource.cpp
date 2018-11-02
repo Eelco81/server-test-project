@@ -30,7 +30,6 @@ void Source::Initialize (double inTime) {
 
 void Source::Step (double inTime) {
     mOutput = mOffset + mAmplitude * std::sin (mPhase + mFrequency * inTime);
-    // LOGINFO << "source " << inTime << " " << mOutput;
 }
 
 void Source::Terminate (double inTime) {

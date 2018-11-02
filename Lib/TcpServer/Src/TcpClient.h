@@ -87,7 +87,12 @@ public:
       * \todo: this should be private
       */
     void WaitForData ();
-     
+    
+    /**
+     * Virtual method. Used for braodcasting. 
+     */
+    virtual void SendData (const std::string& inPacket) {}
+    
 protected:
     /**
      * Message stream for received messages.

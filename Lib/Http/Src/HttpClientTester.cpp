@@ -12,10 +12,6 @@
 #define IP_FOR_TESTING "127.0.0.1"
 #define PORT_FOR_TESTING "1703"
 
-namespace {
-
-} // end anonymous namespace
-
 class HttpClientTester : public ::testing::Test {
     void TearDown () {
         OS::Log::Instance ().Flush ();
