@@ -1,9 +1,98 @@
 <!DOCTYPE html>
 <html>
+<head>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+<script>
+$(document).ready(function(){
+    
+    var options = {
+        title: 'Simulation stream',
+        hAxis: {
+            title: 'Time'
+        },
+        vAxis: {
+            title: 'Value'
+        },
+        backgroundColor: '#f1f8e9'
+    };
+    var chartData;
+    var chart;
+    //var ws = new WebSocket("ws://localhost:1704");
+    var ws = new WebSocket("ws://192.168.1.100:1704");
+    
+    ws.onmessage = function (evt) { 
+        const data = JSON.parse (evt.data)
+        chartData.addRow(data.values);
+        if (chartData.getNumberOfRows() > 20) {
+            chartData.removeRow(0);
+        }
+        chart.draw(chartData, options);
+    }
+    
+    var updateVersion = function() {
+        $.get("api/version", function(data, status){
+            $("#version_text").text(data.application + " " + data.version);
+        });
+    }
+    
+    var onGoogleChartLoaded = function (){
+        chartData = new google.visualization.DataTable();
+        chartData.addColumn('number', 'Time');
+        chartData.addColumn('number', 'Signal');
+        chartData.addColumn('number', 'Signal2');
+        chartData.addRows([]);
+        chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+        chart.draw(chartData, options);
+    }
+
+    $('#button_load').click(function() {
+        $.ajax({url:'api/simulation/config', type: "PUT", data: $('#config_field').text()});
+    });
+    
+    $('#button_start').click(function() {
+        $.ajax({url:'api/simulation/runner', type:'PUT'});
+    });
+    
+    $('#button_stop').click(function() {
+        $.ajax({url:'api/simulation/runner', type:'DELETE'});
+    });
+    
+    updateVersion();
+    google.charts.load('current', {packages: ['corechart', 'line']});   
+    google.charts.setOnLoadCallback(onGoogleChartLoaded);
+    
+    $("#config_field").text(JSON.stringify({ 
+        "step": 50, 
+        "blocks" : [
+            { "name" : "Source1", "type": "source"},
+            { "name" : "Source2", "type": "source"}
+        ],
+        "sample" : [
+            "Source1.out.value", 
+            "Source2.out.value"
+        ]
+    }, null, 2));
+
+});
+
+</script>
+</head>
+
 <body>
-
-<h1>Welcome</h1>
-<p>Here is some text.</p>
-
+    <header style="height:30px; background-color:navy;">
+        <div id="version_text" style="color:white"> </div> 
+    </header>
+    <div>
+        <textarea id="config_field"></textarea>
+        <button id="button_load" type="button" class="btn btn-secondary">Load</button>
+        <button id="button_start" type="button" class="btn btn-secondary">Start</button>
+        <button id="button_stop" type="button" class="btn btn-secondary">Stop</button>
+    </div>
+    <div id="chart_div" style="width: 900px; height: 500px"></div>
 </body>
 </html>
