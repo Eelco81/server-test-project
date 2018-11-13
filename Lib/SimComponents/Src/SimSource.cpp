@@ -1,6 +1,6 @@
 
 #include "SimSource.h"
-#include "Math.h"
+#include <cmath>
 #include "Log.h"
 
 #define _USE_MATH_DEFINES

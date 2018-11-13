@@ -5,7 +5,7 @@
 #include "VersionEndPoint.h"
 #include "TimeEndPoint.h"
 
-#include "SimulationEndPoints.h"
+#include "SimulationEndpoints.h"
 #include "SimService.h"
 
 SystemRouter::SystemRouter (std::shared_ptr<SIM::Service> inService) :

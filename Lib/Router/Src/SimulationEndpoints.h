@@ -5,7 +5,7 @@
 #include <memory>
 #include "HttpRequest.h"
 #include "HttpResponse.h"
-#include "HttpEndPoint.h"
+#include "HttpEndpoint.h"
 
 namespace SIM {
     class IService;

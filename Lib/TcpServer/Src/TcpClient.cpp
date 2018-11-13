@@ -21,7 +21,7 @@ TCP::Client::Client (std::string inAddress, std::string inPort) :
 }
 
 TCP::Client::Client (std::unique_ptr <OS::Socket> inSocket) :
-    mThread (std::make_unique<APP::HoldingThread<Client>> ("TcpClient-" + std::to_string (inSocket->GetId ()), this, &WaitForData)),
+    mThread (std::make_unique<APP::HoldingThread<Client>> ("TcpClient-" + std::to_string (inSocket->GetId ()), this, &TCP::Client::WaitForData)),
     mSocket (std::move (inSocket))
 {
     GetWriteStream ().Pipe (this, &Client::Send);

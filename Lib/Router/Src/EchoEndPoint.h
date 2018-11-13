@@ -2,7 +2,7 @@
 #ifndef _ECHOENDPOINT_H_
 #define _ECHOENDPOINT_H_
 
-#include "HttpEndPoint.h"
+#include "HttpEndpoint.h"
 
 namespace API {
 

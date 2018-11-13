@@ -2,7 +2,7 @@
 #ifndef _VERSIONENDPOINT_H_
 #define _VERSIONENDPOINT_H_
 
-#include "HttpEndPoint.h"
+#include "HttpEndpoint.h"
 
 namespace API {
 

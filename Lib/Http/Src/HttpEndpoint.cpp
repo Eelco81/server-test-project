@@ -1,5 +1,5 @@
 
-#include "HttpEndPoint.h"
+#include "HttpEndpoint.h"
 
 HTTP::EndPoint::EndPoint (const std::string& inPath, HTTP::Method inMethod) :
     mPath (inPath),

@@ -2,7 +2,7 @@
 #ifndef _TIMEENDPOINT_H_
 #define _TIMEENDPOINT_H_
 
-#include "HttpEndPoint.h"
+#include "HttpEndpoint.h"
 
 namespace API {
 
