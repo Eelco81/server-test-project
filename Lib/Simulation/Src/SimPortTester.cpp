@@ -59,6 +59,13 @@ TYPED_TEST (SimPortTester, StringValueInvalidString) {
     }
 }
 
+TYPED_TEST (SimPortTester, NumericValue) {
+    SIM::TypedPort<TypeParam> port ("port");
+    EXPECT_EQ (port.GetNumericValue (), 0.0);
+    port.SetNumericValue (1.0);
+    EXPECT_EQ (port.GetNumericValue (), 1.0);
+}
+
 TEST (SimPortTester, TypeBool) {
     ASSERT_EQ (SIM::Port::BOOL, SIM::TypedPort<bool> ("port").GetType ());
 }

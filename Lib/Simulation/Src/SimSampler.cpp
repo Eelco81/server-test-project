@@ -21,18 +21,13 @@ void SIM::Sampler::Write (const uint64_t& inTimeStamp) {
         if (!portPtr) {
             throw Exception ("Sampler port went out of scope");
         }
-        return portPtr->GetStringValue ();
+        return portPtr->GetNumericValue ();
     };
     
     if (!mPorts.empty ()) {
-        mOutputs[0] = std::to_string (inTimeStamp);
+        mOutputs[0] =  static_cast<double> (inTimeStamp);
         std::transform (mPorts.begin (), mPorts.end (), mOutputs.begin () + 1u, sampleFunction);
         Done (mOutputs);
     }
     
-    //std::cout << "[" << inTimeStamp << "]";
-    //for (const auto& value : mOutputs) {
-    //    std::cout << " " << value;
-    //}
-    //std::cout << std::endl;
 }

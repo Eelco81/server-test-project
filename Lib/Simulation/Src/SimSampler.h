@@ -12,7 +12,7 @@ namespace SIM {
 
 class Port;
 
-class Sampler : public OS::MessageStream<uint64_t,std::vector<std::string>> {
+class Sampler : public OS::MessageStream<uint64_t,std::vector<double>> {
 
 public:
     /**
@@ -37,7 +37,7 @@ public:
     
 protected:
     std::vector<std::weak_ptr<Port>> mPorts;
-    std::vector<std::string> mOutputs;
+    std::vector<double> mOutputs;
 
 };
 

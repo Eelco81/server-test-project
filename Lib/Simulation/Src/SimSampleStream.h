@@ -10,7 +10,7 @@
 
 namespace SIM {
 
-class SampleStream : public OS::MessageStream<std::vector<std::string>, std::string> {
+class SampleStream : public OS::MessageStream<std::vector<double>, std::string> {
 
 public:
     /**
@@ -26,7 +26,7 @@ public:
     /**
      * Forward the sample data
      */
-    void Write (const std::vector<std::string>& inList) override;
+    void Write (const std::vector<double>& inList) override;
     
 };
 

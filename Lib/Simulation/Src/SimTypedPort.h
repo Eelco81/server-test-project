@@ -25,6 +25,8 @@ public:
     virtual Type GetType () const override;
     virtual std::string GetStringValue () const override;
     virtual void SetStringValue (const std::string& inValue) override;
+    virtual double GetNumericValue () const override;
+    virtual void SetNumericValue (double inValue) override;
     
 protected:
     T* mValuePtr;

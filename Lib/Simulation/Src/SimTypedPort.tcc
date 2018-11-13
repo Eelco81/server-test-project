@@ -108,3 +108,13 @@ void SIM::TypedPort<T>::SetStringValue (const std::string& inValue) {
         throw Exception (std::string ("Invalid value string for port <") + GetName () + std::string (">"));
     }
 }
+
+template<typename T>
+double SIM::TypedPort<T>::GetNumericValue () const {
+    return static_cast<double> (*mValuePtr);
+}
+
+template<typename T>
+void SIM::TypedPort<T>::SetNumericValue (double inValue) {
+    *mValuePtr = static_cast<T> (inValue);
+}

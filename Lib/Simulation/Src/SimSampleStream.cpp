@@ -7,7 +7,7 @@ using json = nlohmann::json;
 SIM::SampleStream::SampleStream () = default;
 SIM::SampleStream::~SampleStream () = default;
 
-void SIM::SampleStream::Write (const std::vector<std::string>& inList) {
+void SIM::SampleStream::Write (const std::vector<double>& inList) {
     
     json j;
     j["values"] = inList;
