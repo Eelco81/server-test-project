@@ -1,6 +1,7 @@
 
 #include "gmock/gmock.h"
 #include "Timing.h"
+#include "SimValue.h"
 #include "SimBlock.h"
 #include "SimFactory.h"
 #include "SimService.h"
@@ -48,28 +49,26 @@ TEST (SimServiceTester, Run) {
         }]
     })"_json;
     
-    ASSERT_FALSE (service.Start ());
-    ASSERT_FALSE (service.Stop ());
+    ASSERT_THROW (service.Start (), std::exception);
+    ASSERT_THROW (service.Stop (), std::exception);
     
-    ASSERT_TRUE (service.Load (config));
+    service.Load (config);
     
-    ASSERT_FALSE (service.Stop ());
+    ASSERT_THROW (service.Stop (), std::exception);
     
-    ASSERT_TRUE (service.Start ());
+    service.Start ();
     
-    ASSERT_FALSE (service.Start ());
-    ASSERT_FALSE (service.Load (config));
+    ASSERT_THROW (service.Start (), std::exception);
+    ASSERT_THROW (service.Load (config), std::exception);
     
     OS::Timing::Sleep (150u);
     
-    std::string value;
-    ASSERT_TRUE (service.GetValue ("MyName.in.input", value));
-    EXPECT_EQ (std::string ("0"), value);
+    EXPECT_EQ (0.0, service.GetValue (SIM::Path("MyName", "input", SIM::Path::INPUT)).mValue);
     
     const auto paths = service.GetPaths ();
     ASSERT_EQ (std::string ("MyName.in.input"), paths[0].ToString ());
     
-    ASSERT_TRUE (service.Stop ());
+    service.Stop ();
     
-    ASSERT_FALSE (service.Stop ());
+    ASSERT_THROW (service.Stop (), std::exception);
 }

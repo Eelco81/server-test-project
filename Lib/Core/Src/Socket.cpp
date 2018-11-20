@@ -220,7 +220,7 @@ public:
             return false;
         }
 
-        int result = send (mSocketHandle, inBuffer, inBufferSize, 0);
+        int result = send (mSocketHandle, reinterpret_cast<const char*>(inBuffer), inBufferSize, 0);
         if (result == SOCKET_ERROR) {
             LOGDEBUG << ErrorMessage ("send", GetId ());
             Close ();
@@ -242,7 +242,7 @@ public:
             return false;
         }
 
-        int result = recv (mSocketHandle, ioBuffer, inBufferSize, 0);
+        int result = recv (mSocketHandle, reinterpret_cast<char*>(ioBuffer), inBufferSize, 0);
         if (result == 0) {
             LOGDEBUG << "[Socket](" << GetId () << ") Received termination signal";
             Close ();

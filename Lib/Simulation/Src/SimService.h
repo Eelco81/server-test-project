@@ -9,6 +9,7 @@
 #include "Macros.h"
 #include "Mutex.h"
 
+#include "SimValue.h"
 #include "SimPath.h"
 #include "SimSampleStream.h"
 
@@ -26,12 +27,15 @@ class Factory;
 
 class IService {
 public: 
-    virtual bool Load (const json& inConfig) = 0;
+    virtual void Load (const json& inConfig) = 0;
     virtual bool IsLoaded () const  = 0;
-    virtual bool Start () = 0;
-    virtual bool Stop ()  = 0;
+    virtual void Start () = 0;
+    virtual void Stop ()  = 0;
     virtual bool IsRunning () const = 0;
-    virtual std::vector<Path> GetPaths () const = 0;
+    virtual std::vector<Value> GetValues () = 0;
+    virtual Value GetValue (const Path& inPath) = 0;
+    virtual void SetValue (const Value& inValue) = 0;
+    virtual std::vector<Path> GetPaths () = 0;
 };
 
 class Service : public IService {
@@ -52,7 +56,7 @@ public:
     /**
      * Load the simulation service.
      */
-    bool Load (const json& inConfig) override;
+    void Load (const json& inConfig) override;
     
     /**
      * Verify if thhe simulation service is loaded.
@@ -62,12 +66,12 @@ public:
     /**
      * Start the simulation.
      */
-    bool Start () override;
+    void Start () override;
     
     /**
      * Stop the simulation.
      */
-    bool Stop () override;
+    void Stop () override;
     
     /**
      * Verify if thhe simulation service is running.
@@ -75,14 +79,24 @@ public:
     bool IsRunning () const override;
     
     /**
+     * Retrieve all values from the running simulation.
+     */
+    std::vector<Value> GetValues () override;
+    
+    /**
      * Retrieve value from the running simulation.
      */
-    bool GetValue (const std::string& inPath, std::string& outValue);
+    Value GetValue (const Path& inPath) override;
+    
+    /**
+     * Set value from the running simulation.
+     */
+    void SetValue (const Value& inValue) override;
     
     /**
      * Get all valid paths inside the simulation
      */
-    std::vector<Path> GetPaths () const override;
+    std::vector<Path> GetPaths () override;
     
     /**
      * Trigger call of the service.

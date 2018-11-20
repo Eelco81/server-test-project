@@ -114,14 +114,32 @@ void SIM::Loop::Terminate () {
     mSampler.Write (mTimer.GetTimeStamp ());
 }
 
-std::string SIM::Loop::GetValue (const std::string& inPath) const {
+std::vector<SIM::Value> SIM::Loop::GetValues () const {
     
-    Path path (inPath);
-    auto port (FindPort (path).lock ());
-    if (port) {
-        return port->GetStringValue ();
+    std::vector<SIM::Value> result;
+    for (const auto& path : GetPaths ()) {
+        result.push_back (GetValue (path));
     }
-    throw Exception (std::string ("Failed to find path <") + inPath + std::string (">"));
+    return result;
+}
+
+SIM::Value SIM::Loop::GetValue (const SIM::Path& inPath) const {
+    
+    auto port (FindPort (inPath).lock ());
+    if (port) {
+        return Value (inPath, port->GetNumericValue ());
+    }
+    throw Exception (std::string ("Failed to find path <") + inPath.ToString() + std::string (">"));
+}
+
+void SIM::Loop::SetValue (const SIM::Value& inValue) {
+    
+    auto port (FindPort (inValue.mPath).lock ());
+    if (port) {
+        port->SetNumericValue (inValue.mValue);
+        return;
+    }
+    throw Exception (std::string ("Failed to find path <") + inValue.mPath.ToString() + std::string (">"));
 }
 
 std::vector<SIM::Path> SIM::Loop::GetPaths () const {

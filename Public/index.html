@@ -22,13 +22,13 @@ $(document).ready(function(){
     };
     var chartData;
     var chart;
-    //var ws = new WebSocket("ws://localhost:1704");
-    var ws = new WebSocket("ws://192.168.1.100:1704");
+    var ws = new WebSocket("ws://localhost:1704");
+    //var ws = new WebSocket("ws://192.168.1.100:1704");
     
     ws.onmessage = function (evt) { 
         const data = JSON.parse (evt.data)
         chartData.addRow(data.values);
-        if (chartData.getNumberOfRows() > 20) {
+        if (chartData.getNumberOfRows() > 100) {
             chartData.removeRow(0);
         }
         chart.draw(chartData, options);
@@ -67,7 +67,7 @@ $(document).ready(function(){
     google.charts.setOnLoadCallback(onGoogleChartLoaded);
     
     $("#config_field").text(JSON.stringify({ 
-        "step": 50, 
+        "step": 100, 
         "blocks" : [
             { "name" : "Source1", "type": "source"},
             { "name" : "Source2", "type": "source"}

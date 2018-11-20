@@ -41,8 +41,18 @@ void API::SimLoadEndPoint::Execute (const HTTP::Request& inRequest, HTTP::Respon
         return;
     }
     
-    outResponse.mCode = HTTP::Code::ACCEPTED;
-    mService->Load (config);
+    try {
+        outResponse.mCode = HTTP::Code::ACCEPTED;
+        mService->Load (config);
+    }
+    catch (std::exception& e) {
+        
+        json j;
+        j["error"] = e.what ();
+        
+        outResponse.mCode = HTTP::Code::INTERNAL_SERVER_ERROR;
+        outResponse.SetBody (j.dump (), "application/json");
+    }
 }
 
 /* ---------------------------------------- */
@@ -66,8 +76,18 @@ void API::SimStartEndPoint::Execute (const HTTP::Request& inRequest, HTTP::Respo
         return;
     }
     
-    outResponse.mCode = HTTP::Code::ACCEPTED;
-    mService->Start ();
+    try {
+        outResponse.mCode = HTTP::Code::ACCEPTED;
+        mService->Start ();
+    }
+    catch (std::exception& e) {
+        
+        json j;
+        j["error"] = e.what ();
+        
+        outResponse.mCode = HTTP::Code::INTERNAL_SERVER_ERROR;
+        outResponse.SetBody (j.dump (), "application/json");
+    }
 }
 
 /* ---------------------------------------- */
@@ -86,33 +106,148 @@ void API::SimStopEndPoint::Execute (const HTTP::Request& inRequest, HTTP::Respon
         return;
     }
     
-    outResponse.mCode = HTTP::Code::ACCEPTED;
-    mService->Stop ();
+    try {
+        outResponse.mCode = HTTP::Code::ACCEPTED;
+        mService->Stop ();
+    }
+    catch (std::exception& e) {
+        
+        json j;
+        j["error"] = e.what ();
+        
+        outResponse.mCode = HTTP::Code::INTERNAL_SERVER_ERROR;
+        outResponse.SetBody (j.dump (), "application/json");
+    }
 }
 
 /* ---------------------------------------- */
 
-API::SimGetPathsEndPoint::SimGetPathsEndPoint (const std::string& inPath, std::shared_ptr<SIM::IService> inService) :
+API::SimGetValuesEndPoint::SimGetValuesEndPoint (const std::string& inPath, std::shared_ptr<SIM::IService> inService) :
     API::SimEndPoint::SimEndPoint (inPath, HTTP::Method::GET, inService)
 {
 }
 
-API::SimGetPathsEndPoint::~SimGetPathsEndPoint () = default;
+API::SimGetValuesEndPoint::~SimGetValuesEndPoint () = default;
 
-void API::SimGetPathsEndPoint::Execute (const HTTP::Request& inRequest, HTTP::Response& outResponse) {
+void API::SimGetValuesEndPoint::Execute (const HTTP::Request& inRequest, HTTP::Response& outResponse) {
     
     if (!mService->IsLoaded ()) {
         outResponse.mCode = HTTP::Code::FORBIDDEN;
         return;
     }
     
-    const auto paths (mService->GetPaths ());
-    std::vector<std::string> stringPaths (paths.size ());
-    std::transform (paths.begin (), paths.end (), stringPaths.begin (), [](const auto& path) { return path.ToString (); });
+    try {
+        const auto values (mService->GetValues ());
+        
+        std::vector<json> output (values.size ());
+        std::transform (values.begin (), values.end (), output.begin (), [](const auto& value) { 
+        
+            json j;
+            j["path"] = value.mPath.ToString();
+            j["value"] = value.mValue;
+            
+            return j; 
+        });
+        
+        json j;
+        j["ports"] = output;
+        
+        outResponse.mCode = HTTP::Code::OK;
+        outResponse.SetBody (j.dump (), "application/json");
+    }
+    catch (std::exception& e) {
+        
+        json j;
+        j["error"] = e.what ();
+        
+        outResponse.mCode = HTTP::Code::INTERNAL_SERVER_ERROR;
+        outResponse.SetBody (j.dump (), "application/json");
+    }
+}
+
+/* ---------------------------------------- */
+
+API::SimGetValueEndPoint::SimGetValueEndPoint (const std::string& inPath, std::shared_ptr<SIM::IService> inService) :
+    API::SimEndPoint::SimEndPoint (inPath, HTTP::Method::GET, inService)
+{
+}
+
+API::SimGetValueEndPoint::~SimGetValueEndPoint () = default;
+
+void API::SimGetValueEndPoint::Execute (const HTTP::Request& inRequest, HTTP::Response& outResponse) {
     
-    json j;
-    j["ports"] = stringPaths;
+    if (!mService->IsLoaded ()) {
+        outResponse.mCode = HTTP::Code::FORBIDDEN;
+        return;
+    }
     
-    outResponse.mCode = HTTP::Code::OK;
-    outResponse.SetBody (j.dump (), "application/json");
+    SIM::Path path;
+    try {
+        json config = json::parse (inRequest.mBody);
+        path = SIM::Path (config["path"].get<std::string>());
+    }
+    catch (...) {
+        outResponse.mCode = HTTP::Code::BAD_REQUEST;
+        return;
+    }
+    
+    try {
+        const auto value (mService->GetValue (path));
+        
+        json j;
+        j["path"] = value.mPath.ToString();
+        j["value"] = value.mValue;
+    
+        outResponse.mCode = HTTP::Code::OK;
+        outResponse.SetBody (j.dump (), "application/json");
+    }
+    catch (std::exception& e) {
+        
+        json j;
+        j["error"] = e.what ();
+        
+        outResponse.mCode = HTTP::Code::INTERNAL_SERVER_ERROR;
+        outResponse.SetBody (j.dump (), "application/json");
+    }
+}
+
+
+/* ---------------------------------------- */
+
+API::SimSetValueEndPoint::SimSetValueEndPoint (const std::string& inPath, std::shared_ptr<SIM::IService> inService) :
+    API::SimEndPoint::SimEndPoint (inPath, HTTP::Method::PUT, inService)
+{
+}
+
+API::SimSetValueEndPoint::~SimSetValueEndPoint () = default;
+
+void API::SimSetValueEndPoint::Execute (const HTTP::Request& inRequest, HTTP::Response& outResponse) {
+    
+    if (!mService->IsLoaded ()) {
+        outResponse.mCode = HTTP::Code::FORBIDDEN;
+        return;
+    }
+    
+    SIM::Value value;
+    try {
+        json config = json::parse (inRequest.mBody);
+        value = SIM::Value (SIM::Path (config["path"].get<std::string>()), config["value"].get<double>());
+    }
+    catch (...) {
+        outResponse.mCode = HTTP::Code::BAD_REQUEST;
+        return;
+    }
+    
+    try {
+        mService->SetValue (value);
+        outResponse.mCode = HTTP::Code::OK;
+    }
+    catch (std::exception& e) {
+        
+        json j;
+        j["error"] = e.what ();
+        
+        outResponse.mCode = HTTP::Code::INTERNAL_SERVER_ERROR;
+        outResponse.SetBody (j.dump (), "application/json");
+    }
 }

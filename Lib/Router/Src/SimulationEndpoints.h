@@ -87,18 +87,18 @@ public:
     virtual void Execute (const HTTP::Request& inRequest, HTTP::Response& outResponse) override;
 };
 
-class SimGetPathsEndPoint : public SimEndPoint {
+class SimGetValuesEndPoint : public SimEndPoint {
 
 public:
     /**
      * Constructor
      */
-    SimGetPathsEndPoint (const std::string& inPath, std::shared_ptr<SIM::IService> inService);
+    SimGetValuesEndPoint (const std::string& inPath, std::shared_ptr<SIM::IService> inService);
     
     /**
      * Virtual destructor
      */
-    virtual ~SimGetPathsEndPoint ();
+    virtual ~SimGetValuesEndPoint ();
 
     /**
      * Overloaded endpoint exectution
@@ -106,6 +106,43 @@ public:
     virtual void Execute (const HTTP::Request& inRequest, HTTP::Response& outResponse) override;
 };
 
+class SimGetValueEndPoint : public SimEndPoint {
+
+public:
+    /**
+     * Constructor
+     */
+    SimGetValueEndPoint (const std::string& inPath, std::shared_ptr<SIM::IService> inService);
+    
+    /**
+     * Virtual destructor
+     */
+    virtual ~SimGetValueEndPoint ();
+
+    /**
+     * Overloaded endpoint exectution
+     */
+    virtual void Execute (const HTTP::Request& inRequest, HTTP::Response& outResponse) override;
+};
+
+class SimSetValueEndPoint : public SimEndPoint {
+
+public:
+    /**
+     * Constructor
+     */
+    SimSetValueEndPoint (const std::string& inPath, std::shared_ptr<SIM::IService> inService);
+    
+    /**
+     * Virtual destructor
+     */
+    virtual ~SimSetValueEndPoint ();
+
+    /**
+     * Overloaded endpoint exectution
+     */
+    virtual void Execute (const HTTP::Request& inRequest, HTTP::Response& outResponse) override;
+};
 
 }
 

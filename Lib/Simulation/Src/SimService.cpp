@@ -5,6 +5,7 @@
 #include "SimLoop.h"
 #include "SimFactory.h"
 #include "SimService.h"
+#include "SimException.h"
 
 SIM::Service::Service (std::unique_ptr<Factory> inFactory) :
     mFactory (std::move (inFactory)),
@@ -15,93 +16,97 @@ SIM::Service::Service (std::unique_ptr<Factory> inFactory) :
 
 SIM::Service::~Service () = default;
 
-bool SIM::Service::Load (const json& inConfig) {
-    
-    OS::SingleLock lock (mMutex);
+void SIM::Service::Load (const json& inConfig) {
     
     if (IsRunning ()) {
-        LOGMESSAGE (OS::Log::kWarning, "Cannot load a running simulation");
-        return false;
+        throw Exception ("Cannot load a running simulation");
     }
     
+    OS::SingleLock lock (mMutex);
     try {
         mLoop = mFactory->Create (inConfig);
         mLoop->GetSampler ().Pipe (mSampleStream);
     }
-    catch (std::exception& e) {
-        LOGMESSAGE (OS::Log::kError, e.what ());
+    catch (Exception& e) {
         mLoop.reset (nullptr);
         mRunner.reset (nullptr);
-        return false;
+        throw e;
     }
     
     LOGMESSAGE (OS::Log::kInfo, "Loaded simulation...");
-    
-    return true;
 }
 
-bool SIM::Service::Start () {
-    
-    OS::SingleLock lock (mMutex);
+void SIM::Service::Start () {
     
     if (!IsLoaded ()) {
-        LOGMESSAGE (OS::Log::kWarning, "Cannot start an unloaded simulation");
-        return false;
+        throw Exception ("Cannot start an unloaded simulation");
     }
-    
     if (IsRunning ()) {
-        LOGMESSAGE (OS::Log::kWarning, "Cannot restart a running simulation");
-        return false;
+        throw Exception ("Cannot restart a running simulation");
     }
     
-    mRunner = std::make_unique<APP::TriggerThread<Service>> ("SimulationRunner", mLoop->GetTimeStep (), this, &Service::Trigger);
+    LOGMESSAGE (OS::Log::kInfo, "Initializing loop, starting simulation.");
     
+    OS::SingleLock lock (mMutex);
+    mRunner = std::make_unique<APP::TriggerThread<Service>> ("SimulationRunner", mLoop->GetTimeStep (), this, &Service::Trigger);
     mLoop->Initialize ();
     mRunner->Spawn ();
-    
-    LOGMESSAGE (OS::Log::kInfo, "Initialized loop, starting simulation.");
-    return true;
 }
 
-bool SIM::Service::Stop () {
-    
-    OS::SingleLock lock (mMutex);
+void SIM::Service::Stop () {
     
     if (!IsLoaded ()) {
-        LOGMESSAGE (OS::Log::kWarning, "Cannot stop an unloaded simulation");
-        return false;
+        throw Exception ("Cannot stop an unloaded simulation");
     }
-    
     if (!IsRunning ()) {
-        LOGMESSAGE (OS::Log::kWarning, "Cannot stop a stopped simulation");
-        return false;
+        throw Exception ("Cannot stop a stopped simulation");
     }
-    
-    mRunner.reset (nullptr);
-    mLoop.reset (nullptr);
     
     LOGMESSAGE (OS::Log::kInfo, "Stopped simulation.");
-    return true;
-}
-
-bool SIM::Service::GetValue (const std::string& inPath, std::string& outValue) {
     
-    try {
-        OS::SingleLock lock (mMutex);
-        outValue = mLoop->GetValue (inPath);
-        return true;
-    }
-    catch (std::exception& e) {
-        LOGMESSAGE (OS::Log::kError, e.what ());
-        return false;
-    }
+    OS::SingleLock lock (mMutex);
+    mRunner.reset (nullptr);
+    mLoop.reset (nullptr);
 }
 
-std::vector<SIM::Path> SIM::Service::GetPaths () const {
-    if (IsLoaded ()) {
-        return mLoop->GetPaths ();
+std::vector<SIM::Value> SIM::Service::GetValues () {
+    
+    if (!IsLoaded ()) {
+        throw Exception ("Simulation not loaded");
     }
-    return {};
+    
+    OS::SingleLock lock (mMutex);
+    return mLoop->GetValues ();
+}
+
+SIM::Value SIM::Service::GetValue (const SIM::Path& inPath) {
+    
+    if (!IsLoaded ()) {
+        throw Exception ("Simulation not loaded");
+    }
+    
+    OS::SingleLock lock (mMutex);
+    return mLoop->GetValue (inPath);
+}
+
+void SIM::Service::SetValue (const SIM::Value& inValue) {
+    
+    if (!IsLoaded ()) {
+        throw Exception ("Simulation not loaded");
+    }
+    
+    OS::SingleLock lock (mMutex);
+    return mLoop->SetValue (inValue);
+}
+
+std::vector<SIM::Path> SIM::Service::GetPaths () {
+    
+    if (!IsLoaded ()) {
+        throw Exception ("Simulation not loaded");
+    }
+    
+    OS::SingleLock lock (mMutex);
+    return mLoop->GetPaths ();
 }
 
 bool SIM::Service::Trigger () {

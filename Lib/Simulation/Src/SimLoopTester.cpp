@@ -149,18 +149,26 @@ TEST (SimLoopTester, RunSuccesfulConfig) {
 TEST (SimLoopTester, GetPortValue) {
     SIM::Loop loop (100u);
     loop.AddBlock (std::make_unique<TestBlock> ("Test"));
-    EXPECT_EQ ("0", loop.GetValue ("Test.in.input"));
+    EXPECT_EQ (0.0, loop.GetValue (SIM::Path ("Test", "input", SIM::Path::INPUT)).mValue);
 }
 
 TEST (SimLoopTester, IllegalPath) {
     try {
         SIM::Loop loop (100u);
-        loop.GetValue ("Test.in.input");
+        loop.GetValue (SIM::Path ("Test", "input", SIM::Path::INPUT));
         ASSERT_FALSE (true);
     }
     catch (std::exception& e) {
         ASSERT_EQ (std::string ("Non-existing block <Test>"), e.what ());
     }
+}
+
+TEST (SimLoopTester, GetAllPortValues) {
+    SIM::Loop loop (100u);
+    loop.AddBlock (std::make_unique<TestBlock> ("Test"));
+    EXPECT_EQ (0.0, loop.GetValues ()[0].mValue);
+    EXPECT_EQ (0.0, loop.GetValues ()[1].mValue);
+    EXPECT_EQ (2u, loop.GetValues ().size());
 }
 
 TEST (SimLoopTester, GetAllPorts) {
@@ -173,4 +181,20 @@ TEST (SimLoopTester, GetAllPorts) {
     ASSERT_EQ (std::string ("Test1.out.output"), paths[1].ToString ());
     ASSERT_EQ (std::string ("Test2.in.input"), paths[2].ToString ());
     ASSERT_EQ (std::string ("Test2.out.output"), paths[3].ToString ());
+}
+
+TEST (SimLoopTester, SetGetPortValue) {
+    SIM::Loop loop (100u);
+    loop.AddBlock (std::make_unique<TestBlock> ("Test"));
+    const SIM::Path path ("Test.in.input");
+    EXPECT_EQ (0.0, loop.GetValue (path).mValue);
+    loop.SetValue (SIM::Value (path, 1.0));
+    EXPECT_EQ (1.0, loop.GetValue (path).mValue);
+}
+
+TEST (SimLoopTester, SetGetPortValueIllegalPaths) {
+    SIM::Loop loop (100u);
+    const SIM::Path path ("Test.in.input");
+    EXPECT_THROW (loop.GetValue (path), std::exception);
+    EXPECT_THROW (loop.SetValue (SIM::Value (path, 1.0)), std::exception);
 }

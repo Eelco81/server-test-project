@@ -6,6 +6,7 @@
 #include <vector>
 #include <string>
 
+#include "SimValue.h"
 #include "SimPath.h"
 #include "SimTimer.h"
 #include "SimSampler.h"
@@ -60,15 +61,25 @@ public:
     void Terminate ();
     
     /**
+     * Get a value of a all paths inside the loop
+     */
+    std::vector<Value> GetValues () const;
+
+    /**
      * Get a value of a path inside the loop
      */
-    std::string GetValue (const std::string& inPath) const;
+    Value GetValue (const Path& inPath) const;
+
+    /**
+     * Set a value of inside the loop
+     */
+    void SetValue (const Value& inValue);
 
     /**
      * Get all paths
      */
     std::vector<Path> GetPaths () const;
-    
+         
     /**
      * Get the current timestamp
      */

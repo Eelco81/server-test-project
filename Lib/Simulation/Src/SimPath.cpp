@@ -4,6 +4,10 @@
 #include "SimPath.h"
 #include "SimException.h"
 
+SIM::Path::Path () :
+    mType (SIM::Path::UNINITIALIZED)
+{}
+
 SIM::Path::Path (const std::string& inTarget) {
     
     std::regex rePath ("^([A-Za-z0-9]+).([A-Za-z0-9]+).([A-Za-z0-9]+)$");
