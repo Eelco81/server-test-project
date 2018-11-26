@@ -1,6 +1,7 @@
 
 #include <iostream>
 #include <algorithm>
+#include <regex>
 
 #include "Log.h"
 #include "HttpCodes.h"
@@ -33,18 +34,11 @@ void HTTP::Router::Write (const HTTP::Request& inRequest) {
         response.mCode = Code::NOT_FOUND;
     }
     else {
-        
-        auto endpointIterator = std::find_if (mEndPoints.begin (), mEndPoints.end (), [&inRequest](const auto& endpoint) {
-            return endpoint->GetPath () == inRequest.mPath && endpoint->GetMethod () == inRequest.mMethod;
-        });
-        
-        if (endpointIterator != mEndPoints.end ()) {
-            // The endppoint iterator must set the response code.
-            response.mCode = Code::INTERNAL_SERVER_ERROR;
-            (*endpointIterator)->Execute (inRequest, response);
-        }
-        else {
-            response.mCode = Code::NOT_FOUND;
+        response.mCode = Code::NOT_FOUND;
+        for (auto& endpoint : mEndPoints) {
+            if (endpoint->Route (inRequest, response)) {
+                break;
+            }
         }
     }
     
@@ -52,5 +46,4 @@ void HTTP::Router::Write (const HTTP::Request& inRequest) {
             << " " << inRequest.mPath << " - " << response.mCode << " " << CodeToString (response.mCode);
 
     Done (response);
-    
 }

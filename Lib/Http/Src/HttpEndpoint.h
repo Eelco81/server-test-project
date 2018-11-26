@@ -2,7 +2,9 @@
 #ifndef _HTTP_ENDPOINT_H_
 #define _HTTP_ENDPOINT_H_
 
+#include <vector>
 #include <string>
+#include <regex>
 
 #include "Macros.h"
 #include "HttpCodes.h"
@@ -14,10 +16,18 @@ namespace HTTP {
 class EndPoint {
 
 public:
+    
+    using ParameterList = std::vector<std::string>;
+    
     /**
-     * Constructor
+     * Constructor using complete path
      */
     EndPoint (const std::string& inPath, Method inMethod);
+    
+    /**
+     * Constructor using regex
+     */
+    EndPoint (const std::regex& inPath, Method inMethod);
     
     /**
      * Virtual destructor
@@ -25,22 +35,25 @@ public:
     virtual ~EndPoint ();
     
     /**
-     * Function to implement. 
+     * Function to implement for each endpoint.
      */
-    virtual void Execute (const Request& inRequest, Response& outReponse) = 0;
+    virtual void Execute (const Request& inRequest, Response& outResponse) = 0;
     
-    /**
-     * Retrieve the path of this endpoint
+    /** 
+     * Called by the router.
      */
-    const std::string& GetPath () const { return mPath; }
+    bool Route (const Request& inRequest, Response& outResponse);
     
+protected:
     /**
-     * Retrieve the method of this endpoint.
+     * Retrieve the regex parameter list
      */
-    Method GetMethod () const { return mMethod; }
-
+    const ParameterList& GetParameterList() const { return mParameterList; }
+    
 private:
+    ParameterList mParameterList;
     std::string mPath;
+    std::regex mRegex;
     Method mMethod;
 };
 

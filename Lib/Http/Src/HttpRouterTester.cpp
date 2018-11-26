@@ -26,6 +26,14 @@ public:
     MOCK_METHOD2 (Execute, void (const HTTP::Request&, HTTP::Response&));
 };
 
+class RegexTestEndPoint : public HTTP::EndPoint {
+public:
+    RegexTestEndPoint () : EndPoint (std::regex("\\/test\\/([A-Z]+)\\/other\\/([0-9]+)"), HTTP::Method::DELETE) {}
+    virtual ~RegexTestEndPoint () {}
+    MOCK_METHOD2 (Execute, void (const HTTP::Request&, HTTP::Response&));
+    const ParameterList& GetList () const { return GetParameterList (); }
+};
+
 }
 
 TEST (RouterTester, BasicRouting) {
@@ -47,6 +55,29 @@ TEST (RouterTester, BasicRouting) {
     router.Write (request);
     
     ASSERT_EQ (request.mVersion, response.mVersion);
+    // endpoint should set status code
+}
+
+TEST (RouterTester, RegularExpressions) {
+    
+    HTTP::Router router;
+    HTTP::Response response;
+    router.Pipe ([&](const auto& data) { response = data; });
+    
+    RegexTestEndPoint* regexEndPoint2 = new RegexTestEndPoint ();
+    
+    router.AddEndPoint (std::shared_ptr <HTTP::EndPoint> (regexEndPoint2));
+    
+    EXPECT_CALL (*regexEndPoint2, Execute (::testing::_, ::testing::_)).Times (1);
+    
+    const HTTP::Request request (HTTP::Method::DELETE, std::string ("/test/ABCDEF/other/012345678"));
+    router.Write (request);
+    
+    ASSERT_EQ (request.mVersion, response.mVersion);
+    ASSERT_EQ (std::string ("/test/ABCDEF/other/012345678"), regexEndPoint2->GetList ()[0]);
+    ASSERT_EQ (std::string ("ABCDEF"), regexEndPoint2->GetList ()[1]);
+    ASSERT_EQ (std::string ("012345678"), regexEndPoint2->GetList ()[2]);
+
     // endpoint should set status code
 }
 

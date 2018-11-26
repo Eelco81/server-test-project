@@ -10,10 +10,6 @@
 #include "TcpServer.h"
 #include "TcpClient.h"
 
-void TCP::Client::Stream::Write (const Packet& inPacket) {
-    Done (inPacket);
-};
-
 TCP::Client::Client (std::string inAddress, std::string inPort) :
     TCP::Client::Client (std::make_unique<OS::Socket> (inAddress, inPort))
 {

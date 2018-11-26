@@ -97,26 +97,19 @@ protected:
     /**
      * Message stream for received messages.
      */
-    inline OS::MessageStream<Packet,Packet>& GetReadStream () { return mReadStream; }
+    inline OS::ForwardStream<Packet>& GetReadStream () { return mReadStream; }
     
     /**
      * Message stream for sending messages.
      */
-    inline OS::MessageStream<Packet,Packet>& GetWriteStream () { return mWriteStream; }
+    inline OS::ForwardStream<Packet>& GetWriteStream () { return mWriteStream; }
     
 private:
-    /**
-     * Read stream class
-     */
-    class Stream : public OS::MessageStream<Packet,Packet> {
-    public:
-        void Write (const Packet& inPacket) override;
-    };
     
     std::unique_ptr <OS::Thread> mThread;
     std::shared_ptr <OS::Socket> mSocket;
-    Stream mReadStream;
-    Stream mWriteStream;
+    OS::ForwardStream<Packet> mReadStream;
+    OS::ForwardStream<Packet> mWriteStream;
 };
 
 }
