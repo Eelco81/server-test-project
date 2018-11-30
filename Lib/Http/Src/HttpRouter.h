@@ -17,7 +17,7 @@ namespace HTTP {
 class Router : public OS::MessageStream <Request, Response> {
     
 public:
-    using EndPointPtr = std::shared_ptr <EndPoint>;
+    using EndPointPtr = std::shared_ptr <AbstractEndPoint>;
     Router (const Router& inRouter);
     Router ();
     virtual ~Router ();

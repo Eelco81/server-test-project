@@ -13,7 +13,7 @@ TEST_F (FileEndPointTester, NotFound) {
     HTTP::Response response;
     
     API::FileEndPoint endPoint ("/some/api/path", "I/do/not/exist");
-    endPoint.Execute (request, response);
+    endPoint.Get (request, response);
     
     EXPECT_EQ (response.mCode, HTTP::Code::INTERNAL_SERVER_ERROR);
 }
@@ -37,7 +37,7 @@ TEST_P (FileEndPointTester, ResponseCodeAndHeader) {
     std::string filePath (std::string ("../Test/FileEndPointTester/") + std::get<0> (GetParam ()));
     API::FileEndPoint endPoint ("/some/api/path", filePath);
     
-    endPoint.Execute (request, response);
+    endPoint.Get (request, response);
     
     EXPECT_EQ (response.mCode, HTTP::Code::OK);
     EXPECT_EQ (std::get<1> (GetParam ()), response.mHeaders[HTTP::Header::CONTENT_TYPE]);

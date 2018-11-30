@@ -12,7 +12,7 @@ public:
     VersionEndPoint (const std::string& inPath);
     virtual ~VersionEndPoint ();
 
-    virtual void Execute (const HTTP::Request& inRequest, HTTP::Response& outResponse) override;
+    virtual void Get (const HTTP::Request& inRequest, HTTP::Response& outResponse) override;
 };
 
 }

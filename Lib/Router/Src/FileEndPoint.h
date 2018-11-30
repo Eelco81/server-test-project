@@ -13,10 +13,25 @@ namespace API {
 class FileEndPoint : public HTTP::EndPoint {
     
 public:
+    /**
+     * Constructor
+     */
     FileEndPoint (const std::string& inPath, const std::string& inFileName);
+    
+    /**
+     * Virtual destructor
+     */
     virtual ~FileEndPoint ();
 
-    virtual void Execute (const HTTP::Request& inRequest, HTTP::Response& outResponse) override;
+    /**
+     * Retrieve contents of a file, header set accordingly
+     */
+    virtual void Get (const HTTP::Request& inRequest, HTTP::Response& outResponse) override;
+    
+    /**
+     * Set contents of a file
+     */
+    virtual void Put (const HTTP::Request& inRequest, HTTP::Response& outResponse) override;
     
 private:
     std::string mFileName;

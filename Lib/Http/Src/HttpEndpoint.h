@@ -13,36 +13,82 @@
 
 namespace HTTP {
 
-class EndPoint {
+class AbstractEndPoint {
 
 public:
+    /**
+     * Virtual destructor
+     */
+    virtual ~AbstractEndPoint () = default;
     
+    /**
+     * Optional GET Function to implement for each endpoint.
+     */
+    virtual void Get (const Request& inRequest, Response& outResponse) {}
+    
+    /**
+     * Optional PUT Function to implement for each endpoint.
+     */
+    virtual void Put (const Request& inRequest, Response& outResponse) {}
+    
+    /**
+     * Optional POST Function to implement for each endpoint.
+     */
+    virtual void Post (const Request& inRequest, Response& outResponse) {}
+    
+    /**
+     * Optional DELETE Function to implement for each endpoint.
+     */
+    virtual void Delete (const Request& inRequest, Response& outResponse) {}
+    
+    /** 
+     * Called by the router.
+     */
+    virtual bool Route (const Request& inRequest, Response& outResponse);
+    
+};
+
+class EndPoint : public AbstractEndPoint {
+    
+public:
+    /**
+     * Constructor using complete path
+     */
+    EndPoint (const std::string& inPath);
+    
+    /**
+     * Destructor
+     */
+    virtual ~EndPoint () = default;
+    
+    /** 
+     * Called by the router.
+     */
+    bool Route (const Request& inRequest, Response& outResponse) override;
+    
+private:
+    std::string mPath;
+};
+
+class RegexEndPoint : public AbstractEndPoint {
+    
+public:
     using ParameterList = std::vector<std::string>;
     
     /**
      * Constructor using complete path
      */
-    EndPoint (const std::string& inPath, Method inMethod);
+    RegexEndPoint (const std::regex& inPath);
     
     /**
-     * Constructor using regex
+     * Destructor
      */
-    EndPoint (const std::regex& inPath, Method inMethod);
-    
-    /**
-     * Virtual destructor
-     */
-    virtual ~EndPoint ();
-    
-    /**
-     * Function to implement for each endpoint.
-     */
-    virtual void Execute (const Request& inRequest, Response& outResponse) = 0;
+    virtual ~RegexEndPoint () = default;
     
     /** 
      * Called by the router.
      */
-    bool Route (const Request& inRequest, Response& outResponse);
+    bool Route (const Request& inRequest, Response& outResponse) override;
     
 protected:
     /**
@@ -52,9 +98,7 @@ protected:
     
 private:
     ParameterList mParameterList;
-    std::string mPath;
     std::regex mRegex;
-    Method mMethod;
 };
 
 }

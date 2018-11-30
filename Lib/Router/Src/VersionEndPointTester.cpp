@@ -8,7 +8,7 @@ TEST (VersionEndPointTester, Get) {
     HTTP::Response response;
     API::VersionEndPoint endPoint ("/hello");
     
-    endPoint.Execute (request, response);
+    endPoint.Get (request, response);
     
     EXPECT_EQ ("application/json", response.mHeaders[HTTP::Header::CONTENT_TYPE]);
     EXPECT_EQ ("{\"application\":\"HttpServer\",\"version\":\"0.0.1\"}", response.GetBody ());

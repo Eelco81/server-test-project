@@ -45,5 +45,7 @@ void Application::Run (const OS::CommandLine& inCommandLine) {
     LOGMESSAGE (OS::Log::kInfo, "Quit the app using ENTER on the command line.");
     std::getline (std::cin, name);
 
-    service->GetSampleStream ().Clear ();
+    // Cannot rely on destructors to clean this up. The service is a shared_ptr
+    // and will be cleaned up all the way at the end.
+    service->Stop ();
 }

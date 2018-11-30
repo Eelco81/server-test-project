@@ -18,14 +18,14 @@ std::map<std::string, std::string> contentTypes = {
 } // end anonymous namespace
 
 API::FileEndPoint::FileEndPoint (const std::string& inPath, const std::string& inFileName) : 
-    HTTP::EndPoint (inPath, HTTP::Method::GET),
+    HTTP::EndPoint (inPath),
     mFileName (inFileName)
 {
 }
 
 API::FileEndPoint::~FileEndPoint () = default;
 
-void API::FileEndPoint::Execute (const HTTP::Request& inRequest, HTTP::Response& outResponse) {
+void API::FileEndPoint::Get (const HTTP::Request& inRequest, HTTP::Response& outResponse) {
         
     std::vector<uint8_t> data;
     if (OS::Files::Read (mFileName, data)) {
@@ -41,4 +41,8 @@ void API::FileEndPoint::Execute (const HTTP::Request& inRequest, HTTP::Response&
     else {
         outResponse.mCode = HTTP::Code::INTERNAL_SERVER_ERROR;
     }
+}
+
+void API::FileEndPoint::Put (const HTTP::Request& inRequest, HTTP::Response& outResponse) {
+    outResponse.mCode = HTTP::Code::NOT_IMPLEMENTED;
 }

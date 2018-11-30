@@ -4,9 +4,10 @@
 #include "FileEndPoint.h"
 #include "VersionEndPoint.h"
 #include "TimeEndPoint.h"
-
-#include "SimulationEndpoints.h"
-#include "SimService.h"
+#include "SimExecEndPoint.h"
+#include "SimConfigEndPoint.h"
+#include "SimPortsEndPoint.h"
+#include "SimPortEndPoint.h"
 
 SystemRouter::SystemRouter (std::shared_ptr<SIM::Service> inService) :
     HTTP::Router ()
@@ -17,10 +18,8 @@ SystemRouter::SystemRouter (std::shared_ptr<SIM::Service> inService) :
 
     AddEndPoint (std::make_shared<API::FileEndPoint> ("/home", "./Public/index.html"));
 
-    AddEndPoint (std::make_shared<API::SimLoadEndPoint> ("/api/simulation/config", inService));
-    AddEndPoint (std::make_shared<API::SimStartEndPoint> ("/api/simulation/runner", inService));
-    AddEndPoint (std::make_shared<API::SimStopEndPoint> ("/api/simulation/runner", inService));
-    AddEndPoint (std::make_shared<API::SimGetValuesEndPoint> ("/api/simulation/ports", inService));
-    AddEndPoint (std::make_shared<API::SimGetValueEndPoint> ("/api/simulation/ports/id", inService));
-    AddEndPoint (std::make_shared<API::SimSetValueEndPoint> ("/api/simulation/ports/id", inService));
+    AddEndPoint (std::make_shared<API::SIM::ExecEndPoint> ("/api/simulation", inService, "./Config/"));
+    AddEndPoint (std::make_shared<API::SIM::ConfigEndPoint> ("/api/simulation/config/([A-Za-z0-9]+)", inService, "./Config/"));
+    AddEndPoint (std::make_shared<API::SIM::PortsEndPoint> ("/api/simulation/ports", inService));
+    AddEndPoint (std::make_shared<API::SIM::PortEndPoint> ("/api/simulation/ports", inService));
 }

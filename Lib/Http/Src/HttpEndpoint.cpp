@@ -1,46 +1,55 @@
 
 #include "HttpEndpoint.h"
-#include <iostream>
 
-HTTP::EndPoint::EndPoint (const std::string& inPath, HTTP::Method inMethod) :
-    mPath (inPath),
-    mMethod (inMethod)
-{
+bool HTTP::AbstractEndPoint::Route (const Request& inRequest, Response& outResponse) {
+    outResponse.mCode = Code::NOT_FOUND;
+    switch (inRequest.mMethod) {
+        case Method::GET :
+            Get (inRequest, outResponse);
+            break;
+        case Method::PUT :
+            Put (inRequest, outResponse);
+            break;
+        case Method::POST :
+            Post (inRequest, outResponse);
+            break;
+        case Method::DELETE :
+            Delete (inRequest, outResponse);
+            break;
+        default:
+            break;
+    }
+    return true;
 }
 
-HTTP::EndPoint::EndPoint (const std::regex& inPath, HTTP::Method inMethod) :
-    mRegex (inPath),
-    mMethod (inMethod)
+HTTP::EndPoint::EndPoint (const std::string& inPath) :
+    mPath (inPath)
 {
 }
-
-HTTP::EndPoint::~EndPoint () = default;
 
 bool HTTP::EndPoint::Route (const Request& inRequest, Response& outResponse) {
     
-    if (inRequest.mMethod != mMethod) {
+    if (mPath != inRequest.mPath) {
         return false;
     }
-    
-    mParameterList.clear ();
-    
-    if (!mPath.empty() && mPath == inRequest.mPath) {
-        
-        outResponse.mCode = Code::INTERNAL_SERVER_ERROR;
-        Execute (inRequest, outResponse);
-        return true;
-    }
+
+    return AbstractEndPoint::Route (inRequest, outResponse);
+}
+
+HTTP::RegexEndPoint::RegexEndPoint (const std::regex& inPath) :
+    mRegex (inPath)
+{
+}
+
+bool HTTP::RegexEndPoint::Route (const Request& inRequest, Response& outResponse) {
     
     std::smatch match;
-    if (mPath.empty() && std::regex_match (inRequest.mPath, match, mRegex)) {
-        
-        mParameterList.resize (match.size ());
-        std::transform (match.begin (), match.end (), mParameterList.begin (), [](const auto& m) { return m.str(); });
-        
-        outResponse.mCode = Code::INTERNAL_SERVER_ERROR;
-        Execute (inRequest, outResponse);
-        return true;
+    if (!std::regex_match (inRequest.mPath, match, mRegex)) {
+        return false; 
     }
     
-    return false;
+    mParameterList.resize (match.size ());
+    std::transform (match.begin (), match.end (), mParameterList.begin (), [](const auto& m) { return m.str(); });
+    
+    return AbstractEndPoint::Route (inRequest, outResponse);
 }

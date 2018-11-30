@@ -12,7 +12,7 @@ public:
     TimeEndPoint (const std::string& inPath);
     virtual ~TimeEndPoint ();
 
-    virtual void Execute (const HTTP::Request& inRequest, HTTP::Response& outResponse) override;
+    virtual void Get (const HTTP::Request& inRequest, HTTP::Response& outResponse) override;
 };
 
 }

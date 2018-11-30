@@ -9,7 +9,7 @@ TEST (TimeEndPointTester, Get) {
     HTTP::Response response;
     API::TimeEndPoint endPoint ("/hello");
     
-    endPoint.Execute (request, response);
+    endPoint.Get (request, response);
     
     EXPECT_EQ ("application/json", response.mHeaders[HTTP::Header::CONTENT_TYPE]);
     EXPECT_THAT (response.GetBody (), ::testing::HasSubstr ("\"unit\":\"ms\""));

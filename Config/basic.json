@@ -1,0 +1,11 @@
+{ 
+    "step": 50, 
+    "blocks" : [
+        { "name" : "Source1", "type": "source"},
+        { "name" : "Source2", "type": "source"}
+    ],
+    "sample" : [
+        "Source1.out.value", 
+        "Source2.out.value"
+    ]
+}

@@ -49,34 +49,19 @@ $(document).ready(function(){
         chart = new google.visualization.LineChart(document.getElementById('chart_div'));
         chart.draw(chartData, options);
     }
-
-    $('#button_load').click(function() {
-        $.ajax({url:'api/simulation/config', type: "PUT", data: $('#config_field').text()});
-    });
     
     $('#button_start').click(function() {
-        $.ajax({url:'api/simulation/runner', type:'PUT'});
+        $.ajax({url:'api/simulation', type:'PUT', data: JSON.stringify({ id: "basic"}) } );
     });
     
     $('#button_stop').click(function() {
-        $.ajax({url:'api/simulation/runner', type:'DELETE'});
+        $.ajax({url:'api/simulation', type:'DELETE'});
     });
     
     updateVersion();
     google.charts.load('current', {packages: ['corechart', 'line']});   
     google.charts.setOnLoadCallback(onGoogleChartLoaded);
     
-    $("#config_field").text(JSON.stringify({ 
-        "step": 100, 
-        "blocks" : [
-            { "name" : "Source1", "type": "source"},
-            { "name" : "Source2", "type": "source"}
-        ],
-        "sample" : [
-            "Source1.out.value", 
-            "Source2.out.value"
-        ]
-    }, null, 2));
 
 });
 
@@ -88,8 +73,6 @@ $(document).ready(function(){
         <div id="version_text" style="color:white"> </div> 
     </header>
     <div>
-        <textarea id="config_field"></textarea>
-        <button id="button_load" type="button" class="btn btn-secondary">Load</button>
         <button id="button_start" type="button" class="btn btn-secondary">Start</button>
         <button id="button_stop" type="button" class="btn btn-secondary">Stop</button>
     </div>

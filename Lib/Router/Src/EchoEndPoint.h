@@ -12,7 +12,7 @@ public:
     EchoEndPoint (const std::string& inPath);
     virtual ~EchoEndPoint ();
 
-    virtual void Execute (const HTTP::Request& inRequest, HTTP::Response& outResponse) override;
+    virtual void Put (const HTTP::Request& inRequest, HTTP::Response& outResponse) override;
 };
 
 }

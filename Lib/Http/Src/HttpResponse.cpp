@@ -8,7 +8,7 @@ HTTP::Response::Response () :
 {
 }
 
-HTTP::Response::Response (Code inCode, Version inVersion) :
+HTTP::Response::Response (HTTP::Code inCode, HTTP::Version inVersion) :
     mCode (inCode),
     mVersion (inVersion)
 {

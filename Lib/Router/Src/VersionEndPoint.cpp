@@ -7,13 +7,13 @@
 using json = nlohmann::json;
 
 API::VersionEndPoint::VersionEndPoint (const std::string& inPath) : 
-    HTTP::EndPoint (inPath, HTTP::Method::GET)
+    HTTP::EndPoint (inPath)
 {
 }
 
 API::VersionEndPoint::~VersionEndPoint () = default;
 
-void API::VersionEndPoint::Execute (const HTTP::Request& inRequest, HTTP::Response& outResponse) {
+void API::VersionEndPoint::Get (const HTTP::Request& inRequest, HTTP::Response& outResponse) {
     
     json j;
     j["application"] = OS::Version::GetApplicationName ();

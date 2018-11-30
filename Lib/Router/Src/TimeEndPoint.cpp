@@ -6,13 +6,13 @@
 using json = nlohmann::json;
 
 API::TimeEndPoint::TimeEndPoint (const std::string& inPath) : 
-    HTTP::EndPoint (inPath, HTTP::Method::GET)
+    HTTP::EndPoint (inPath)
 {
 }
 
 API::TimeEndPoint::~TimeEndPoint () = default;
 
-void API::TimeEndPoint::Execute (const HTTP::Request& inRequest, HTTP::Response& outResponse) {
+void API::TimeEndPoint::Get (const HTTP::Request& inRequest, HTTP::Response& outResponse) {
     
     json j;
     j["value"] = OS::Timing::Now ();
