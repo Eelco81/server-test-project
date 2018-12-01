@@ -2,6 +2,7 @@
 #include "Router.h"
 #include "EchoEndPoint.h"
 #include "FileEndPoint.h"
+#include "DirEndPoint.h"
 #include "VersionEndPoint.h"
 #include "TimeEndPoint.h"
 #include "SimExecEndPoint.h"
@@ -17,6 +18,7 @@ SystemRouter::SystemRouter (std::shared_ptr<SIM::Service> inService) :
     AddEndPoint (std::make_shared<API::EchoEndPoint> ("/api/echo"));
 
     AddEndPoint (std::make_shared<API::FileEndPoint> ("/home", "./Public/index.html"));
+    AddEndPoint (std::make_shared<API::DirEndPoint> ("/home", "./Public"));
 
     AddEndPoint (std::make_shared<API::SIM::ExecEndPoint> ("/api/simulation", inService, "./Config/"));
     AddEndPoint (std::make_shared<API::SIM::ConfigEndPoint> ("/api/simulation/config/([A-Za-z0-9]+)", inService, "./Config/"));

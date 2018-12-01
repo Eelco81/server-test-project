@@ -8,7 +8,6 @@
 namespace filesystem = std::experimental::filesystem;
 
 bool OS::FileSystem::Read (const std::string& inPath, std::vector<uint8_t>& outBuffer) {
-
     std::ifstream stream;
     stream.open (inPath, std::ifstream::binary);
     if (stream.is_open ()) {
@@ -23,7 +22,6 @@ bool OS::FileSystem::Read (const std::string& inPath, std::vector<uint8_t>& outB
 }
 
 bool OS::FileSystem::Read (const std::string& inPath, std::string& outBuffer) {
-
     std::ifstream stream;
     stream.open (inPath, std::ifstream::binary);
     if (stream.is_open ()) {
@@ -46,7 +44,6 @@ bool OS::FileSystem::Write (const std::string& inPath, const std::string& inBuff
 }
 
 bool OS::FileSystem::Write (const std::string& inPath, const char* inBuffer, std::size_t inSize) {
-
     std::ofstream stream;
     stream.open (inPath);
     if (stream.is_open ()) {
@@ -70,7 +67,6 @@ bool OS::FileSystem::CreateDir (const std::string& inPath) {
 }
 
 bool OS::FileSystem::ListDir (const std::string& inPath, std::vector<std::string>& outFiles) {
-    
     if (!Exists (inPath)) {
         return false;
     }

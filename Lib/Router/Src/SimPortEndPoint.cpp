@@ -48,13 +48,21 @@ void API::SIM::PortEndPoint::Put (const HTTP::Request& inRequest, HTTP::Response
         return;
     }
     
-    ::SIM::Value value;
+    json config;
     try {
-        json config = json::parse (inRequest.mBody);
-        value = ::SIM::Value (::SIM::Path (GetParameterList()[1]), config["value"].get<double>());
+        config = json::parse (inRequest.mBody);
     }
     catch (...) {
-        outResponse.mCode = HTTP::Code::BAD_REQUEST;
+        SetErrorMessage (outResponse, HTTP::Code::BAD_REQUEST, "Request is not valid json");
+        return;
+    }
+    
+    ::SIM::Value value;
+    try {
+       value = ::SIM::Value (::SIM::Path (GetParameterList()[1]), config["value"].get<double>());
+    }
+    catch (std::exception& e) {
+        SetErrorMessage (outResponse, HTTP::Code::BAD_REQUEST, e.what ());
         return;
     }
     
