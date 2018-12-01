@@ -1,6 +1,6 @@
 
 #include "SimExecEndPoint.h"
-#include "Files.h"
+#include "FileSystem.h"
 
 API::SIM::ExecEndPoint::ExecEndPoint (const std::string& inPath, std::shared_ptr<::SIM::IService> inService, const std::string& inConfigPath) :
     API::SIM::EndPoint (inPath, inService),
@@ -38,7 +38,7 @@ void API::SIM::ExecEndPoint::Put (const HTTP::Request& inRequest, HTTP::Response
     }
     
     std::vector<uint8_t> data;
-    if (!OS::Files::Read (mConfigPath + id + ".json", data)) {
+    if (!OS::FileSystem::Read (mConfigPath + id + ".json", data)) {
         SetErrorMessage (outResponse, HTTP::Code::BAD_REQUEST, id + " does not exist.");
         return;
     }

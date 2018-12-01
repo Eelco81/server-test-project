@@ -1,7 +1,10 @@
 
 CC              = g++
 AR              = ar
-CFLAGS          = -c -Wall -std=gnu++14
+CFLAGS          = -c -std=c++17 -std=gnu++17 -Wall  
+#GCOVFLAGS       = -fprofile-arcs -ftest-coverage
+#GCOV            = -lgcov
+HTMLDIR         = ./html
 
 PRODSOURCES     = $(filter-out %MockMain.cpp,$(filter-out %Tester.cpp,$(SOURCES)))
 PRODOBJECTS     = $(PRODSOURCES:.cpp=.o)
@@ -33,13 +36,13 @@ $(LIBTARGET): $(DEPENDENCIES) $(PRODOBJECTS)
 	$(AR) $(ARFLAGS) $@ $(PRODOBJECTS) 
 
 $(TARGET): $(DEPENDENCIES) $(PRODOBJECTS)  
-	$(CC) -o $@ $(PRODOBJECTS) $(LIBPATHS) $(LIBRARIES) $(LINKS)
+	$(CC) -o $@ $(PRODOBJECTS) $(LIBPATHS) $(LIBRARIES) $(LINKS) -lstdc++fs $(GCOV)
     
 $(TESTTARGET): $(DEPENDENCIES) $(TESTOBJECTS) $(GMOCKOBJECTS) 
-	$(CC) -o $@ $(TESTOBJECTS) $(GMOCKOBJECTS) $(LIBPATHS) $(LIBRARIES) $(LINKS)
+	$(CC) -o $@ $(TESTOBJECTS) $(GMOCKOBJECTS) $(LIBPATHS) $(LIBRARIES) $(LINKS) -lstdc++fs $(GCOV)
     
 .cpp.o:
-	$(CC) $(CFLAGS) $(INCLUDES) $< -o $@
+	$(CC) $(CFLAGS) $(GCOVFLAGS) $(INCLUDES) $< -o $@
 
 .cc.o:
 	$(CC) $(CFLAGS) $(INCLUDES) $< -o $@
@@ -52,7 +55,11 @@ clean:
 	for lib in $(DEPENDENCIES) ; do \
 		make clean -C $(LIBDIR)/$$lib/Make ; \
 	done
-	rm -rf $(TESTOBJECTS) $(GMOCKOBJECTS) $(LIBTARGET) $(TARGET) $(TESTTARGET)
-    
+	rm -rf $(TESTOBJECTS) $(GMOCKOBJECTS) $(LIBTARGET) $(TARGET) $(TESTTARGET) $(TESTOBJECTS:.o=.gcda) $(TESTOBJECTS:.o=.gcno) $(HTMLDIR)
+
 test: $(TESTTARGET)
 	./$(TESTTARGET) --gtest_filter="*"
+
+coverage: clean test
+	mkdir $(HTMLDIR)
+	gcovr $(SOURCEDIR) --html --html-details -o $(HTMLDIR)/$(TESTTARGET).html
