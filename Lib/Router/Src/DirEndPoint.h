@@ -14,7 +14,7 @@ public:
     /**
      * Constructor
      */
-    DirEndPoint (const std::string& inPath, const std::string& inDirName);
+    DirEndPoint (const std::string& inPath, const std::string& inDirName, const std::string& inExtension = "");
     
     /**
      * Virtual destructor
@@ -33,6 +33,7 @@ public:
     
 private:
     std::string mDirName;
+    std::string mExtension;
 };
 
 }

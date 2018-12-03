@@ -1,7 +1,9 @@
 
+#include <iostream>
 #include "SimPortEndPoint.h"
 #include "SimPath.h"
 #include "SimValue.h"
+#include "ApiUtils.h"
 
 API::SIM::PortEndPoint::PortEndPoint (const std::string& inPath, std::shared_ptr<::SIM::IService> inService) :
     API::SIM::EndPoint (inPath + "/([A-Za-z0-9\\.]+)", inService)
@@ -13,7 +15,7 @@ API::SIM::PortEndPoint::~PortEndPoint () = default;
 void API::SIM::PortEndPoint::Get (const HTTP::Request& inRequest, HTTP::Response& outResponse) {
     
     if (!mService->IsLoaded ()) {
-        outResponse.mCode = HTTP::Code::FORBIDDEN;
+        API::Utils::SetErrorMessage (outResponse, HTTP::Code::FORBIDDEN, "No simulation loaded");
         return;
     }
     
@@ -22,7 +24,7 @@ void API::SIM::PortEndPoint::Get (const HTTP::Request& inRequest, HTTP::Response
         path = ::SIM::Path (GetParameterList ()[1]);
     }
     catch (...) {
-        outResponse.mCode = HTTP::Code::BAD_REQUEST;
+        API::Utils::SetErrorMessage (outResponse, HTTP::Code::BAD_REQUEST, "Not a valid path");
         return;
     }
     
@@ -37,14 +39,14 @@ void API::SIM::PortEndPoint::Get (const HTTP::Request& inRequest, HTTP::Response
         outResponse.SetBody (j.dump (), "application/json");
     }
     catch (std::exception& e) {
-        SetErrorMessage (outResponse, HTTP::Code::INTERNAL_SERVER_ERROR, e.what ());
+        API::Utils::SetErrorMessage (outResponse, HTTP::Code::INTERNAL_SERVER_ERROR, e.what ());
     }
 }
 
 void API::SIM::PortEndPoint::Put (const HTTP::Request& inRequest, HTTP::Response& outResponse) {
     
     if (!mService->IsLoaded ()) {
-        outResponse.mCode = HTTP::Code::FORBIDDEN;
+        API::Utils::SetErrorMessage (outResponse, HTTP::Code::FORBIDDEN, "No simulation loaded");
         return;
     }
     
@@ -53,7 +55,7 @@ void API::SIM::PortEndPoint::Put (const HTTP::Request& inRequest, HTTP::Response
         config = json::parse (inRequest.mBody);
     }
     catch (...) {
-        SetErrorMessage (outResponse, HTTP::Code::BAD_REQUEST, "Request is not valid json");
+        API::Utils::SetErrorMessage (outResponse, HTTP::Code::BAD_REQUEST, "Request is not valid json");
         return;
     }
     
@@ -62,7 +64,7 @@ void API::SIM::PortEndPoint::Put (const HTTP::Request& inRequest, HTTP::Response
        value = ::SIM::Value (::SIM::Path (GetParameterList()[1]), config["value"].get<double>());
     }
     catch (std::exception& e) {
-        SetErrorMessage (outResponse, HTTP::Code::BAD_REQUEST, e.what ());
+        API::Utils::SetErrorMessage (outResponse, HTTP::Code::BAD_REQUEST, e.what ());
         return;
     }
     
@@ -71,6 +73,6 @@ void API::SIM::PortEndPoint::Put (const HTTP::Request& inRequest, HTTP::Response
         outResponse.mCode = HTTP::Code::OK;
     }
     catch (std::exception& e) {
-        SetErrorMessage (outResponse, HTTP::Code::INTERNAL_SERVER_ERROR, e.what ());
+        API::Utils::SetErrorMessage (outResponse, HTTP::Code::INTERNAL_SERVER_ERROR, e.what ());
     }
 }

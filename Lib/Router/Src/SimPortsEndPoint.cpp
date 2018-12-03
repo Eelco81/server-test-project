@@ -1,5 +1,6 @@
 
 #include "SimPortsEndPoint.h"
+#include "ApiUtils.h"
 
 API::SIM::PortsEndPoint::PortsEndPoint (const std::string& inPath, std::shared_ptr<::SIM::IService> inService) :
     API::SIM::EndPoint (inPath, inService)
@@ -11,7 +12,7 @@ API::SIM::PortsEndPoint::~PortsEndPoint () = default;
 void API::SIM::PortsEndPoint::Get (const HTTP::Request& inRequest, HTTP::Response& outResponse) {
     
     if (!mService->IsLoaded ()) {
-        outResponse.mCode = HTTP::Code::FORBIDDEN;
+        API::Utils::SetErrorMessage (outResponse, HTTP::Code::FORBIDDEN, "No simulation loaded");
         return;
     }
     
@@ -35,6 +36,6 @@ void API::SIM::PortsEndPoint::Get (const HTTP::Request& inRequest, HTTP::Respons
         outResponse.SetBody (j.dump (), "application/json");
     }
     catch (std::exception& e) {
-        SetErrorMessage (outResponse, HTTP::Code::INTERNAL_SERVER_ERROR, e.what ());
+        API::Utils::SetErrorMessage (outResponse, HTTP::Code::INTERNAL_SERVER_ERROR, e.what ());
     }
 }

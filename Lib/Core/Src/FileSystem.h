@@ -49,6 +49,11 @@ public:
      */
     static std::string GetExtension (const std::string& inPath);
 
+    /**
+     * Get basename of a path
+     */
+    static std::string GetBasename (const std::string& inPath);
+
 };
 
 }

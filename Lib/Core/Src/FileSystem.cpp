@@ -80,3 +80,7 @@ bool OS::FileSystem::ListDir (const std::string& inPath, std::vector<std::string
 std::string OS::FileSystem::GetExtension (const std::string& inPath) {
     return filesystem::path (inPath).extension ();
 }
+
+std::string OS::FileSystem::GetBasename (const std::string& inPath) {
+    return filesystem::path (inPath).stem ();
+}

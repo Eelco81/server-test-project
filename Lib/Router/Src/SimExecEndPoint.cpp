@@ -1,6 +1,7 @@
 
 #include "SimExecEndPoint.h"
 #include "FileSystem.h"
+#include "ApiUtils.h"
 
 API::SIM::ExecEndPoint::ExecEndPoint (const std::string& inPath, std::shared_ptr<::SIM::IService> inService, const std::string& inConfigPath) :
     API::SIM::EndPoint (inPath, inService),
@@ -23,7 +24,7 @@ void API::SIM::ExecEndPoint::Get (const HTTP::Request& inRequest, HTTP::Response
 void API::SIM::ExecEndPoint::Put (const HTTP::Request& inRequest, HTTP::Response& outResponse) {
     
     if (mService->IsLoaded () || mService->IsRunning ()) {
-        outResponse.mCode = HTTP::Code::FORBIDDEN;
+        API::Utils::SetErrorMessage (outResponse, HTTP::Code::FORBIDDEN, "Simulation is already running.");
         return;
     }
     
@@ -33,13 +34,13 @@ void API::SIM::ExecEndPoint::Put (const HTTP::Request& inRequest, HTTP::Response
         id = body["id"].get<std::string> ();
     }
     catch (...) {
-        SetErrorMessage (outResponse, HTTP::Code::BAD_REQUEST, "No 'id' in the request body.");
+        API::Utils::SetErrorMessage (outResponse, HTTP::Code::BAD_REQUEST, "No 'id' in the request body.");
         return;
     }
     
     std::vector<uint8_t> data;
     if (!OS::FileSystem::Read (mConfigPath + id + ".json", data)) {
-        SetErrorMessage (outResponse, HTTP::Code::BAD_REQUEST, id + " does not exist.");
+        API::Utils::SetErrorMessage (outResponse, HTTP::Code::BAD_REQUEST, id + " does not exist.");
         return;
     }
     
@@ -49,7 +50,7 @@ void API::SIM::ExecEndPoint::Put (const HTTP::Request& inRequest, HTTP::Response
         config = json::parse (dataStr);
     }
     catch (...) {
-        SetErrorMessage (outResponse, HTTP::Code::INTERNAL_SERVER_ERROR, "Config is not in valid json format.");
+        API::Utils::SetErrorMessage (outResponse, HTTP::Code::INTERNAL_SERVER_ERROR, "Config is not in valid json format.");
         return;
     }
     
@@ -58,7 +59,8 @@ void API::SIM::ExecEndPoint::Put (const HTTP::Request& inRequest, HTTP::Response
         mService->Start ();
     }
     catch (std::exception& e) {
-        SetErrorMessage (outResponse, HTTP::Code::INTERNAL_SERVER_ERROR, e.what ());
+        API::Utils::SetErrorMessage (outResponse, HTTP::Code::INTERNAL_SERVER_ERROR, e.what ());
+        return;
     }
     
     outResponse.mCode = HTTP::Code::ACCEPTED;
@@ -76,6 +78,6 @@ void API::SIM::ExecEndPoint::Delete (const HTTP::Request& inRequest, HTTP::Respo
         mService->Stop ();
     }
     catch (std::exception& e) {
-        SetErrorMessage (outResponse, HTTP::Code::INTERNAL_SERVER_ERROR, e.what ());
+        API::Utils::SetErrorMessage (outResponse, HTTP::Code::INTERNAL_SERVER_ERROR, e.what ());
     }
 }

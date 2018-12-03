@@ -99,3 +99,11 @@ TEST (FileSystemTester, GetExtension) {
     ASSERT_EQ (std::string (".txt1"), OS::FileSystem::GetExtension ("file.txt1"));
     ASSERT_EQ (std::string (".Txt1"), OS::FileSystem::GetExtension ("file.Txt1"));
 }
+
+TEST (FileSystemTester, GetBasename) {
+    
+    ASSERT_EQ (std::string ("file"), OS::FileSystem::GetBasename ("/home/file.txt"));
+    ASSERT_EQ (std::string ("file"), OS::FileSystem::GetBasename ("file.txt"));
+    ASSERT_EQ (std::string ("file"), OS::FileSystem::GetBasename ("./file.txt"));
+    ASSERT_EQ (std::string ("file"), OS::FileSystem::GetBasename ("C://dir/file.txt"));
+}
