@@ -86,6 +86,12 @@ TEST (FileSystemTester, ListDirectory) {
     ASSERT_EQ (std::string ("tmp2.txt"), files[1]);
     ASSERT_EQ (std::string ("tmp3.txt"), files[2]);
     
+    
+    ASSERT_TRUE (OS::FileSystem::ListDir (kTestDir, files, false));
+    ASSERT_EQ (std::string ("tmp1"), files[0]);
+    ASSERT_EQ (std::string ("tmp2"), files[1]);
+    ASSERT_EQ (std::string ("tmp3"), files[2]);
+    
     ASSERT_TRUE (OS::FileSystem::Remove (kTestDir));
     ASSERT_FALSE (OS::FileSystem::Exists (kTestDir));
 }

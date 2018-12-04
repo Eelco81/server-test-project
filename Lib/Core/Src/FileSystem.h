@@ -42,7 +42,7 @@ public:
     /**
      * List contents of a directory
      */
-    static bool ListDir (const std::string& inPath, std::vector<std::string>& outFiles);
+    static bool ListDir (const std::string& inPath, std::vector<std::string>& outFiles, bool inIncludeExtensions = true);
     
     /**
      * Get extension of a path

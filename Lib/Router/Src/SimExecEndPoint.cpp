@@ -1,4 +1,8 @@
 
+#include <iostream>
+#include <json.hpp>
+using json = nlohmann::json;
+
 #include "SimExecEndPoint.h"
 #include "FileSystem.h"
 #include "ApiUtils.h"

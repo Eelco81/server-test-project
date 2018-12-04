@@ -66,13 +66,13 @@ bool OS::FileSystem::CreateDir (const std::string& inPath) {
     return filesystem::create_directory (filesystem::path (inPath)); 
 }
 
-bool OS::FileSystem::ListDir (const std::string& inPath, std::vector<std::string>& outFiles) {
+bool OS::FileSystem::ListDir (const std::string& inPath, std::vector<std::string>& outFiles, bool inIncludeExtensions) {
     if (!Exists (inPath)) {
         return false;
     }
     outFiles.clear ();
     for (const auto& p : filesystem::directory_iterator (inPath)) {
-        outFiles.push_back (p.path().filename().string ());
+        outFiles.push_back (inIncludeExtensions ? p.path ().filename ().string () : p.path ().stem ().string ());
     }
     return true;
 }

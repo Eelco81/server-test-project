@@ -1,4 +1,7 @@
 
+#include <json.hpp>
+using json = nlohmann::json;
+
 #include <iostream>
 #include "SimPortEndPoint.h"
 #include "SimPath.h"
@@ -50,18 +53,19 @@ void API::SIM::PortEndPoint::Put (const HTTP::Request& inRequest, HTTP::Response
         return;
     }
     
-    json config;
+    double doubleValue;
     try {
-        config = json::parse (inRequest.mBody);
+        json config = json::parse (inRequest.mBody);
+        doubleValue = config["value"].get<double> ();
     }
     catch (...) {
-        API::Utils::SetErrorMessage (outResponse, HTTP::Code::BAD_REQUEST, "Request is not valid json");
+        API::Utils::SetErrorMessage (outResponse, HTTP::Code::BAD_REQUEST, "Request is not valid json or did not contain 'value' element");
         return;
     }
     
     ::SIM::Value value;
     try {
-       value = ::SIM::Value (::SIM::Path (GetParameterList()[1]), config["value"].get<double>());
+       value = ::SIM::Value (::SIM::Path (GetParameterList()[1]), doubleValue);
     }
     catch (std::exception& e) {
         API::Utils::SetErrorMessage (outResponse, HTTP::Code::BAD_REQUEST, e.what ());

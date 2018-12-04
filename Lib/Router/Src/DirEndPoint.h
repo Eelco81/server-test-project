@@ -38,7 +38,4 @@ private:
 
 }
 
-
-
-
 #endif // _DIRENDPOINT_H_
