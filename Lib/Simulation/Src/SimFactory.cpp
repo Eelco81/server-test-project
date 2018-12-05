@@ -8,10 +8,13 @@ namespace {
     const std::string stepTag ("step");
     const std::string blocksTag ("blocks");
     const std::string connectorsTag ("connectors");
+    const std::string initializersTag ("initializers");
     const std::string sampleTag ("sample"); 
     const std::string settingsTag ("settings");
     const std::string nameTag ("name");
     const std::string typeTag ("type");
+    const std::string portTag ("port");
+    const std::string valueTag ("value");
     const std::string sourceTag ("source");
     const std::string targetTag ("target");
 }
@@ -67,6 +70,24 @@ std::unique_ptr<SIM::Loop> SIM::Factory::Create (const json& inConfig) {
             const auto target (config[targetTag].get<std::string> ());
             
             loop->Connect (source, target);
+        }
+    }
+    
+    if (inConfig.find (initializersTag) != inConfig.end () && !inConfig[initializersTag].empty ()) {
+        
+        for (auto& config : inConfig[initializersTag]) {
+            
+            if (config.find (portTag) == config.end () || !config[portTag].is_string ()) {
+                throw Exception ("Initializer without \"port\" element in config");
+            }
+            const auto port (config[portTag].get<std::string> ());
+            
+            if (config.find (valueTag) == config.end () || !config[valueTag].is_number ()) {
+                throw Exception ("Initializer without \"value\" element in config");
+            }
+            const auto value (config[valueTag].get<double> ());
+            
+            loop->SetInitializer (port, value);
         }
     }
     

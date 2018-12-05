@@ -7,5 +7,9 @@
     "sample" : [
         "Source1.out.value", 
         "Source2.out.value"
+    ],
+    "initializers" : [
+        { "port": "Source1.par.type", "value": 3 }, 
+        { "port": "Source1.par.frequency", "value": 1 }
     ]
 }

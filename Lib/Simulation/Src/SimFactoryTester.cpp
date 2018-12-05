@@ -106,7 +106,37 @@ INSTANTIATE_TEST_CASE_P (SimFactoryTester, SimFactoryTester,
             "sample" : [
                 "I do not exist"
             ]
-        })", std::string ("Cannot sample <I do not exist>: Illegal path <I do not exist>"))
+        })", std::string ("Cannot sample <I do not exist>: Illegal path <I do not exist>")),
+        std::make_tuple (R"({
+            "step": 10,
+            "blocks" : [{
+                "name" : "MyName",
+                "type" : "MyType"
+            }],
+            "initializers" : [
+                {}
+            ]
+        })", std::string ("Initializer without \"port\" element in config")),
+        std::make_tuple (R"({
+            "step": 10,
+            "blocks" : [{
+                "name" : "MyName",
+                "type" : "MyType"
+            }],
+            "initializers" : [
+                { "port" : "someport" }
+            ]
+        })", std::string ("Initializer without \"value\" element in config")),
+        std::make_tuple (R"({
+            "step": 10,
+            "blocks" : [{
+                "name" : "MyName",
+                "type" : "MyType"
+            }],
+            "initializers" : [
+                { "port" : "I do not exist", "value": 1 }
+            ]
+        })", std::string ("Cannot initialize <I do not exist>: Illegal path <I do not exist>"))
     )
 );
 

@@ -3,6 +3,7 @@
 #include "SimLoop.h"
 #include "SimBlock.h"
 #include "SimConnector.h"
+#include "SimInitializer.h"
 #include "SimException.h"
 #include "SimPath.h"
 
@@ -63,6 +64,18 @@ void SIM::Loop::Connect (const std::string& inSource, const std::string& inTarge
     }
 }
 
+void SIM::Loop::SetInitializer (const std::string& inPath, double inValue) {
+    
+    try {
+        auto port (FindPort (Path (inPath)));
+        auto initializer = std::make_unique<Initializer> (port, inValue);
+        mInitializers.emplace_back (std::move (initializer));
+    }
+    catch (Exception& e) {
+        throw Exception (std:: string ("Cannot initialize <") + inPath + std::string (">: ") + e.what ());
+    }
+}
+
 void SIM::Loop::AddSample (const std::string& inSource) {
     
     try {
@@ -81,6 +94,9 @@ void SIM::Loop::Initialize () {
     // \todo: this causes massive delays, blocks and connectors need to be 
     // executed chronologically.
     
+    for (auto& initializer : mInitializers) {
+        initializer->Apply ();
+    }
     for (auto& block : mBlocks) {
         block->Initialize (mTimer.GetTime ());
     }

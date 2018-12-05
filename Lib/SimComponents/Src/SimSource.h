@@ -22,6 +22,7 @@ private:
     double mPhase;
     double mFrequency;
     double mOffset;
+    uint8_t mType;
 
 };
 

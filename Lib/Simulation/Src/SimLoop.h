@@ -16,6 +16,7 @@ namespace SIM {
 class Port;
 class Block;
 class Connector;
+class Initializer;
 
 class Loop {
 
@@ -39,6 +40,11 @@ public:
      * Connect an output path to an input path inside the loop
      */
     void Connect (const std::string& inSource, const std::string& inTarget);
+    
+    /**
+     * Connect an output path to an input path inside the loop
+     */
+    void SetInitializer (const std::string& inPort, double inValue);
     
     /**
      * Add to sampler
@@ -106,6 +112,7 @@ private:
     Sampler mSampler;
     std::vector<std::unique_ptr<Block>> mBlocks;
     std::vector<std::unique_ptr<Connector>> mConnectors;
+    std::vector<std::unique_ptr<Initializer>> mInitializers;
     
 };
 

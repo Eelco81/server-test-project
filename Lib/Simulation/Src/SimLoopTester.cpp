@@ -106,6 +106,31 @@ TEST (SimLoopTester, NonExistingTargetBlocks) {
     }
 }
 
+TEST (SimLoopTester, IllegalInitializerPaths) {
+    
+    try {
+        SIM::Loop loop (100u);
+        loop.SetInitializer ("Blah.Blah.Blah.Blah", 0.0);
+        ASSERT_FALSE (true);
+    }
+    catch (std::exception& e) {
+        ASSERT_EQ (std::string ("Cannot initialize <Blah.Blah.Blah.Blah>: Illegal path <Blah.Blah.Blah.Blah>"), e.what ());
+    }
+}
+
+TEST (SimLoopTester, NonExistingInitializers) {
+    
+    try {
+        SIM::Loop loop (100u);
+        loop.AddBlock (std::make_unique<TestBlock> ("Block"));
+        loop.SetInitializer ("IDoNotExist.in.input", 1.0);
+        ASSERT_FALSE (true);
+    }
+    catch (std::exception& e) {
+        ASSERT_EQ (std::string ("Cannot initialize <IDoNotExist.in.input>: Non-existing block <IDoNotExist>"), e.what ());
+    }
+}
+
 TEST (SimLoopTester, RunSuccesfulConfig) {
     
     const std::vector<std::string> names = {
@@ -128,6 +153,8 @@ TEST (SimLoopTester, RunSuccesfulConfig) {
         
         loop.AddBlock (std::move (block));
     }
+    
+    loop.SetInitializer ("block1.in.input", 1.0);
     
     loop.Connect ("block1.out.output", "block2.in.input");
     loop.Connect ("block2.out.output", "block3.in.input");
