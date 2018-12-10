@@ -1,15 +1,29 @@
 { 
-    "step": 50, 
+    "step": 100, 
     "blocks" : [
-        { "name" : "Source1", "type": "source"},
-        { "name" : "Source2", "type": "source"}
+        { "name" : "source", "type": "source" },
+        { "name" : "oscillator", "type": "oscillator" },
+        { "name" : "pid", "type": "pid" }
     ],
     "sample" : [
-        "Source1.out.value", 
-        "Source2.out.value"
+        "oscillator.in.force", 
+        "oscillator.out.position", 
+        "oscillator.out.velocity", 
+        "oscillator.out.acceleration"
+    ],
+    "connectors" : [
+        { "source": "source.out.value", "target" : "oscillator.in.force" },
+        { "source": "oscillator.out.position", "target" : "pid.in.input" },
+        { "source": "pid.out.output", "target" : "oscillator.in.control" }
     ],
     "initializers" : [
-        { "port": "Source1.par.type", "value": 3 }, 
-        { "port": "Source1.par.frequency", "value": 1 }
+        { "port": "source.par.type", "value": 3 }, 
+        { "port": "source.par.frequency", "value": 0.2 },
+        { "port": "oscillator.par.mass", "value": 1 }, 
+        { "port": "oscillator.par.damping", "value": 0.6 },
+        { "port": "oscillator.par.friction", "value": 1 },
+        { "port": "pid.par.kp", "value": 1.0 },
+        { "port": "pid.par.ki", "value": 0.8 },
+        { "port": "pid.par.kd", "value": 2.0 }
     ]
 }

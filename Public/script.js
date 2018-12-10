@@ -19,7 +19,7 @@ $(document).ready(function(){
     ws.onmessage = function (evt) { 
         const data = JSON.parse (evt.data)
         chartData.addRow(data.values);
-        if (chartData.getNumberOfRows() > 100) {
+        if (chartData.getNumberOfRows() > 200) {
             chartData.removeRow(0);
         }
         chart.draw(chartData, options);
@@ -34,8 +34,10 @@ $(document).ready(function(){
     var onGoogleChartLoaded = function (){
         chartData = new google.visualization.DataTable();
         chartData.addColumn('number', 'Time');
-        chartData.addColumn('number', 'Signal');
-        chartData.addColumn('number', 'Signal2');
+        chartData.addColumn('number', 'Force');
+        chartData.addColumn('number', 'Position');
+        chartData.addColumn('number', 'Velocity');
+        chartData.addColumn('number', 'Acceleration');
         chartData.addRows([]);
         chart = new google.visualization.LineChart(document.getElementById('chart_div'));
         chart.draw(chartData, options);

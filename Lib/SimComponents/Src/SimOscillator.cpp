@@ -7,11 +7,13 @@ using namespace SIM::COM;
 Oscillator::Oscillator (const std::string& inName) :
     SIM::Block (inName),
     mForce (0.0),
+    mControl (0.0),
     mMass (1.0),
     mDamping (1.0),
     mFriction (1.0)
 {
     AddInPort (&mForce, "force");
+    AddInPort (&mControl, "control");
     AddOutPort (&mSystem.OutputRef()(0), "position");
     AddOutPort (&mSystem.OutputRef()(1), "velocity");
     AddOutPort (&mSystem.OutputRef()(2), "acceleration");
@@ -48,7 +50,7 @@ void Oscillator::Initialize (double inTime) {
 }
 
 void Oscillator::Step (double inTime) {
-    mSystem.Update (mForce);
+    mSystem.Update (mForce + mControl);
 }
 
 void Oscillator::Terminate (double inTime) {

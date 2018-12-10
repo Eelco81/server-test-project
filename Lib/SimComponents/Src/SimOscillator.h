@@ -19,6 +19,7 @@ public:
     
 private:
     double mForce;
+    double mControl;
     double mVelocity;
     double mPosition;
     double mMass;
