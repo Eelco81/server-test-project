@@ -2,6 +2,9 @@
 #include <iostream>
 #include <algorithm>
 
+#include <json.hpp>
+using json = nlohmann::json;
+
 #include "SimPort.h"
 #include "SimSampler.h"
 #include "SimException.h"
@@ -27,7 +30,9 @@ void SIM::Sampler::Write (const uint64_t& inTimeStamp) {
     if (!mPorts.empty ()) {
         mOutputs[0] =  static_cast<double> (inTimeStamp);
         std::transform (mPorts.begin (), mPorts.end (), mOutputs.begin () + 1u, sampleFunction);
-        Done (mOutputs);
+        
+        Event event ("sampler");
+        event.mData = mOutputs;
+        Done (event);
     }
-    
 }

@@ -11,8 +11,10 @@
 #include <regex>
 
 SIM::Loop::Loop (uint64_t inTimeStep) : 
+    OS::ForwardStream<SIM::Event> (),
     mTimer (inTimeStep)
 {
+    mSampler.Pipe (*this);
 }
 
 SIM::Loop::~Loop () {

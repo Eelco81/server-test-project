@@ -7,12 +7,13 @@
 #include <memory>
 
 #include "MessageStream.h"
+#include "SimEvent.h"
 
 namespace SIM {
 
 class Port;
 
-class Sampler : public OS::MessageStream<uint64_t,std::vector<double>> {
+class Sampler : public OS::MessageStream<uint64_t,Event> {
 
 public:
     /**

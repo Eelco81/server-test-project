@@ -1,7 +1,7 @@
 
 $(document).ready(function(){
     
-    var options = {
+    const options = {
         title: 'Simulation stream',
         hAxis: {
             title: 'Time'
@@ -11,27 +11,29 @@ $(document).ready(function(){
         },
         backgroundColor: '#f1f8e9'
     };
-    var chartData;
-    var chart;
-    var ws = new WebSocket("ws://localhost:1704");
+    let chartData;
+    let chart;
+    const ws = new WebSocket("ws://localhost:1704");
     //var ws = new WebSocket("ws://192.168.1.100:1704");
     
     ws.onmessage = function (evt) { 
         const data = JSON.parse (evt.data)
-        chartData.addRow(data.values);
-        if (chartData.getNumberOfRows() > 200) {
-            chartData.removeRow(0);
+        if (data["event-id"] === "sampler") {
+            chartData.addRow(data["event-data"]);
+            if (chartData.getNumberOfRows() > 200) {
+                chartData.removeRow(0);
+            }
+            chart.draw(chartData, options);
         }
-        chart.draw(chartData, options);
     }
     
-    var updateVersion = function() {
+    const updateVersion = function() {
         $.get("api/version", function(data, status){
             $("#version_text").text(data.application + " " + data.version);
         });
     }
     
-    var onGoogleChartLoaded = function (){
+    const onGoogleChartLoaded = function (){
         chartData = new google.visualization.DataTable();
         chartData.addColumn('number', 'Time');
         chartData.addColumn('number', 'Force');

@@ -6,10 +6,12 @@
 #include <vector>
 #include <string>
 
+#include "MessageStream.h"
 #include "SimValue.h"
 #include "SimPath.h"
 #include "SimTimer.h"
 #include "SimSampler.h"
+#include "SimEvent.h"
 
 namespace SIM {
 
@@ -18,7 +20,7 @@ class Block;
 class Connector;
 class Initializer;
 
-class Loop {
+class Loop : public OS::ForwardStream<Event> {
 
 public:
     /**
@@ -95,11 +97,6 @@ public:
      * Get the loops time step
      */
     uint64_t GetTimeStep () const;
-
-    /**
-     * Get the sampler stream
-     */
-    inline Sampler& GetSampler () { return mSampler; }
     
 private:
     /**

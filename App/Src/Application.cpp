@@ -39,7 +39,7 @@ void Application::Run (const OS::CommandLine& inCommandLine) {
     RFC6455::Server websockServer (ip, websockport);
     websockServer.Start ();
 
-    service->GetSampleStream ().Pipe (&websockServer, &RFC6455::Server::BroadCast);
+    service->GetStream ().Pipe (&websockServer, &RFC6455::Server::BroadCast);
     
     std::string name;
     LOGMESSAGE (OS::Log::kInfo, "Quit the app using ENTER on the command line.");

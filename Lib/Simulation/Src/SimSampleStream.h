@@ -7,26 +7,27 @@
 #include <memory>
 
 #include "MessageStream.h"
+#include "SimEvent.h"
 
 namespace SIM {
 
-class SampleStream : public OS::MessageStream<std::vector<double>, std::string> {
+class EventStream : public OS::MessageStream<Event, std::string> {
 
 public:
     /**
      * Constructor
      */
-    SampleStream ();
+    EventStream ();
     
     /**
      * Virtual destructor
      */
-    virtual ~SampleStream ();
+    virtual ~EventStream ();
     
     /**
      * Forward the sample data
      */
-    void Write (const std::vector<double>& inList) override;
+    void Write (const Event& inEvent) override;
     
 };
 

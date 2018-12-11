@@ -25,7 +25,7 @@ void SIM::Service::Load (const json& inConfig) {
     OS::SingleLock lock (mMutex);
     try {
         mLoop = mFactory->Create (inConfig);
-        mLoop->GetSampler ().Pipe (mSampleStream);
+        mLoop->Pipe (mStream);
     }
     catch (Exception& e) {
         mLoop.reset (nullptr);

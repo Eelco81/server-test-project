@@ -18,9 +18,9 @@ public:
         AddOutPort<bool> ("output");
     }
     MOCK_METHOD0 (Configure, void ());
-    MOCK_METHOD1 (Initialize, void (double));
-    MOCK_METHOD1 (Step, void (double));
-    MOCK_METHOD1 (Terminate, void (double));
+    MOCK_METHOD2 (Initialize, void (double, double));
+    MOCK_METHOD2 (Step, void (double, double));
+    MOCK_METHOD2 (Terminate, void (double, double));
 };
 
 }
@@ -146,10 +146,10 @@ TEST (SimLoopTester, RunSuccesfulConfig) {
         
         auto block = std::make_unique<TestBlock> (name);
         
-        EXPECT_CALL (*block, Initialize (0.0)).Times (1);
-        EXPECT_CALL (*block, Step (0.1)).Times (1);
-        EXPECT_CALL (*block, Step (0.2)).Times (1);
-        EXPECT_CALL (*block, Terminate (0.2)).Times (1);
+        EXPECT_CALL (*block, Initialize (0.0, 0.1)).Times (1);
+        EXPECT_CALL (*block, Step (0.1, 0.1)).Times (1);
+        EXPECT_CALL (*block, Step (0.2, 0.1)).Times (1);
+        EXPECT_CALL (*block, Terminate (0.2, 0.1)).Times (1);
         
         loop.AddBlock (std::move (block));
     }

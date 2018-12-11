@@ -106,14 +106,14 @@ public:
     /**
      * Get sample stream
      */
-    inline SampleStream& GetSampleStream () { return mSampleStream; }
+    inline EventStream& GetStream () { return mStream; }
     
 private:
     std::unique_ptr<Factory> mFactory;
     std::unique_ptr<APP::PeriodicThread> mRunner;
     std::unique_ptr<Loop> mLoop;
     OS::Mutex mMutex;
-    SampleStream mSampleStream;
+    EventStream mStream;
 };
 
 } // end namespace SIM

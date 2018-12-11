@@ -16,9 +16,9 @@ public:
         AddInPort<uint8_t> ("input");
     }
     MOCK_METHOD1 (Configure, void (const json&));
-    MOCK_METHOD1 (Initialize, void (double));
-    MOCK_METHOD1 (Step, void (double));
-    MOCK_METHOD1 (Terminate, void (double));
+    MOCK_METHOD2 (Initialize, void (double, double));
+    MOCK_METHOD2 (Step, void (double, double));
+    MOCK_METHOD2 (Terminate, void (double, double));
 };
 
 class TestFactory : public SIM::Factory {
@@ -26,10 +26,10 @@ protected :
     std::unique_ptr<SIM::Block> CreateBlock (const std::string& inName, const std::string& inType) override {
         auto block = std::make_unique<TestBlock> (inName);
         EXPECT_CALL (*block, Configure (::testing::_)).Times (1);
-        EXPECT_CALL (*block, Initialize (0.0)).Times (1);
-        EXPECT_CALL (*block, Step (0.1)).Times (1);
-        EXPECT_CALL (*block, Step (0.2)).Times (1);
-        EXPECT_CALL (*block, Terminate (0.2)).Times (1);
+        EXPECT_CALL (*block, Initialize (0.0, 0.1)).Times (1);
+        EXPECT_CALL (*block, Step (0.1, 0.1)).Times (1);
+        EXPECT_CALL (*block, Step (0.2, 0.1)).Times (1);
+        EXPECT_CALL (*block, Terminate (0.2, 0.1)).Times (1);
         return block;
     }
 };
@@ -63,7 +63,7 @@ TEST (SimServiceTester, Run) {
     
     OS::Timing::Sleep (150u);
     
-    EXPECT_EQ (0.0, service.GetValue (SIM::Path("MyName", "input", SIM::Path::INPUT)).mValue);
+    EXPECT_EQ (0.0, service.GetValue (SIM::Path ("MyName", "input", SIM::Path::INPUT)).mValue);
     
     const auto paths = service.GetPaths ();
     ASSERT_EQ (std::string ("MyName.in.input"), paths[0].ToString ());

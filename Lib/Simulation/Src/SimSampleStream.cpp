@@ -1,17 +1,9 @@
 
 #include "SimSampleStream.h"
 
-#include <json.hpp>
-using json = nlohmann::json;
+SIM::EventStream::EventStream () = default;
+SIM::EventStream::~EventStream () = default;
 
-SIM::SampleStream::SampleStream () = default;
-SIM::SampleStream::~SampleStream () = default;
-
-void SIM::SampleStream::Write (const std::vector<double>& inList) {
-    
-    json j;
-    j["values"] = inList;
-    
-    Done (j.dump ());
-    
+void SIM::EventStream::Write (const SIM::Event& inEvent) {
+    Done (inEvent.ToString ());
 }
