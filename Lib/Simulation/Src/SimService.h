@@ -5,13 +5,12 @@
 #include <atomic>
 #include <memory>
 
-#include "MessageStream.h"
 #include "Macros.h"
 #include "Mutex.h"
 
 #include "SimValue.h"
 #include "SimPath.h"
-#include "SimSampleStream.h"
+#include "SimEventStream.h"
 
 #include <json.hpp>
 using json = nlohmann::json;

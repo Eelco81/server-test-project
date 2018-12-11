@@ -1,6 +1,6 @@
 
-#ifndef _SIM_SAMPLESTREAM_H_
-#define _SIM_SAMPLESTREAM_H_
+#ifndef _SIM_EVENTSTREAM_H_
+#define _SIM_EVENTSTREAM_H_
 
 #include <cstdint>
 #include <vector>
@@ -33,4 +33,4 @@ public:
 
 }
 
-#endif // _SIM_SAMPLESTREAM_H_
+#endif // _SIM_EVENTSTREAM_H_

@@ -1,5 +1,5 @@
 
-#include "SimSampleStream.h"
+#include "SimEventStream.h"
 
 SIM::EventStream::EventStream () = default;
 SIM::EventStream::~EventStream () = default;
