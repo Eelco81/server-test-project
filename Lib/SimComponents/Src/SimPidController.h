@@ -12,12 +12,11 @@ public:
     PIDController (const std::string& inName);
     ~PIDController ();
     
-    void Initialize (double inTime) override;
-    void Step (double inTime) override;
-    void Terminate (double inTime) override;
+    void Initialize (double inTime, double inTimeStep) override;
+    void Step (double inTime, double inTimeStep) override;
+    void Terminate (double inTime, double inTimeStep) override;
     
 private:
-
     double mInput;
     double mSetpoint;
     double mOutput;
@@ -26,6 +25,7 @@ private:
     double mKp;
     double mKi;
     double mKd;
+    bool mEnable;
 };
 
 }}

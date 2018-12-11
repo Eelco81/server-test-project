@@ -98,7 +98,7 @@ void SIM::Loop::Initialize () {
         initializer->Apply ();
     }
     for (auto& block : mBlocks) {
-        block->Initialize (mTimer.GetTime ());
+        block->Initialize (mTimer.GetTime (), mTimer.GetTimeStepValue ());
     }
     for (auto& connector : mConnectors) {
         connector->Transfer ();
@@ -114,7 +114,7 @@ void SIM::Loop::Update () {
     // executed chronologically.
     
     for (auto& block : mBlocks) {
-        block->Step (mTimer.GetTime ());
+        block->Step (mTimer.GetTime (), mTimer.GetTimeStepValue ());
     }
     for (auto& connector : mConnectors) {
         connector->Transfer ();
@@ -125,7 +125,7 @@ void SIM::Loop::Update () {
 void SIM::Loop::Terminate () {
     
     for (auto& block : mBlocks) {
-        block->Terminate (mTimer.GetTime ());
+        block->Terminate (mTimer.GetTime (), mTimer.GetTimeStepValue ());
     }
     mSampler.Write (mTimer.GetTimeStamp ());
 }

@@ -19,6 +19,10 @@ double SIM::Timer::GetTime () const {
     return static_cast<double> (mTime) / 1000.0;
 }
 
+double SIM::Timer::GetTimeStepValue () const {
+    return static_cast<double> (mTimeStep) / 1000.0;
+}
+
 uint64_t SIM::Timer::GetTimeStamp () const {
     return mTime;
 }

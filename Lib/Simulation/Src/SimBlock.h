@@ -35,19 +35,18 @@ public:
     /**
      * Empty initialize function, to be overloaded
      */
-    virtual void Initialize (double inTime) {}
+    virtual void Initialize (double inTime, double inTimeStep) {}
     
     /**
      * Empty step function, to be overloaded
      */
-    virtual void Step (double inTime) {}
+    virtual void Step (double inTime, double inTimeStep) {}
     
     /**
      * Empty terminate function, to be overloaded
      */
-    virtual void Terminate (double inTime) {}
+    virtual void Terminate (double inTime, double inTimeStep) {}
 
-public:
     /**
      * Get block name
      */
@@ -102,7 +101,6 @@ protected:
     
     //todo: rather use ID instead of name
     std::string mName;
-
 };
 
 }

@@ -26,11 +26,11 @@ Source::Source (const std::string& inName) :
 
 Source::~Source () = default;
 
-void Source::Initialize (double inTime) {
-    Step (inTime);
+void Source::Initialize (double inTime, double inTimeStep) {
+    Step (inTime, inTimeStep);
 }
 
-void Source::Step (double inTime) {
+void Source::Step (double inTime, double inTimeStep) {
     switch (mType) {
         case 0u:
             mOutput = mOffset; break;
@@ -45,6 +45,6 @@ void Source::Step (double inTime) {
     }
 }
 
-void Source::Terminate (double inTime) {
-    Step (inTime);
+void Source::Terminate (double inTime, double inTimeStep) {
+    Step (inTime, inTimeStep);
 }

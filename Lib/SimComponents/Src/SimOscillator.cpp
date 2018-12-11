@@ -24,7 +24,7 @@ Oscillator::Oscillator (const std::string& inName) :
 
 Oscillator::~Oscillator () = default;
 
-void Oscillator::Initialize (double inTime) {
+void Oscillator::Initialize (double inTime, double inTimeStep) {
     
     MATH::Matrix<2,2> A (0.0);
     MATH::Matrix<2,1> B (0.0);
@@ -45,14 +45,13 @@ void Oscillator::Initialize (double inTime) {
     C(2,1) = -mDamping / mMass;
     D(2,0) = 1.0 / mMass; 
     
-    mSystem.Reset (A, B, C, D, 0.1);
-    
+    mSystem.Reset (A, B, C, D, inTimeStep);
 }
 
-void Oscillator::Step (double inTime) {
+void Oscillator::Step (double inTime, double inTimeStep) {
     mSystem.Update (mForce + mControl);
 }
 
-void Oscillator::Terminate (double inTime) {
-    Step (inTime);
+void Oscillator::Terminate (double inTime, double inTimeStep) {
+    Step (inTime, inTimeStep);
 }

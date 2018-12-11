@@ -34,6 +34,11 @@ public:
     double GetTime () const;
 
     /**
+     * Get the current time step as double in seconds
+     */
+     double GetTimeStepValue() const;
+     
+    /**
      * Get the current time as tick in milliseconds.
      */
     uint64_t GetTimeStamp () const;
