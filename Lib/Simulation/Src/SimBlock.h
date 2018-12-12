@@ -9,6 +9,9 @@
 #include <json.hpp>
 using json = nlohmann::json;
 
+#include "MathMatrix.h"
+#include "MathVector.h"
+
 #include "SimTypedPort.h"
 #include "SimPath.h"
 
@@ -64,6 +67,16 @@ public:
     
 protected:
     
+    template<std::size_t Nrows, std::size_t Ncols, typename T>
+    void AddInPort (MATH::Matrix<Nrows,Ncols,T>& inMatrix, const std::string& inName) {
+        for (std::size_t i (0u); i < Nrows; i++) {
+            for (std::size_t j (0u); j < Ncols; j++) {
+                const std::string name (inName + "[" + std::to_string(i) + "][" + std::to_string (j) + "]");
+                mInputs.emplace_back (std::make_shared<TypedPort<T>> (name, inMatrix.GetValuePtr (i,j)));
+            }
+        }
+    }
+    
     template<typename T>
     void AddInPort (T* inValuePtr, const std::string& inName) {
         mInputs.emplace_back (std::make_shared<TypedPort<T>> (inName, inValuePtr));
@@ -74,6 +87,16 @@ protected:
         mInputs.emplace_back (std::make_shared<TypedPort<T>> (inName));
     }
     
+    template<std::size_t Nrows, std::size_t Ncols, typename T>
+    void AddOutPort (MATH::Matrix<Nrows,Ncols,T>& inMatrix, const std::string& inName) {
+        for (std::size_t i (0u); i < Nrows; i++) {
+            for (std::size_t j (0u); j < Ncols; j++) {
+                const std::string name (inName + "[" + std::to_string(i) + "][" + std::to_string (j) + "]");
+                mOutputs.emplace_back (std::make_shared<TypedPort<T>> (name, inMatrix.GetValuePtr (i,j)));
+            }
+        }
+    }
+    
     template<typename T>
     void AddOutPort (T* inValuePtr, const std::string& inName) {
         mOutputs.emplace_back (std::make_shared<TypedPort<T>> (inName, inValuePtr));
@@ -82,6 +105,16 @@ protected:
     template<typename T>
     void AddOutPort (const std::string& inName) {
         mOutputs.emplace_back (std::make_shared<TypedPort<T>> (inName));
+    }
+    
+    template<std::size_t Nrows, std::size_t Ncols, typename T>
+    void AddParPort (MATH::Matrix<Nrows,Ncols,T>& inMatrix, const std::string& inName) {
+        for (std::size_t i (0u); i < Nrows; i++) {
+            for (std::size_t j (0u); j < Ncols; j++) {
+                const std::string name (inName + "[" + std::to_string(i) + "][" + std::to_string (j) + "]");
+                mParameters.emplace_back (std::make_shared<TypedPort<T>> (name, inMatrix.GetValuePtr (i,j)));
+            }
+        }
     }
     
     template<typename T>

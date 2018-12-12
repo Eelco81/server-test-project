@@ -17,7 +17,7 @@ struct Event {
     Event (const std::string& inId);
     
     /**
-     * Constructor
+     * Typed constructor
      */
     template <typename T>
     Event (const std::string& inId, const T& inData) :

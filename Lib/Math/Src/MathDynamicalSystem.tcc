@@ -1,13 +1,7 @@
 
 template<std::size_t N, std::size_t M, std::size_t K, typename T>
 MATH::DynSys<N,M,K,T>::DynSys () :
-    mA ((T)0),
-    mB ((T)0),
-    mC ((T)0),
-    mD ((T)0),
-    mX ((T)0),
-    mY ((T)0),
-    mDT ((T)0)
+    MATH::DynSys<N,M,K,T>::DynSys ((T)0, (T)0, (T)0, (T)0, (T)0, (T)0)
 {
 }
 
@@ -42,6 +36,3 @@ void MATH::DynSys<N,M,K,T>::Update (const MATH::Vector<M,T>& inU) {
     mX = mX + ( mA * mX + mB * inU ) * mDT;
     mY = mC * mX + mD * inU;
 }
-
-
-

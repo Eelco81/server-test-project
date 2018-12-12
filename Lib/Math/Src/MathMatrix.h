@@ -10,25 +10,49 @@ template <std::size_t Nrows, std::size_t Ncols, typename T = double>
 class Matrix {
 
 public:
+    /**
+     * Constructors.
+     */
     Matrix ();
     Matrix (T inValue);
     Matrix (const Matrix& inMatrix);
+    
+    /**
+     * Destructor.
+     */
     virtual ~Matrix ();
 
-public:
+    /**
+     * Access operators.
+     */
     T operator() (std::size_t inRow, std::size_t inCol = 0u) const;
     T& operator() (std::size_t inRow, std::size_t inCol = 0u);
+    T* GetValuePtr (std::size_t inRow, std::size_t inCol = 0u);
     
+    /**
+     * Assignment operators.
+     */
     Matrix& operator= (const Matrix& inMatrix);
     Matrix& operator= (T inValue);
+    
+    /**
+     * Arithmic operators.
+     */
     Matrix operator+ (const Matrix& inMatrix) const;
     Matrix operator+ (T inValue) const;
     Matrix operator- (const Matrix& inMatrix) const;
     Matrix operator- (T inValue) const;
     Matrix operator* (T inValue) const;
     Matrix operator/ (T inValue) const;
+    
+    /**
+     * Transpose.
+     */
     Matrix<Ncols,Nrows,T> operator~ () const;
     
+    /**
+     * Equality check operators.
+     */
     bool operator== (const Matrix& inMatrix) const;
     bool operator== (T inValue) const;
     

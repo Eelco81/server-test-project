@@ -33,6 +33,11 @@ T& MATH::Matrix<Nrows,Ncols,T>::operator() (std::size_t inRow, std::size_t inCol
 }
 
 template<std::size_t Nrows, std::size_t Ncols, typename T>
+T* MATH::Matrix<Nrows,Ncols,T>::GetValuePtr (std::size_t inRow, std::size_t inCol) {
+    return mData.data () + inRow + inCol * Nrows;
+}
+
+template<std::size_t Nrows, std::size_t Ncols, typename T>
 MATH::Matrix<Nrows,Ncols,T>& MATH::Matrix<Nrows,Ncols,T>::operator= (const MATH::Matrix<Nrows,Ncols,T>& inMatrix) {
     std::copy (inMatrix.mData.begin (), inMatrix.mData.end (), mData.begin ()); 
     return *this;
