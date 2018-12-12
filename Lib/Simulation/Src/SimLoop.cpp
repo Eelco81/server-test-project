@@ -161,6 +161,7 @@ void SIM::Loop::SetValue (const SIM::Value& inValue) {
 }
 
 std::vector<SIM::Path> SIM::Loop::GetPaths () const {
+    
     std::vector<SIM::Path> result;
     for (const auto& block : mBlocks) {
         const auto paths (block->GetAllPorts ());

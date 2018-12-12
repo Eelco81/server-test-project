@@ -17,6 +17,16 @@ struct Event {
     Event (const std::string& inId);
     
     /**
+     * Constructor
+     */
+    template <typename T>
+    Event (const std::string& inId, const T& inData) :
+        SIM::Event (inId)
+    {
+        mData = inData;
+    }
+    
+    /**
      * Destructor
      */
     virtual ~Event ();

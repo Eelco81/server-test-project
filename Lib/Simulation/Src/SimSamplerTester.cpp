@@ -16,7 +16,7 @@ TEST (SimSamplerTester, Sampling) {
     
     sampler.Write (0xFE);
     
-    ASSERT_EQ ("{\"event-data\":[254.0,255.0],\"event-id\":\"sampler\"}", samples);
+    ASSERT_EQ ("{\"event-data\":[254.0,255.0],\"event-id\":\"sim-sampler\"}", samples);
 }
 
 

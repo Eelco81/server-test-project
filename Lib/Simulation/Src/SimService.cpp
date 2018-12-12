@@ -5,6 +5,7 @@
 #include "SimLoop.h"
 #include "SimFactory.h"
 #include "SimService.h"
+#include "SimEvent.h"
 #include "SimException.h"
 
 SIM::Service::Service (std::unique_ptr<Factory> inFactory) :
@@ -33,6 +34,7 @@ void SIM::Service::Load (const json& inConfig) {
         throw e;
     }
     
+    mStream.Write (Event ("sim-loaded"));
     LOGMESSAGE (OS::Log::kInfo, "Loaded simulation...");
 }
 
@@ -51,6 +53,8 @@ void SIM::Service::Start () {
     mRunner = std::make_unique<APP::TriggerThread<Service>> ("SimulationRunner", mLoop->GetTimeStep (), this, &Service::Trigger);
     mLoop->Initialize ();
     mRunner->Spawn ();
+    
+    mStream.Write (Event ("sim-started"));
 }
 
 void SIM::Service::Stop () {
@@ -67,6 +71,8 @@ void SIM::Service::Stop () {
     OS::SingleLock lock (mMutex);
     mRunner.reset (nullptr);
     mLoop.reset (nullptr);
+    
+    mStream.Write (Event ("sim-stopped"));
 }
 
 std::vector<SIM::Value> SIM::Service::GetValues () {

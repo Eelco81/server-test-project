@@ -17,8 +17,12 @@ $(document).ready(function(){
     //var ws = new WebSocket("ws://192.168.1.100:1704");
     
     ws.onmessage = function (evt) { 
-        const data = JSON.parse (evt.data)
-        if (data["event-id"] === "sampler") {
+        const data = JSON.parse (evt.data);
+        if (data["event-id"] === "sim-started") {
+            chartData.removeRows(0, chartData.getNumberOfRows());
+            chart.draw(chartData, options);
+        }
+        else if (data["event-id"] === "sim-sampler") {
             chartData.addRow(data["event-data"]);
             if (chartData.getNumberOfRows() > 200) {
                 chartData.removeRow(0);
