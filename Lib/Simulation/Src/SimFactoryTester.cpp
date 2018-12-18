@@ -93,18 +93,36 @@ INSTANTIATE_TEST_CASE_P (SimFactoryTester, SimFactoryTester,
                 "name" : "MyName",
                 "type" : "MyType"
             }],
-            "sample" : [
-                12345
-            ]
-        })", std::string ("Sample path is not a string")),
+            "samplers" : 12345
+        })", std::string ("Sampler list is not an array")),
         std::make_tuple (R"({
             "step": 10,
             "blocks" : [{
                 "name" : "MyName",
                 "type" : "MyType"
             }],
-            "sample" : [
-                "I do not exist"
+            "samplers" : [ 
+                "I am not an array" 
+            ]
+        })", std::string ("Sampler config is not an array")),
+        std::make_tuple (R"({
+            "step": 10,
+            "blocks" : [{
+                "name" : "MyName",
+                "type" : "MyType"
+            }],
+            "samplers" : [ 
+                [ 123456 ] 
+            ]
+        })", std::string ("Sampler element is not a string")),
+        std::make_tuple (R"({
+            "step": 10,
+            "blocks" : [{
+                "name" : "MyName",
+                "type" : "MyType"
+            }],
+            "samplers" : [ 
+                [ "I do not exist" ] 
             ]
         })", std::string ("Cannot sample <I do not exist>: Illegal path <I do not exist>")),
         std::make_tuple (R"({

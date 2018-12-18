@@ -9,7 +9,7 @@ namespace {
     const std::string blocksTag ("blocks");
     const std::string connectorsTag ("connectors");
     const std::string initializersTag ("initializers");
-    const std::string sampleTag ("sample"); 
+    const std::string sampleTag ("samplers"); 
     const std::string settingsTag ("settings");
     const std::string nameTag ("name");
     const std::string typeTag ("type");
@@ -93,17 +93,27 @@ std::unique_ptr<SIM::Loop> SIM::Factory::Create (const json& inConfig) {
     
     if (inConfig.find (sampleTag) != inConfig.end () && !inConfig[sampleTag].empty ()) {
         
-        for (auto& path : inConfig[sampleTag]) {
+        if (!inConfig[sampleTag].is_array ()) {
+            throw Exception ("Sampler list is not an array");
+        }
+        
+        for (auto& pathList : inConfig[sampleTag]) {
             
-            if (!path.is_string ()) {
-                throw Exception ("Sample path is not a string");
+            if (!pathList.is_array ()) {
+                throw Exception ("Sampler config is not an array");
             }
-            const auto source (path.get<std::string> ());
             
-            loop->AddSample (source);
+            std::vector <std::string> paths;
+            for (const auto& path : pathList) {
+                if (!path.is_string ()) {
+                    throw Exception ("Sampler element is not a string");
+                }
+                paths.push_back (path.get<std::string> ());
+            }
+            
+            loop->AddSampler (paths);
         }
     }
-    
     
     return loop;
 }

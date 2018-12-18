@@ -9,7 +9,11 @@ using json = nlohmann::json;
 #include "SimSampler.h"
 #include "SimException.h"
 
-SIM::Sampler::Sampler () = default;
+SIM::Sampler::Sampler (std::size_t inId) :
+    mId (std::string ("sim-sampler-") + std::to_string (inId)) 
+{
+}
+
 SIM::Sampler::~Sampler () = default;
 
 void SIM::Sampler::AddPort (std::weak_ptr<SIM::Port> inPort) {
@@ -30,6 +34,6 @@ void SIM::Sampler::Write (const uint64_t& inTimeStamp) {
     if (!mPorts.empty ()) {
         mOutputs[0] =  static_cast<double> (inTimeStamp);
         std::transform (mPorts.begin (), mPorts.end (), mOutputs.begin () + 1u, sampleFunction);
-        Done (Event ("sim-sampler", mOutputs));
+        Done (Event (mId, mOutputs));
     }
 }

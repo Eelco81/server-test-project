@@ -9,14 +9,14 @@ TEST (SimSamplerTester, Sampling) {
     auto port = std::make_shared<SIM::TypedPort<uint8_t>> ("TestPort");
     port->Set (0xFF);
     
-    SIM::Sampler sampler;
+    SIM::Sampler sampler (1u);
     sampler.AddPort (port);
     
     sampler.Pipe ([&](const auto& newsamples) {samples = newsamples.ToString();});
     
     sampler.Write (0xFE);
     
-    ASSERT_EQ ("{\"event-data\":[254.0,255.0],\"event-id\":\"sim-sampler\"}", samples);
+    ASSERT_EQ ("{\"event-data\":[254.0,255.0],\"event-id\":\"sim-sampler-1\"}", samples);
 }
 
 

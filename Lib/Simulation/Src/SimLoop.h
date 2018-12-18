@@ -49,9 +49,9 @@ public:
     void SetInitializer (const std::string& inPort, double inValue);
     
     /**
-     * Add to sampler
+     * Add sampler
      */
-    void AddSample (const std::string& inSource);
+    void AddSampler (const std::vector<std::string>& inPaths);
     
     /**
      * Initialize the loop
@@ -106,10 +106,10 @@ private:
     
 private:
     Timer mTimer;
-    Sampler mSampler;
     std::vector<std::unique_ptr<Block>> mBlocks;
     std::vector<std::unique_ptr<Connector>> mConnectors;
     std::vector<std::unique_ptr<Initializer>> mInitializers;
+    std::vector<std::unique_ptr<Sampler>> mSamplers;
     
 };
 

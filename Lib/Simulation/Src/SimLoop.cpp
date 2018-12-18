@@ -14,7 +14,6 @@ SIM::Loop::Loop (uint64_t inTimeStep) :
     OS::ForwardStream<SIM::Event> (),
     mTimer (inTimeStep)
 {
-    mSampler.Pipe (*this);
 }
 
 SIM::Loop::~Loop () {
@@ -78,15 +77,20 @@ void SIM::Loop::SetInitializer (const std::string& inPath, double inValue) {
     }
 }
 
-void SIM::Loop::AddSample (const std::string& inSource) {
+void SIM::Loop::AddSampler (const std::vector<std::string>& inPaths) {
     
-    try {
-        Path sourcePath (inSource);
-        mSampler.AddPort (FindPort (sourcePath));
+    auto sampler = std::make_unique<Sampler> (mSamplers.size ());
+    for (const auto& path: inPaths) {
+        try {
+            auto port (FindPort (Path (path)));
+            sampler->AddPort (port);
+        }
+        catch (Exception& e) {
+            throw Exception (std:: string ("Cannot sample <") + path + std::string (">: ") + e.what ());
+        }
     }
-    catch (Exception& e) {
-        throw Exception (std:: string ("Cannot sample <") + inSource + std::string (">: ") + e.what ());
-    }
+    sampler->Pipe (*this);
+    mSamplers.emplace_back (std::move (sampler));
 }
 
 void SIM::Loop::Initialize () {
@@ -105,7 +109,9 @@ void SIM::Loop::Initialize () {
     for (auto& connector : mConnectors) {
         connector->Transfer ();
     }
-    mSampler.Write (mTimer.GetTimeStamp ());
+    for (auto& sampler : mSamplers) {
+        sampler->Write (mTimer.GetTimeStamp ());
+    }
 }
 
 void SIM::Loop::Update () {
@@ -121,7 +127,9 @@ void SIM::Loop::Update () {
     for (auto& connector : mConnectors) {
         connector->Transfer ();
     }
-    mSampler.Write (mTimer.GetTimeStamp ());
+    for (auto& sampler : mSamplers) {
+        sampler->Write (mTimer.GetTimeStamp ());
+    }
 }
 
 void SIM::Loop::Terminate () {
@@ -129,7 +137,9 @@ void SIM::Loop::Terminate () {
     for (auto& block : mBlocks) {
         block->Terminate (mTimer.GetTime (), mTimer.GetTimeStepValue ());
     }
-    mSampler.Write (mTimer.GetTimeStamp ());
+    for (auto& sampler : mSamplers) {
+        sampler->Write (mTimer.GetTimeStamp ());
+    }
 }
 
 std::vector<SIM::Value> SIM::Loop::GetValues () const {

@@ -19,7 +19,7 @@ public:
     /**
      * Constructor
      */
-    Sampler ();
+    Sampler (std::size_t inId);
     
     /**
      * Virtual destructor
@@ -39,6 +39,7 @@ public:
 protected:
     std::vector<std::weak_ptr<Port>> mPorts;
     std::vector<double> mOutputs;
+    std::string mId;
 
 };
 

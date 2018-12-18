@@ -5,11 +5,16 @@
         { "name" : "oscillator", "type": "oscillator" },
         { "name" : "pid", "type": "pid" }
     ],
-    "sample" : [
-        "oscillator.in.force", 
-        "oscillator.out.position", 
-        "oscillator.out.velocity", 
-        "oscillator.out.acceleration"
+    "samplers" : [
+        [
+            "oscillator.out.position",
+            "oscillator.out.velocity",
+            "oscillator.out.acceleration"
+        ],
+        [
+            "oscillator.in.force",
+            "oscillator.in.control"
+        ]
     ],
     "connectors" : [
         { "source": "source.out.value", "target" : "oscillator.in.force" },
