@@ -10,8 +10,8 @@ template <typename T>
 class TypedPort : public Port {
 
 public:
-    TypedPort (const std::string& inName, T* inValue);
-    TypedPort (const std::string& inName);
+    TypedPort (const Path& inPath, T* inValue);
+    TypedPort (const Path& inPath);
     virtual ~TypedPort ();
     
     TypedPort& operator= (const TypedPort& inMatrix);

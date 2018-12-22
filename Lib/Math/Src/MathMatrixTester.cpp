@@ -22,14 +22,53 @@ TYPED_TEST (MathMatrixTester, Constructors) {
     ASSERT_EQ (C, B);
 };
 
+TYPED_TEST (MathMatrixTester, SpecialConstructors) {
+    
+    const auto A = MATH::Diag<3u,TypeParam> ((TypeParam)1, 0);
+    const auto B = MATH::Diag<3u,TypeParam> ((TypeParam)1, -1);
+    const auto C = MATH::Diag<3u,TypeParam> ((TypeParam)1, 1);
+    
+    ASSERT_EQ ((TypeParam)1, A(0,0));
+    ASSERT_EQ ((TypeParam)0, A(0,1));
+    ASSERT_EQ ((TypeParam)0, A(0,2));
+    ASSERT_EQ ((TypeParam)0, A(1,0));
+    ASSERT_EQ ((TypeParam)1, A(1,1));
+    ASSERT_EQ ((TypeParam)0, A(1,2));
+    ASSERT_EQ ((TypeParam)0, A(2,0));
+    ASSERT_EQ ((TypeParam)0, A(2,1));
+    ASSERT_EQ ((TypeParam)1, A(2,2));
+    
+    ASSERT_EQ ((TypeParam)0, B(0,0));
+    ASSERT_EQ ((TypeParam)0, B(0,1));
+    ASSERT_EQ ((TypeParam)0, B(0,2));
+    ASSERT_EQ ((TypeParam)1, B(1,0));
+    ASSERT_EQ ((TypeParam)0, B(1,1));
+    ASSERT_EQ ((TypeParam)0, B(1,2));
+    ASSERT_EQ ((TypeParam)0, B(2,0));
+    ASSERT_EQ ((TypeParam)1, B(2,1));
+    ASSERT_EQ ((TypeParam)0, B(2,2));
+    
+    ASSERT_EQ ((TypeParam)0, C(0,0));
+    ASSERT_EQ ((TypeParam)1, C(0,1));
+    ASSERT_EQ ((TypeParam)0, C(0,2));
+    ASSERT_EQ ((TypeParam)0, C(1,0));
+    ASSERT_EQ ((TypeParam)0, C(1,1));
+    ASSERT_EQ ((TypeParam)1, C(1,2));
+    ASSERT_EQ ((TypeParam)0, C(2,0));
+    ASSERT_EQ ((TypeParam)0, C(2,1));
+    ASSERT_EQ ((TypeParam)0, C(2,2));
+};
+
 TYPED_TEST (MathMatrixTester, GetSet) {
     
     MATH::Matrix<50u,20u,TypeParam> A (10);
     ASSERT_EQ((TypeParam)10, A(0,0));
+    ASSERT_EQ((TypeParam)10, *A.GetValuePtr(1,0));
     
     A(1,0) = 20;
     ASSERT_EQ((TypeParam)20, A(1,0));
     ASSERT_FALSE(A==10);
+    ASSERT_EQ((TypeParam)20, *A.GetValuePtr(1,0));
 };
 
 TYPED_TEST (MathMatrixTester, Assignment) {

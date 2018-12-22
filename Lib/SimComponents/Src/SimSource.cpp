@@ -16,12 +16,12 @@ Source::Source (const std::string& inName) :
     mOffset (0.0),
     mType (1u)
 {
-    AddOutPort (&mOutput, "value");
-    AddParPort (&mAmplitude, "amplitude");
-    AddParPort (&mPhase, "phase");
-    AddParPort (&mFrequency, "frequency");
-    AddParPort (&mOffset, "offset");
-    AddParPort (&mType, "type");
+    AddPort (&mOutput, Path::OUTPUT, "value");
+    AddPort (&mAmplitude, Path::PARAMETER, "amplitude");
+    AddPort (&mPhase, Path::PARAMETER, "phase");
+    AddPort (&mFrequency, Path::PARAMETER, "frequency");
+    AddPort (&mOffset, Path::PARAMETER, "offset");
+    AddPort (&mType, Path::PARAMETER, "type");
 }
 
 Source::~Source () = default;

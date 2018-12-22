@@ -9,6 +9,7 @@
 #include "SimExecEndPoint.h"
 #include "SimPortsEndPoint.h"
 #include "SimPortEndPoint.h"
+#include "SimSamplersEndPoint.h"
 
 SystemRouter::SystemRouter (std::shared_ptr<SIM::Service> inService) :
     HTTP::Router ()
@@ -25,4 +26,6 @@ SystemRouter::SystemRouter (std::shared_ptr<SIM::Service> inService) :
     AddEndPoint (std::make_shared<API::ListDirEndPoint> ("/api/simulation/config", "./Config/", false));
     AddEndPoint (std::make_shared<API::SIM::PortsEndPoint> ("/api/simulation/ports", inService));
     AddEndPoint (std::make_shared<API::SIM::PortEndPoint> ("/api/simulation/ports", inService));
+    AddEndPoint (std::make_shared<API::SIM::SamplersEndPoint> ("/api/simulation/samplers", inService));
+    
 }

@@ -37,3 +37,18 @@ void SIM::Sampler::Write (const uint64_t& inTimeStamp) {
         Done (Event (mId, mOutputs));
     }
 }
+
+SIM::Sampler::Info SIM::Sampler::GetInfo () const {
+    
+    Info info;
+    for (auto& port : mPorts) {
+        const auto portPtr (port.lock ());
+        if (!portPtr) {
+            throw Exception ("Sampler port went out of scope");
+        }
+        info.mPortInfos.push_back (portPtr->GetInfo ());
+    }
+    info.mId = mId;
+    
+    return info;
+}

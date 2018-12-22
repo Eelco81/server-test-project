@@ -10,7 +10,7 @@ SIM::Path::Path () :
 
 SIM::Path::Path (const std::string& inTarget) {
     
-    std::regex rePath ("^([A-Za-z0-9]+).([A-Za-z0-9]+).([A-Za-z0-9]+)$");
+    std::regex rePath ("^([A-Za-z0-9]+).([A-Za-z0-9]+).([A-Za-z0-9\\[\\]]+)$");
     
     std::smatch matchPath;
     if (!std::regex_search (inTarget, matchPath, rePath)) {
@@ -57,4 +57,8 @@ std::string SIM::Path::ToString () const {
     }
     
     return mBlockID + std::string (".") + type + std::string (".") + mPortID;
+}
+
+bool SIM::Path::operator== (const SIM::Path& inPath) const {
+    return (mBlockID == inPath.mBlockID) && (mPortID == inPath.mPortID) && (mType == inPath.mType);
 }

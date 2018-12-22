@@ -1,6 +1,7 @@
 
 #include "gtest/gtest.h"
 #include "SimInitializer.h"
+#include "SimPath.h"
 
 #include <vector>
 #include <cstdint>
@@ -14,7 +15,7 @@ TYPED_TEST (SimInitializerTester, Transfer) {
     
     TypeParam value (1);
     
-    auto port = std::make_shared<SIM::TypedPort<TypeParam>> ("port", &value);
+    auto port = std::make_shared<SIM::TypedPort<TypeParam>> (SIM::Path ("test.in.port"), &value);
     
     SIM::Initializer initializer (port, 0.0);
     ASSERT_EQ (port->Get (), value);

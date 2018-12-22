@@ -3,16 +3,16 @@
 #include "SimException.h"
 
 template <typename T>
-SIM::TypedPort<T>::TypedPort (const std::string& inName, T* inValuePtr) : 
-    Port (inName),
+SIM::TypedPort<T>::TypedPort (const SIM::Path& inPath, T* inValuePtr) : 
+    Port (inPath),
     mValuePtr (inValuePtr),
     mHasOwnership (false)
 {
 }
 
 template <typename T>
-SIM::TypedPort<T>::TypedPort (const std::string& inName) : 
-    Port (inName),
+SIM::TypedPort<T>::TypedPort (const SIM::Path& inPath) : 
+    Port (inPath),
     mValuePtr (new T (0)),
     mHasOwnership (true)
 {
@@ -105,7 +105,7 @@ void SIM::TypedPort<T>::SetStringValue (const std::string& inValue) {
         }
     }
     catch (...) {
-        throw Exception (std::string ("Invalid value string for port <") + GetName () + std::string (">"));
+        throw Exception (std::string ("Invalid value string for port <") + GetPath ().ToString () + std::string (">"));
     }
 }
 

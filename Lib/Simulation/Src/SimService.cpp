@@ -115,6 +115,10 @@ std::vector<SIM::Path> SIM::Service::GetPaths () {
     return mLoop->GetPaths ();
 }
 
+std::vector<SIM::Sampler::Info> SIM::Service::GetSamplers () const {
+    return mLoop->GetSamplers ();
+}
+
 bool SIM::Service::Trigger () {
     
     try {

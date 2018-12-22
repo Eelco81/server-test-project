@@ -1,13 +1,17 @@
 
 #include "SimPort.h"
 
-SIM::Port::Port (const std::string& inName) : 
-    mName (inName) 
+SIM::Port::Port (const SIM::Path& inPath) : 
+    mPath (inPath) 
 {
 }
 
 SIM::Port::~Port () = default;
 
-const std::string& SIM::Port::GetName () const { 
-    return mName; 
+const SIM::Path& SIM::Port::GetPath () const { 
+    return mPath; 
+}
+
+SIM::Port::Info SIM::Port::GetInfo () const {
+    return { GetPath (), GetType () };
 }

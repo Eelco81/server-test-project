@@ -5,6 +5,8 @@
 #include <cstdint>
 #include <string>
 
+#include "SimPath.h"
+
 namespace SIM {
 
 class Port {
@@ -28,11 +30,18 @@ public:
         DOUBLE
     };
 
-public:
+    /**
+     * Info of the Port
+     */
+    struct Info {
+        Path mPath;
+        Type mType;
+    };
+    
     /**
      * Constructor
      */
-    Port (const std::string& inName);
+    Port (const Path& inPath);
     
     /**
      * Destructor
@@ -42,7 +51,7 @@ public:
     /**
      * Get the port name
      */
-    const std::string& GetName () const;
+    const Path& GetPath () const;
     
     /**
      * Get the port type
@@ -69,8 +78,13 @@ public:
      */
     virtual void SetNumericValue (double inValue) = 0;
     
+    /**
+     * Get port info
+     */
+    Info GetInfo () const;
+    
 protected:
-    std::string mName;
+    Path mPath;
 };
 
 }

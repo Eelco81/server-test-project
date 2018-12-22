@@ -180,6 +180,15 @@ std::vector<SIM::Path> SIM::Loop::GetPaths () const {
     return result;
 }
 
+std::vector<SIM::Sampler::Info> SIM::Loop::GetSamplers () const {
+    
+    std::vector<Sampler::Info> info;
+    for (const auto& sampler : mSamplers) {
+        info.push_back (sampler->GetInfo ());
+    }
+    return info;
+}
+
 uint64_t SIM::Loop::GetTimeStamp () const {
     return mTimer.GetTimeStamp ();
 }

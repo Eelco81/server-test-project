@@ -13,7 +13,7 @@ public:
     TestBlock (const std::string& inName) : 
         Block (inName)
     {
-        AddInPort<uint8_t> ("input");
+        AddPort<uint8_t> (SIM::Path::INPUT, "input");
     }
     MOCK_METHOD1 (Configure, void (const json&));
     MOCK_METHOD2 (Initialize, void (double, double));

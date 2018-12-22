@@ -12,14 +12,14 @@ Oscillator::Oscillator (const std::string& inName) :
     mDamping (1.0),
     mFriction (1.0)
 {
-    AddInPort (&mForce, "force");
-    AddInPort (&mControl, "control");
-    AddOutPort (&mSystem.OutputRef()(0), "position");
-    AddOutPort (&mSystem.OutputRef()(1), "velocity");
-    AddOutPort (&mSystem.OutputRef()(2), "acceleration");
-    AddParPort (&mMass, "mass");
-    AddParPort (&mDamping, "damping");
-    AddParPort (&mFriction, "friction");
+    AddPort (&mForce, Path::INPUT, "force");
+    AddPort (&mControl, Path::INPUT, "control");
+    AddPort (&mSystem.OutputRef()(0), Path::OUTPUT, "position");
+    AddPort (&mSystem.OutputRef()(1), Path::OUTPUT, "velocity");
+    AddPort (&mSystem.OutputRef()(2), Path::OUTPUT, "acceleration");
+    AddPort (&mMass, Path::PARAMETER, "mass");
+    AddPort (&mDamping, Path::PARAMETER, "damping");
+    AddPort (&mFriction, Path::PARAMETER, "friction");
 }
 
 Oscillator::~Oscillator () = default;

@@ -26,7 +26,6 @@ private:
     double mDamping;
     double mFriction;
     
-    double mPrevTime;
     MATH::DynSys<2,1,3,double> mSystem;
 
 };

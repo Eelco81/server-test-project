@@ -14,8 +14,8 @@ public:
     TestBlock (const std::string& inName) : 
         Block (inName)
     {
-        AddInPort<bool> ("input");
-        AddOutPort<bool> ("output");
+        AddPort<bool> (SIM::Path::INPUT, "input");
+        AddPort<bool> (SIM::Path::OUTPUT, "output");
     }
     MOCK_METHOD0 (Configure, void ());
     MOCK_METHOD2 (Initialize, void (double, double));

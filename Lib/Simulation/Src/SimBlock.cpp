@@ -20,25 +20,11 @@ std::weak_ptr<SIM::Port> SIM::Block::GetPort (const Path& inPath) {
         throw Exception (std::string ("Getting illegal path <") + inPath.ToString () + std::string (". from block <") + GetName () + ">"); 
     }
     
-    auto nameIterator = [inPath] (const auto& it) { return it->GetName () == inPath.mPortID; };
+    auto nameIterator = [inPath] (const auto& it) { return it->GetPath () == inPath; };
     
-    if (inPath.mType == Path::INPUT) {
-        auto it = std::find_if (mInputs.begin (), mInputs.end (), nameIterator);
-        if (it != mInputs.end ()) {
-            return *it;
-        }
-    }
-    else if (inPath.mType == Path::OUTPUT) {
-        auto it = std::find_if (mOutputs.begin (), mOutputs.end (), nameIterator);
-        if (it != mOutputs.end ()) {
-            return *it;
-        }
-    }
-    else if (inPath.mType == Path::PARAMETER) {
-        auto it = std::find_if (mParameters.begin (), mParameters.end (), nameIterator);
-        if (it != mParameters.end ()) {
-            return *it;
-        }
+    auto it = std::find_if (mPorts.begin (), mPorts.end (), nameIterator);
+    if (it != mPorts.end ()) {
+        return *it;
     }
     
     return std::weak_ptr<Port> ();
@@ -46,14 +32,8 @@ std::weak_ptr<SIM::Port> SIM::Block::GetPort (const Path& inPath) {
 
 std::vector<SIM::Path> SIM::Block::GetAllPorts () const {
     std::vector<SIM::Path> result;
-    for (const auto& port : mInputs) {
-        result.push_back (Path (mName, port->GetName (), Path::INPUT));
-    }
-    for (const auto& port : mOutputs) {
-        result.push_back (Path (mName, port->GetName (), Path::OUTPUT));
-    }
-    for (const auto& port : mParameters) {
-        result.push_back (Path (mName, port->GetName (), Path::PARAMETER));
+    for (const auto& port : mPorts) {
+        result.push_back (port->GetPath ());
     }
     return result;
 }

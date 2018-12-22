@@ -16,13 +16,13 @@ PIDController::PIDController (const std::string& inName) :
     mKd (0.0),
     mEnable (true)
 {
-    AddInPort (&mInput, "input");
-    AddInPort (&mSetpoint, "setpoint");
-    AddOutPort (&mOutput, "output");
-    AddParPort (&mKp, "kp");
-    AddParPort (&mKi, "ki");
-    AddParPort (&mKd, "kd");
-    AddParPort (&mEnable, "enable");
+    AddPort (&mInput, Path::INPUT, "input");
+    AddPort (&mSetpoint, Path::INPUT, "setpoint");
+    AddPort (&mOutput, Path::OUTPUT, "output");
+    AddPort (&mKp, Path::PARAMETER, "kp");
+    AddPort (&mKi, Path::PARAMETER, "ki");
+    AddPort (&mKd, Path::PARAMETER, "kd");
+    AddPort (&mEnable, Path::PARAMETER, "enable");
 }
 
 PIDController::~PIDController () = default;

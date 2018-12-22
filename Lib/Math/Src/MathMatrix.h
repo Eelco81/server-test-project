@@ -21,7 +21,7 @@ public:
      * Destructor.
      */
     virtual ~Matrix ();
-
+    
     /**
      * Access operators.
      */
@@ -83,6 +83,24 @@ Matrix<N,K,T> operator/ (const Matrix<N,N,T>& inLhs, const Matrix<N,K,T>& inRhs)
     return mat;
 }
 
+template <std::size_t N, typename T = double>
+Matrix<N,N,T> Diag (T inValue, int64_t inIndex) {
+    MATH::Matrix<N,N,T> mat;
+    for (std::size_t i(0u); i < N - std::abs (inIndex); i++) {
+        if (inIndex >=0) {
+            mat(i, i + std::abs (inIndex)) = inValue;
+        }
+        else {
+            mat(i + std::abs(inIndex), i) = inValue;
+        }
+    }
+    return mat;
+}
+
+template <std::size_t N, typename T = double>
+Matrix<N,N,T> Identity () {
+    return Diag<N,T> ((T)1, 0);
+}
 
 }
 

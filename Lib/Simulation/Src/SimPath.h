@@ -19,6 +19,8 @@ struct Path {
     Path (const std::string& inTarget);
     Path (const std::string& inBlockID, const std::string& inPortID, Type inType);
 
+    bool operator== (const Path& inPath) const;
+    
     std::string ToString () const;
     
     std::string mBlockID;

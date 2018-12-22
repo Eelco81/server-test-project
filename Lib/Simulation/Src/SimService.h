@@ -11,6 +11,7 @@
 #include "SimValue.h"
 #include "SimPath.h"
 #include "SimEventStream.h"
+#include "SimSampler.h"
 
 #include <json.hpp>
 using json = nlohmann::json;
@@ -35,6 +36,7 @@ public:
     virtual Value GetValue (const Path& inPath) = 0;
     virtual void SetValue (const Value& inValue) = 0;
     virtual std::vector<Path> GetPaths () = 0;
+    virtual std::vector<Sampler::Info> GetSamplers () const = 0;
 };
 
 class Service : public IService {
@@ -96,6 +98,11 @@ public:
      * Get all valid paths inside the simulation
      */
     std::vector<Path> GetPaths () override;
+    
+    /**
+     * Get all sampler configurations
+     */
+    std::vector<Sampler::Info> GetSamplers () const override;
     
     /**
      * Trigger call of the service.

@@ -13,9 +13,9 @@ public:
     TestBlock () : 
         Block ("Test")
     {
-        AddInPort (&mInput, "input");
-        AddOutPort (&mOutput, "output");
-        AddParPort (&mParameter, "parameter");
+        AddPort (&mInput, SIM::Path::INPUT, "input");
+        AddPort (&mOutput, SIM::Path::OUTPUT, "output");
+        AddPort (&mParameter, SIM::Path::PARAMETER, "parameter");
     }
 public:
     bool mInput = true;
@@ -28,9 +28,9 @@ public:
     MatrixBlock () : 
         Block ("Test")
     {
-        AddInPort (mInput, "input");
-        AddOutPort (mOutput, "output");
-        AddParPort (mParameter, "parameter");
+        AddPort (mInput, SIM::Path::INPUT, "input");
+        AddPort (mOutput, SIM::Path::OUTPUT, "output");
+        AddPort (mParameter, SIM::Path::PARAMETER, "parameter");
     }
 public:
     MATH::Matrix<3,1,uint8_t> mInput = 0x01;

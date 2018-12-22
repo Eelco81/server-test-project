@@ -1,0 +1,36 @@
+{
+    "step": 100, 
+    "blocks" : [
+        { "name" : "source", "type": "source" },
+        { "name" : "heat", "type": "heat" }
+    ],
+    "samplers" : [
+        [
+            "heat.out.x[0][0]",
+            "heat.out.x[1][0]",
+            "heat.out.x[2][0]",
+            "heat.out.x[3][0]",
+            "heat.out.x[4][0]",
+            "heat.out.x[5][0]",
+            "heat.out.x[6][0]",
+            "heat.out.x[7][0]",
+            "heat.out.x[8][0]",
+            "heat.out.x[9][0]"
+        ],
+        [
+            "heat.in.u[0][0]",
+            "heat.in.u[5][0]"
+        ]
+    ],
+    "connectors" : [
+        { "source": "source.out.value", "target" : "heat.in.u[5][0]" }
+    ],
+    "initializers" : [
+        { "port": "source.par.type", "value": 3 }, 
+        { "port": "source.par.frequency", "value": 0.2 },
+        { "port": "source.par.amplitude", "value": 1.0 },
+        { "port": "source.par.offset", "value": 1.0 },
+        { "port": "heat.par.L", "value": 1.0 },
+        { "port": "heat.par.alpha", "value": 0.001 }
+    ]
+}

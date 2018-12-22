@@ -87,7 +87,12 @@ public:
      * Get all paths
      */
     std::vector<Path> GetPaths () const;
-         
+    
+    /**
+     * Get sampler infos
+     */
+    std::vector<Sampler::Info> GetSamplers () const;
+    
     /**
      * Get the current timestamp
      */

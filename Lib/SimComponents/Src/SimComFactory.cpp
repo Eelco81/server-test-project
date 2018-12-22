@@ -3,6 +3,7 @@
 #include "SimSource.h"
 #include "SimOscillator.h"
 #include "SimPidController.h"
+#include "SimHeatEquation.h"
 
 std::unique_ptr<SIM::Block> SIM::COM::Factory::CreateBlock (const std::string& inName, const std::string& inType) {
     
@@ -14,6 +15,9 @@ std::unique_ptr<SIM::Block> SIM::COM::Factory::CreateBlock (const std::string& i
     }
     if (inType == "pid") {
         return std::make_unique <SIM::COM::PIDController> (inName);
+    }
+    if (inType == "heat") {
+        return std::make_unique <SIM::COM::HeatEquation> (inName);
     }
     return std::unique_ptr <SIM::Block> ();
 };

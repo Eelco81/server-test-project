@@ -68,69 +68,30 @@ public:
 protected:
     
     template<std::size_t Nrows, std::size_t Ncols, typename T>
-    void AddInPort (MATH::Matrix<Nrows,Ncols,T>& inMatrix, const std::string& inName) {
+    void AddPort (MATH::Matrix<Nrows,Ncols,T>& inMatrix, Path::Type inType, const std::string& inName) {
         for (std::size_t i (0u); i < Nrows; i++) {
             for (std::size_t j (0u); j < Ncols; j++) {
                 const std::string name (inName + "[" + std::to_string(i) + "][" + std::to_string (j) + "]");
-                mInputs.emplace_back (std::make_shared<TypedPort<T>> (name, inMatrix.GetValuePtr (i,j)));
+                const Path path (mName, name, inType);
+                mPorts.emplace_back (std::make_shared<TypedPort<T>> (path, inMatrix.GetValuePtr (i,j)));
             }
         }
     }
     
     template<typename T>
-    void AddInPort (T* inValuePtr, const std::string& inName) {
-        mInputs.emplace_back (std::make_shared<TypedPort<T>> (inName, inValuePtr));
+    void AddPort (T* inValuePtr, Path::Type inType, const std::string& inName) {
+        const Path path (mName, inName, inType);
+        mPorts.emplace_back (std::make_shared<TypedPort<T>> (path, inValuePtr));
     }
     
     template<typename T>
-    void AddInPort (const std::string& inName) {
-        mInputs.emplace_back (std::make_shared<TypedPort<T>> (inName));
-    }
-    
-    template<std::size_t Nrows, std::size_t Ncols, typename T>
-    void AddOutPort (MATH::Matrix<Nrows,Ncols,T>& inMatrix, const std::string& inName) {
-        for (std::size_t i (0u); i < Nrows; i++) {
-            for (std::size_t j (0u); j < Ncols; j++) {
-                const std::string name (inName + "[" + std::to_string(i) + "][" + std::to_string (j) + "]");
-                mOutputs.emplace_back (std::make_shared<TypedPort<T>> (name, inMatrix.GetValuePtr (i,j)));
-            }
-        }
-    }
-    
-    template<typename T>
-    void AddOutPort (T* inValuePtr, const std::string& inName) {
-        mOutputs.emplace_back (std::make_shared<TypedPort<T>> (inName, inValuePtr));
-    }
-    
-    template<typename T>
-    void AddOutPort (const std::string& inName) {
-        mOutputs.emplace_back (std::make_shared<TypedPort<T>> (inName));
-    }
-    
-    template<std::size_t Nrows, std::size_t Ncols, typename T>
-    void AddParPort (MATH::Matrix<Nrows,Ncols,T>& inMatrix, const std::string& inName) {
-        for (std::size_t i (0u); i < Nrows; i++) {
-            for (std::size_t j (0u); j < Ncols; j++) {
-                const std::string name (inName + "[" + std::to_string(i) + "][" + std::to_string (j) + "]");
-                mParameters.emplace_back (std::make_shared<TypedPort<T>> (name, inMatrix.GetValuePtr (i,j)));
-            }
-        }
-    }
-    
-    template<typename T>
-    void AddParPort (T* inValuePtr, const std::string& inName) {
-        mParameters.emplace_back (std::make_shared<TypedPort<T>> (inName, inValuePtr));
-    }
-    
-    template<typename T>
-    void AddParPort (const std::string& inName) {
-        mParameters.emplace_back (std::make_shared<TypedPort<T>> (inName));
+    void AddPort (Path::Type inType, const std::string& inName) {
+        const Path path (mName, inName, inType);
+        mPorts.emplace_back (std::make_shared<TypedPort<T>> (path));
     }
     
 protected:
-    std::vector<std::shared_ptr<Port>> mInputs;
-    std::vector<std::shared_ptr<Port>> mOutputs;
-    std::vector<std::shared_ptr<Port>> mParameters;
+    std::vector<std::shared_ptr<Port>> mPorts;
     
     //todo: rather use ID instead of name
     std::string mName;
