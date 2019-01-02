@@ -8,6 +8,9 @@
     "samplers" : [
         [
             "oscillator.out.position",
+            "pid.in.setpoint"
+        ],
+        [
             "oscillator.out.velocity",
             "oscillator.out.acceleration"
         ],
