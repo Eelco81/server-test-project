@@ -9,8 +9,9 @@ using json = nlohmann::json;
 #include "SimSampler.h"
 #include "SimException.h"
 
-SIM::Sampler::Sampler (std::size_t inId) :
-    mId (std::string ("sim-sampler-") + std::to_string (inId)) 
+SIM::Sampler::Sampler (std::size_t inId, SIM::Sampler::Type inType) :
+    mId (std::string ("sim-sampler-") + std::to_string (inId)),
+    mType (inType)
 {
 }
 
@@ -49,6 +50,7 @@ SIM::Sampler::Info SIM::Sampler::GetInfo () const {
         info.mPortInfos.push_back (portPtr->GetInfo ());
     }
     info.mId = mId;
+    info.mType = mType;
     
     return info;
 }

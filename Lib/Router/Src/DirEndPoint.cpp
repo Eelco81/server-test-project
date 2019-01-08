@@ -3,7 +3,7 @@
 #include "ApiUtils.h"
 
 API::DirEndPoint::DirEndPoint (const std::string& inPath, const std::string& inDirName, const std::string& inExtension) : 
-    HTTP::RegexEndPoint (std::regex (inPath + "/([\\.A-Za-z0-9]+)")),
+    HTTP::RegexEndPoint (std::regex (inPath + "/([\\.A-Za-z0-9\\-]+)")),
     mDirName (inDirName),
     mExtension (inExtension)
 {

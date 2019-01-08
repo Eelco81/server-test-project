@@ -59,6 +59,20 @@ TYPED_TEST (MathMatrixTester, SpecialConstructors) {
     ASSERT_EQ ((TypeParam)0, C(2,2));
 };
 
+TYPED_TEST (MathMatrixTester, Augment) {
+    
+    const auto A1 = MATH::Matrix<1u,1u,TypeParam> ((TypeParam)1);
+    const auto A2 = MATH::Matrix<1u,1u,TypeParam> ((TypeParam)0);
+    const auto A3 = MATH::Matrix<1u,1u,TypeParam> ((TypeParam)0);
+    const auto A4 = MATH::Matrix<1u,1u,TypeParam> ((TypeParam)1);
+    
+    const auto A = MATH::Augment (A1, A2, A3, A4);
+    ASSERT_EQ ((TypeParam)1, A(0,0));
+    ASSERT_EQ ((TypeParam)0, A(0,1));
+    ASSERT_EQ ((TypeParam)0, A(1,0));
+    ASSERT_EQ ((TypeParam)1, A(1,1));
+};
+
 TYPED_TEST (MathMatrixTester, GetSet) {
     
     MATH::Matrix<50u,20u,TypeParam> A (10);

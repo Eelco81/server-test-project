@@ -51,7 +51,7 @@ public:
     /**
      * Add sampler
      */
-    void AddSampler (const std::vector<std::string>& inPaths);
+    void AddSampler (const std::vector<std::string>& inPaths, Sampler::Type inType);
     
     /**
      * Initialize the loop

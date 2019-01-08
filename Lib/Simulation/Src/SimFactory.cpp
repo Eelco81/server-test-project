@@ -14,6 +14,7 @@ namespace {
     const std::string nameTag ("name");
     const std::string typeTag ("type");
     const std::string portTag ("port");
+    const std::string portsTag ("ports");
     const std::string valueTag ("value");
     const std::string sourceTag ("source");
     const std::string targetTag ("target");
@@ -93,25 +94,32 @@ std::unique_ptr<SIM::Loop> SIM::Factory::Create (const json& inConfig) {
     
     if (inConfig.find (sampleTag) != inConfig.end () && !inConfig[sampleTag].empty ()) {
         
-        if (!inConfig[sampleTag].is_array ()) {
+        const auto samplerConfigs = inConfig[sampleTag];
+        
+        if (!samplerConfigs.is_array ()) {
             throw Exception ("Sampler list is not an array");
         }
         
-        for (auto& pathList : inConfig[sampleTag]) {
+        for (const auto& samplerConfig : samplerConfigs) {
             
-            if (!pathList.is_array ()) {
-                throw Exception ("Sampler config is not an array");
+            Sampler::Type type (SIM::Sampler::HIST);
+            if (samplerConfig.find (typeTag) != samplerConfig.end () && samplerConfig[typeTag].is_string ()) {
+                type = (samplerConfig[typeTag].get<std::string> () == "hist") ? Sampler::HIST : Sampler::ROW;
+            }
+        
+            if (samplerConfig.find (portsTag) == samplerConfig.end () || !samplerConfig[portsTag].is_array ()) {
+                throw Exception ("Sampler ports config is not an array");
             }
             
             std::vector <std::string> paths;
-            for (const auto& path : pathList) {
+            for (const auto& path : samplerConfig[portsTag]) {
                 if (!path.is_string ()) {
                     throw Exception ("Sampler element is not a string");
                 }
                 paths.push_back (path.get<std::string> ());
             }
             
-            loop->AddSampler (paths);
+            loop->AddSampler (paths, type);
         }
     }
     

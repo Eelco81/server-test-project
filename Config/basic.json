@@ -6,18 +6,9 @@
         { "name" : "pid", "type": "pid" }
     ],
     "samplers" : [
-        [
-            "oscillator.out.position",
-            "pid.in.setpoint"
-        ],
-        [
-            "oscillator.out.velocity",
-            "oscillator.out.acceleration"
-        ],
-        [
-            "oscillator.in.force",
-            "oscillator.in.control"
-        ]
+        { "type": "hist", "ports": [ "oscillator.out.position", "pid.in.setpoint"] },
+        { "type": "hist", "ports": [ "oscillator.out.velocity", "oscillator.out.acceleration"] }, 
+        { "type": "hist", "ports": [ "oscillator.in.force", "oscillator.in.control" ] }
     ],
     "connectors" : [
         { "source": "source.out.value", "target" : "oscillator.in.force" },
@@ -32,6 +23,7 @@
         { "port": "oscillator.par.friction", "value": 1 },
         { "port": "pid.par.kp", "value": 1.0 },
         { "port": "pid.par.ki", "value": 0.8 },
-        { "port": "pid.par.kd", "value": 2.0 }
+        { "port": "pid.par.kd", "value": 2.0 },
+        { "port": "pid.par.enable", "value": 1.0 }
     ]
 }

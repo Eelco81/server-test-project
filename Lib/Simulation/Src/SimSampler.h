@@ -15,18 +15,28 @@ namespace SIM {
 class Sampler : public OS::MessageStream<uint64_t,Event> {
 
 public:
+    
+    /**
+     * Sampler type
+     */
+    enum Type : uint8_t {
+        HIST = 0x00,
+        ROW
+    };
+
     /**
      * Info 
      */
     struct Info {
         std::vector<Port::Info> mPortInfos;
         std::string mId;
+        Type mType;
     };
     
     /**
      * Constructor
      */
-    Sampler (std::size_t inId);
+    Sampler (std::size_t inId, Type inType = HIST);
     
     /**
      * Virtual destructor
@@ -52,6 +62,7 @@ protected:
     std::vector<std::weak_ptr<Port>> mPorts;
     std::vector<double> mOutputs;
     std::string mId;
+    Type mType;
 
 };
 

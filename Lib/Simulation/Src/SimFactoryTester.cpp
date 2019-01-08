@@ -101,19 +101,19 @@ INSTANTIATE_TEST_CASE_P (SimFactoryTester, SimFactoryTester,
                 "name" : "MyName",
                 "type" : "MyType"
             }],
-            "samplers" : [ 
-                "I am not an array" 
-            ]
-        })", std::string ("Sampler config is not an array")),
+            "samplers" : [ {
+                "ports": "I am not an array" 
+            }]
+        })", std::string ("Sampler ports config is not an array")),
         std::make_tuple (R"({
             "step": 10,
             "blocks" : [{
                 "name" : "MyName",
                 "type" : "MyType"
             }],
-            "samplers" : [ 
-                [ 123456 ] 
-            ]
+            "samplers" : [{ 
+                "ports" : [ 12345 ] 
+            }]
         })", std::string ("Sampler element is not a string")),
         std::make_tuple (R"({
             "step": 10,
@@ -121,9 +121,9 @@ INSTANTIATE_TEST_CASE_P (SimFactoryTester, SimFactoryTester,
                 "name" : "MyName",
                 "type" : "MyType"
             }],
-            "samplers" : [ 
-                [ "I do not exist" ] 
-            ]
+            "samplers" : [{ 
+                "ports": [ "I do not exist" ] 
+            }]
         })", std::string ("Cannot sample <I do not exist>: Illegal path <I do not exist>")),
         std::make_tuple (R"({
             "step": 10,

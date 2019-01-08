@@ -1,6 +1,6 @@
 
-#ifndef _SIM_HEATEQUATION_H_
-#define _SIM_HEATEQUATION_H_
+#ifndef _SIM_WAVEEQUATION_H_
+#define _SIM_WAVEEQUATION_H_
 
 #include "SimBlock.h"
 #include "MathVector.h"
@@ -8,14 +8,14 @@
 
 namespace SIM { namespace COM {
 
-class HeatEquation : public SIM::Block {
+class WaveEquation : public SIM::Block {
 
 public:
     static constexpr std::size_t N = 50u;
 
 public:
-    HeatEquation (const std::string& inName);
-    ~HeatEquation ();
+    WaveEquation (const std::string& inName);
+    ~WaveEquation ();
     
     void Initialize (double inTime, double inTimeStep) override;
     void Step (double inTime, double inTimeStep) override;
@@ -23,7 +23,7 @@ public:
     
 private:
     MATH::Vector<N> mU;
-    MATH::DynSys<N,N,N> mSystem;
+    MATH::DynSys<N*2,N,N*2> mSystem;
     
     double mX0;
     double mXN;
@@ -34,4 +34,4 @@ private:
 
 }}
 
-#endif // _SIM_HEATEQUATION_H_
+#endif // _SIM_WAVEEQUATION_H_

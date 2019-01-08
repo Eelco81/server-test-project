@@ -77,9 +77,9 @@ void SIM::Loop::SetInitializer (const std::string& inPath, double inValue) {
     }
 }
 
-void SIM::Loop::AddSampler (const std::vector<std::string>& inPaths) {
+void SIM::Loop::AddSampler (const std::vector<std::string>& inPaths, SIM::Sampler::Type inType) {
     
-    auto sampler = std::make_unique<Sampler> (mSamplers.size ());
+    auto sampler = std::make_unique<Sampler> (mSamplers.size (), inType);
     for (const auto& path: inPaths) {
         try {
             auto port (FindPort (Path (path)));

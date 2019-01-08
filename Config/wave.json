@@ -1,0 +1,82 @@
+{
+    "step": 100, 
+    "blocks" : [
+        { "name" : "source", "type": "source" },
+        { "name" : "wave", "type": "wave" }
+    ],
+    "samplers" : [{ 
+        "type": "row", 
+        "ports": [
+            "wave.par.x0",
+            "wave.out.x[0][0]", 
+            "wave.out.x[1][0]",
+            "wave.out.x[2][0]",
+            "wave.out.x[3][0]",
+            "wave.out.x[4][0]",
+            "wave.out.x[5][0]",
+            "wave.out.x[6][0]",
+            "wave.out.x[7][0]",
+            "wave.out.x[8][0]",
+            "wave.out.x[9][0]",
+            "wave.out.x[10][0]",
+            "wave.out.x[11][0]",
+            "wave.out.x[12][0]",
+            "wave.out.x[13][0]",
+            "wave.out.x[14][0]",
+            "wave.out.x[15][0]",
+            "wave.out.x[16][0]",
+            "wave.out.x[17][0]",
+            "wave.out.x[18][0]",
+            "wave.out.x[19][0]",
+            "wave.out.x[20][0]", 
+            "wave.out.x[21][0]",
+            "wave.out.x[22][0]",
+            "wave.out.x[23][0]",
+            "wave.out.x[24][0]",
+            "wave.out.x[25][0]",
+            "wave.out.x[26][0]",
+            "wave.out.x[27][0]",
+            "wave.out.x[28][0]",
+            "wave.out.x[29][0]",
+            "wave.out.x[30][0]", 
+            "wave.out.x[31][0]",
+            "wave.out.x[32][0]",
+            "wave.out.x[33][0]",
+            "wave.out.x[34][0]",
+            "wave.out.x[35][0]",
+            "wave.out.x[36][0]",
+            "wave.out.x[37][0]",
+            "wave.out.x[38][0]",
+            "wave.out.x[39][0]",
+            "wave.out.x[40][0]", 
+            "wave.out.x[41][0]",
+            "wave.out.x[42][0]",
+            "wave.out.x[43][0]",
+            "wave.out.x[44][0]",
+            "wave.out.x[45][0]",
+            "wave.out.x[46][0]",
+            "wave.out.x[47][0]",
+            "wave.out.x[48][0]",
+            "wave.out.x[49][0]",
+            "wave.par.xN"
+        ]
+    },{ 
+        "type": "hist", 
+        "ports": [ 
+            "source.out.value"
+        ]
+    }],
+    "connectors_" : [
+        { "source": "source.out.value", "target" : "wave.par.x0" }
+    ],
+    "initializers" : [
+        { "port": "source.par.type", "value": 1 }, 
+        { "port": "source.par.frequency", "value": 0.1 },
+        { "port": "source.par.amplitude", "value": 1.0 },
+        { "port": "source.par.offset", "value": 0.0 },
+        { "port": "wave.par.L", "value": 1.0 },
+        { "port": "wave.par.alpha", "value": 0.0001 },
+        { "port": "wave.par.x0", "value": 0.0 },
+        { "port": "wave.par.xN", "value": 0.0 }
+    ]
+}

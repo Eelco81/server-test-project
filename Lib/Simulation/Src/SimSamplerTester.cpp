@@ -46,5 +46,6 @@ TEST (SimSamplerTester, Info) {
     ASSERT_EQ (SIM::Port::DOUBLE, info.mPortInfos[3].mType);
     
     ASSERT_EQ (std::string ("sim-sampler-1"), info.mId);
+    ASSERT_EQ (SIM::Sampler::HIST, info.mType);
 }
 

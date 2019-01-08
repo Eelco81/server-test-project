@@ -102,6 +102,20 @@ Matrix<N,N,T> Identity () {
     return Diag<N,T> ((T)1, 0);
 }
 
+template <std::size_t N,typename T = double>
+Matrix<N*2,N*2,T> Augment (MATH::Matrix<N,N,T> A1, MATH::Matrix<N,N,T> A2, MATH::Matrix<N,N,T> A3, MATH::Matrix<N,N,T> A4) {
+    MATH::Matrix<N*2,N*2,T> A;
+    for (std::size_t i(0u); i < N; i++) {
+        for (std::size_t j(0u); j < N; j++) {
+            A(i  ,j  ) = A1(i,j);
+            A(i  ,j+N) = A2(i,j);
+            A(i+N,j  ) = A3(i,j);
+            A(i+N,j+N) = A4(i,j);
+        }
+    }
+    return A;
+}
+
 }
 
 #include "MathMatrix.tcc"

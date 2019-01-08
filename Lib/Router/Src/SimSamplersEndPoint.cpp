@@ -36,7 +36,8 @@ void API::SIM::SamplersEndPoint::Get (const HTTP::Request& inRequest, HTTP::Resp
             
             json j;
             j["ports"] = ports;
-            j["id"] = sampler.mId;;
+            j["id"] = sampler.mId;
+            j["type"] = sampler.mType;
             
             return j; 
         });

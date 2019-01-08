@@ -4,9 +4,11 @@
         { "name" : "source", "type": "source" },
         { "name" : "heat", "type": "heat" }
     ],
-    "samplers" : [
-        [
-            "heat.out.x[0][0]",
+    "samplers" : [{ 
+        "type": "row", 
+        "ports": [
+            "heat.par.x0",
+            "heat.out.x[0][0]", 
             "heat.out.x[1][0]",
             "heat.out.x[2][0]",
             "heat.out.x[3][0]",
@@ -15,22 +17,67 @@
             "heat.out.x[6][0]",
             "heat.out.x[7][0]",
             "heat.out.x[8][0]",
-            "heat.out.x[9][0]"
-        ],
-        [
-            "heat.in.u[0][0]",
-            "heat.in.u[5][0]"
+            "heat.out.x[9][0]",
+            "heat.out.x[10][0]",
+            "heat.out.x[11][0]",
+            "heat.out.x[12][0]",
+            "heat.out.x[13][0]",
+            "heat.out.x[14][0]",
+            "heat.out.x[15][0]",
+            "heat.out.x[16][0]",
+            "heat.out.x[17][0]",
+            "heat.out.x[18][0]",
+            "heat.out.x[19][0]",
+            "heat.out.x[20][0]", 
+            "heat.out.x[21][0]",
+            "heat.out.x[22][0]",
+            "heat.out.x[23][0]",
+            "heat.out.x[24][0]",
+            "heat.out.x[25][0]",
+            "heat.out.x[26][0]",
+            "heat.out.x[27][0]",
+            "heat.out.x[28][0]",
+            "heat.out.x[29][0]",
+            "heat.out.x[30][0]", 
+            "heat.out.x[31][0]",
+            "heat.out.x[32][0]",
+            "heat.out.x[33][0]",
+            "heat.out.x[34][0]",
+            "heat.out.x[35][0]",
+            "heat.out.x[36][0]",
+            "heat.out.x[37][0]",
+            "heat.out.x[38][0]",
+            "heat.out.x[39][0]",
+            "heat.out.x[40][0]", 
+            "heat.out.x[41][0]",
+            "heat.out.x[42][0]",
+            "heat.out.x[43][0]",
+            "heat.out.x[44][0]",
+            "heat.out.x[45][0]",
+            "heat.out.x[46][0]",
+            "heat.out.x[47][0]",
+            "heat.out.x[48][0]",
+            "heat.out.x[49][0]",
+            "heat.par.xN"
         ]
-    ],
+    },{ 
+        "type": "hist", 
+        "ports": [ 
+            "source.out.value"
+        ]
+    }],
     "connectors" : [
-        { "source": "source.out.value", "target" : "heat.in.u[5][0]" }
+        { "source": "source.out.value", "target" : "heat.in.u[5][0]" },
+        { "source": "source.out.value", "target" : "heat.in.u[30][0]" }
     ],
     "initializers" : [
-        { "port": "source.par.type", "value": 3 }, 
+        { "port": "source.par.type", "value": 1 }, 
         { "port": "source.par.frequency", "value": 0.2 },
         { "port": "source.par.amplitude", "value": 1.0 },
-        { "port": "source.par.offset", "value": 1.0 },
+        { "port": "source.par.offset", "value": 0.0 },
         { "port": "heat.par.L", "value": 1.0 },
-        { "port": "heat.par.alpha", "value": 0.001 }
+        { "port": "heat.par.alpha", "value": 0.001 },
+        { "port": "heat.par.x0", "value": -1.0 },
+        { "port": "heat.par.xN", "value": 1.0 }
     ]
 }
