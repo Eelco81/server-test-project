@@ -10,11 +10,18 @@ Vue.component('chart-area', {
     },
     mounted: function() {
         const self = this;
-        this.sim.subscribe("sim-started", function(){
+        this.revokeStartSubscription = this.sim.subscribe("sim-started", function(){
             self.sim.getSamplers(function(samplers){
                 self.samplers = samplers;
             });
         });
+        this.revokeStopSubscription = this.sim.subscribe("sim-stopped", function(){
+            self.samplers = [];
+        });
+    },
+    beforeDestroy: function() {
+        this.revokeStartSubscription();
+        this.revokeStopSubscription();
     },
     template: `
         <div>

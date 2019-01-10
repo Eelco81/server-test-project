@@ -1,0 +1,29 @@
+
+.header-bar {
+    height:30px;
+    background-color:navy;
+    color:white;
+}
+
+.port-table {
+    float:left;
+}
+
+.port-line-label {
+    float:left;
+}
+
+.port-line-value {
+    float:left;
+}
+
+.sim-control {
+    margin:5px;
+    float:left;
+}
+
+.chart-graph {
+    width: 300px;
+    height: 200px;
+    float:left;
+}

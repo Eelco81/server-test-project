@@ -74,4 +74,16 @@ class Simulator extends EventEmitter {
         });
     }
     
+    setPort(port) {
+        console.log(port.value)
+        $.ajax({
+            url: this._root + "/ports/" + port.path,
+            type: "PUT",
+            data: JSON.stringify({ value: Number(port.value) }),
+            error: logSimulatorError,
+            succes: function() {
+                console.log("Succesfully set <" + port.path + ">");
+            }
+        });
+    }
 }

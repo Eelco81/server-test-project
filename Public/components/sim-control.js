@@ -1,4 +1,5 @@
 
+'use strict';
 
 Vue.component('sim-control', {
     props: ['sim'],
@@ -24,10 +25,10 @@ Vue.component('sim-control', {
         }
     },
     template: `
-        <form style="margin:5px; float:left">
+        <form class="sim-control">
             <div class="form-group">
                 <select id="config-select" class="form-control" v-model="selectedConfig">
-                    <option v-for="config in configs" :value="config">{{config}}</option>
+                    <option v-for="config in configs" v-bind:value="config">{{config}}</option>
                 </select>
             </div>
             <button id="button-start" type="button" class="btn btn-secondary" v-on:click="start">Start</button>

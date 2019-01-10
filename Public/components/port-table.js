@@ -10,16 +10,41 @@ Vue.component('port-table', {
     },
     mounted: function() {
         const self = this;
-        this.sim.subscribe("sim-started", function(){
+        this.revokeSubscription = this.sim.subscribe("sim-started", function(){
             self.sim.getPorts(function(ports){
-                self.ports = ports;
+                self.ports = ports.filter(function(port) { 
+                    return port.path.match(/\.par\./);
+                });
             });
         });
     },
+    beforeDestroy: function() {
+        this.revokeSubscription();
+    },
+    methods: {
+        submit: function(port) {
+            this.sim.setPort(port);
+        }
+    },
     template: `
-        <ol> 
-            <li v-for="port in ports" v-bind:key="port.path"> 
-                <div>{{port.path}} + " " + {{port.value}}</div>
-            </li>
-        </ol>`
+        <div class="port-table">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">Path</th>
+                        <th scope="col">Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="port in ports" v-bind:key="port.path">
+                        <td>{{port.path}}</td>
+                        <td>
+                            <input type="number" v-model="port.value"/>
+                            <button type="button" class="btn btn-secondary" v-on:click="submit(port)">Submit</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        `
 });

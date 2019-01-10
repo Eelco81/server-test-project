@@ -6,10 +6,15 @@ class EventEmitter {
     }
     
     subscribe(eventName, fn) {
+        const self = this;
         if(!this._events[eventName]) {
             this._events[eventName] = [];
         }
         this._events[eventName].push(fn);
+        
+        return function () {
+            self._events[eventName] = self._events[eventName].filter(function(evFn) { return evFn !== fn; });
+        }
     }
     
     emit(eventName, data1, data2) {

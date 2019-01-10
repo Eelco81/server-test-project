@@ -21,7 +21,7 @@ Vue.component('header-bar', {
         }
     },
     template: `
-        <header style="height:30px; background-color:navy; color:white;">
+        <header class="header-bar">
             <div>{{ name }}</div> 
         </header>`
 });

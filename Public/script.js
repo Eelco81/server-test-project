@@ -1,15 +1,19 @@
 
 'use strict';
 
-google.charts.load('current', {packages: ['corechart', 'line']});
+$(function() {
 
-google.charts.setOnLoadCallback(function(){
-    
-    new Vue({
-        el: '#vue-app',
-        data: {
-            sim: new Simulator()
-        } 
+    google.charts.load('current', {packages: ['corechart', 'line']});
+
+    google.charts.setOnLoadCallback(function(){
+        
+        new Vue({
+            el: '#vue-app',
+            data: {
+                sim: new Simulator()
+            } 
+        });
+        
     });
-    
+
 });
