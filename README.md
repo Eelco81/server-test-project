@@ -1,5 +1,11 @@
 # server-test-project
 
-This project is my test bin for trying out some new things. Currently I am trying to master the c++11/c++14 standard, some basic server/client behaviour, a workflow using GIT and some python Qt stuff.
+This project is my test bin for trying out some new things.
 
-I have no idea where this project is going yet!
+Current stack:
+- C++11/14/17 for server (Linux/Windows).
+- GoogleMock / GoogleTest for unit tests.
+- python / behave for integration tests.
+- VueJS for client side javascript (with JQuery, GoogleCharts and Bootstrap).
+
+See the root makefile for build instructions.

@@ -2,9 +2,9 @@
 from subprocess import Popen, PIPE
 import time
 
-def before_feature(context, feature):
-    context.port = "1702"
-    context.websockport = "1704" 
+def before_feature( context, feature ):
+    context.port = "1704"
+    context.websockport = "1706" 
     context.ip = "127.0.0.1"
     context.url = "http://" + context.ip + ":" + context.port
     context.websockurl = "ws://" + context.ip + ":" + context.websockport + "/web"
@@ -14,15 +14,15 @@ def before_feature(context, feature):
             '-ip', context.ip, 
             '-port', context.port, 
             '-websockport', context.websockport, 
-            '-loglevel', 'INFO'
+            '-loglevel', 'NONE'
         ], 
-        stdin=PIPE, # stderr=PIPE, stdout=PIPE,
+        stdin=PIPE, stderr=PIPE, stdout=PIPE,
         cwd = "../.."
     )
-    time.sleep(3)
+    time.sleep( 3 )
 
-def after_feature(context, feature):
-    context.server.communicate(input=b'quit\n')
-    time.sleep(3)
+def after_feature( context, feature ):
+    context.server.communicate( input=b'quit\n' )
+    time.sleep( 3 )
     context.server.kill()
-    time.sleep(2)
+    time.sleep( 2 )

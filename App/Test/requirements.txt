@@ -1,3 +1,4 @@
 behave
 websocket-client
 requests
+assertpy
