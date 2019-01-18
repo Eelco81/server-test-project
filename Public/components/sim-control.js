@@ -1,7 +1,7 @@
 
 'use strict';
 
-Vue.component('sim-control', {
+export default {
     props: ['sim'],
     data: function () {
         return {
@@ -34,4 +34,4 @@ Vue.component('sim-control', {
             <button id="button-start" type="button" class="btn btn-secondary" v-on:click="start">Start</button>
             <button id="button-stop" type="button" class="btn btn-secondary" v-on:click="stop">Stop</button>
         </form>`
-});
+};

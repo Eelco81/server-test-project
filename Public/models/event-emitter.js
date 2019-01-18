@@ -1,4 +1,6 @@
 
+'use strict';
+
 class EventEmitter {
     
     constructor() {
@@ -27,3 +29,5 @@ class EventEmitter {
     }
     
 }
+
+export { EventEmitter as default }

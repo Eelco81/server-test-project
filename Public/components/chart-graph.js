@@ -1,7 +1,9 @@
 
 'use strict';
 
-Vue.component('chart-graph', {
+import Chart from "./../models/chart.js"
+
+export default {
     props: ['sampler', 'sim'],
     mounted: function() {
         
@@ -18,4 +20,4 @@ Vue.component('chart-graph', {
         this.revokeSubscription();
     },
     template: '<div class="chart-graph"></div>'
-});
+};

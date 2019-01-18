@@ -1,13 +1,16 @@
 
 'use strict';
 
+import EventEmitter from './event-emitter.js'
+import $ from "jquery"
+
 const logSimulatorError = function (data) {
     console.log(data.responseJSON ? data.responseJSON.error : data.responseTEXT);
 };
 
 class Simulator extends EventEmitter {
 
-    constructor(){
+    constructor() {
         
         super();
         
@@ -75,7 +78,6 @@ class Simulator extends EventEmitter {
     }
     
     setPort(port) {
-        console.log(port.value)
         $.ajax({
             url: this._root + "/ports/" + port.path,
             type: "PUT",
@@ -87,3 +89,5 @@ class Simulator extends EventEmitter {
         });
     }
 }
+
+export { Simulator as default }

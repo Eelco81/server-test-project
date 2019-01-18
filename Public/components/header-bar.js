@@ -1,7 +1,7 @@
 
 'use strict';
 
-Vue.component('header-bar', {
+export default {
     data: function() {
         return {
             version: "",
@@ -24,4 +24,4 @@ Vue.component('header-bar', {
         <header class="header-bar">
             <div>{{ name }}</div> 
         </header>`
-});
+};

@@ -13,4 +13,5 @@ TARGET          = serveraplication
 -include $(TOOLDIR)/build.mk # DO NOT DELETE
 
 integration-test : 
-	cd ../Test; behave
+	rm *.xml
+	cd ../Test; behave --junit --junit-directory ../Make

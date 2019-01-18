@@ -1,0 +1,17 @@
+{
+  "name": "simulation-client",
+  "version": "0.0.1",
+  "description": "Client code for the HTTP server",
+  "license": "MIT",
+  "devDependencies": {
+    "expose-loader": "^0.7.5",
+    "lodash": "^4.17.11",
+    "vue": "^2.5.22",
+    "webpack": "^4.28.4",
+    "webpack-cli": "^3.2.1"
+  },
+  "dependencies": {
+    "google-charts": "^2.0.0",
+    "jquery": "^3.3.1"
+  }
+}

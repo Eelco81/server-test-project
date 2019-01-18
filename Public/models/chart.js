@@ -1,6 +1,8 @@
 
 'use strict';
 
+import {GoogleCharts} from 'google-charts'
+
 class Chart {
     
     constructor(elem, id, type) {
@@ -14,8 +16,8 @@ class Chart {
             hAxis: { title: 'Time' },
             vAxis: { title: 'Value' }
         };
-        this._data = new google.visualization.DataTable();
-        this._chart = new google.visualization.LineChart(elem);
+        this._data = new GoogleCharts.api.visualization.DataTable();
+        this._chart = new GoogleCharts.api.visualization.LineChart(elem);
     }
     
     init(ports) {
@@ -57,3 +59,5 @@ class Chart {
     }
     
 };
+
+export { Chart as default }

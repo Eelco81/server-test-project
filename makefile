@@ -3,8 +3,11 @@ TOOL_DIR=./Tools
 
 -include $(TOOL_DIR)/external.mk
 
-application: external
+application:
 	make all -C App/Make
+
+client:
+	make all -C Public
 
 test: external
 	make test -C Lib/AppUtils/Make
@@ -17,7 +20,7 @@ test: external
 	make test -C Lib/TcpServer/Make
 	make test -C Lib/WebSockets/Make
 
-integration-test: application
+integration-test:
 	make integration-test -C App/Make
 
 clean:

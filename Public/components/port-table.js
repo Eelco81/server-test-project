@@ -1,7 +1,7 @@
 
 'use strict';
 
-Vue.component('port-table', {
+export default {
     props: ['sim'],
     data: function() {
         return {
@@ -47,4 +47,4 @@ Vue.component('port-table', {
             </table>
         </div>
         `
-});
+};

@@ -1,8 +1,15 @@
 
 DOWNLOAD_DIR=./Download
 EXTERNAL_DIR=./External
+APP_DIR=./App
 
-download:
+pip:
+	make pip -C App/Make
+
+npm:
+	make npm -C Public
+
+download: clean-external
 	mkdir ${DOWNLOAD_DIR}
 	wget -P ${DOWNLOAD_DIR} https://github.com/google/googlemock/archive/release-1.7.0.zip
 	mv ${DOWNLOAD_DIR}/release-1.7.0.zip ${DOWNLOAD_DIR}/gmock-release-1.7.0.zip
@@ -11,7 +18,7 @@ download:
 	wget -P ${DOWNLOAD_DIR} https://raw.githubusercontent.com/983/SHA1/master/sha1.hpp
 	wget -P ${DOWNLOAD_DIR} https://github.com/nlohmann/json/releases/download/v3.3.0/json.hpp
 
-external: download
+external: pip npm download
 	mkdir ${EXTERNAL_DIR}
 	mkdir ${EXTERNAL_DIR}/gmock
 	mkdir ${EXTERNAL_DIR}/gmock/googlemock

@@ -1,8 +1,14 @@
 
 'use strict';
 
-Vue.component('chart-area', {
+import ChartGraph from "./chart-graph.js"
+import $ from "jquery"
+
+export default {
     props: ['sim'],
+    components: {
+        "chart-graph": ChartGraph
+    },
     data: function() {
         return {
             samplers: []
@@ -32,4 +38,4 @@ Vue.component('chart-area', {
                 v-bind:sim="sim"
             ></chart-graph>
         </div>`
-});
+};

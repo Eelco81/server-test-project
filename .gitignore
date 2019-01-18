@@ -25,6 +25,10 @@
 /App/Src/*.gcno
 /App/Src/*.TMP
 /App/Make/*.exe
+/App/Make/*.xml
+
+/Public/node_modules
+/Public/main.js
 
 /External
 /Downloads
