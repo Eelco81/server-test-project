@@ -4,3 +4,6 @@ npm:
 
 all:
 	npx webpack --config webpack.conf.js
+
+install:
+	

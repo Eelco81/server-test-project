@@ -1,29 +1,30 @@
 
-TOOL_DIR=./Tools
+ROOT_DIR=.
 
--include $(TOOL_DIR)/external.mk
+-include $(ROOT_DIR)/Tools/external.mk
+-include $(ROOT_DIR)/Tools/install.mk
 
 application:
 	make all -C App/Make
 
 client:
-	make all -C Public
+	make all -C $(WEB_DIR)
 
 test: external
-	make test -C Lib/AppUtils/Make
-	make test -C Lib/Core/Make
-	make test -C Lib/Http/Make
-	make test -C Lib/Math/Make
-	make test -C Lib/Router/Make
-	make test -C Lib/SimComponents/Make
-	make test -C Lib/Simulation/Make
-	make test -C Lib/TcpServer/Make
-	make test -C Lib/WebSockets/Make
+	make test -C $(LIB_DIR)/AppUtils/Make
+	make test -C $(LIB_DIR)/Core/Make
+	make test -C $(LIB_DIR)/Http/Make
+	make test -C $(LIB_DIR)/Math/Make
+	make test -C $(LIB_DIR)/Router/Make
+	make test -C $(LIB_DIR)/SimComponents/Make
+	make test -C $(LIB_DIR)/Simulation/Make
+	make test -C $(LIB_DIR)/TcpServer/Make
+	make test -C $(LIB_DIR)/WebSockets/Make
 
 integration-test:
-	make integration-test -C App/Make
+	make integration-test -C $(APP_DIR)/Make
 
-clean:
-	make clean -C App/Make
+clean: 
+	make clean -C $(APP_DIR)/Make
 
-distclean: clean clean-external
+distclean: clean clean-external clean-install

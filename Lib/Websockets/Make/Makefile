@@ -1,13 +1,8 @@
 # Make a static library
 
-EXTERNAL        = ./../../../External/sha1
-SOURCEDIR       = ./../Src
-LIBDIR          = ./../..
-TOOLDIR         = ./../../../Tools/
-SOURCES         = $(wildcard $(SOURCEDIR)/*.cpp)
-DEPENDENCIES    = Http TcpServer AppUtils Core 
-LINKS           = -lpthread
-INCLUDES        = -I$(EXTERNAL)
+ROOT_DIR        = ./../../..
+SOURCE_DIR      = ./../Src
+DEPENDENCIES    = Http TcpServer AppUtils Core
 LIBTARGET       = libwebsockets.a
 
--include $(TOOLDIR)/build.mk
+-include $(ROOT_DIR)/Tools/build.mk

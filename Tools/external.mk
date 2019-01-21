@@ -1,13 +1,11 @@
 
-DOWNLOAD_DIR=./Download
-EXTERNAL_DIR=./External
-APP_DIR=./App
+-include ${ROOT_DIR}/Tools/config.mk
 
 pip:
-	make pip -C App/Make
+	make pip -C ${APP_DIR}/Make
 
 npm:
-	make npm -C Public
+	make npm -C ${WEB_DIR}
 
 download: clean-external
 	mkdir ${DOWNLOAD_DIR}
@@ -37,3 +35,5 @@ external: pip npm download
 clean-external:
 	rm -rf ${DOWNLOAD_DIR}
 	rm -rf ${EXTERNAL_DIR}
+	rm -rf ${WEB_DIR}/node_modules
+

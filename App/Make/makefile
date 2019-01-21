@@ -1,16 +1,11 @@
 # create an executable
 
-EXTERNAL        = ./../../External/nlohman
-SOURCEDIR       = ./../Src
-LIBDIR          = ./../../Lib
-TOOLDIR         = ./../../Tools
-SOURCES         = $(wildcard $(SOURCEDIR)/*.cpp)
+ROOT_DIR        = ./../..
+SOURCE_DIR      = ./../Src
 DEPENDENCIES    = Websockets Router Http TcpServer SimComponents Simulation AppUtils Core
-LINKS           = -lpthread
-INCLUDES        = -I$(EXTERNAL)
 TARGET          = serveraplication
 
--include $(TOOLDIR)/build.mk # DO NOT DELETE
+-include $(ROOT_DIR)/Tools/build.mk # DO NOT DELETE
 
 pip: 
 	pip install -r ../Test/requirements.txt

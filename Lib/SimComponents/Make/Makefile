@@ -1,13 +1,8 @@
 # Make a static library
 
-EXTERNAL        = ./../../../External/nlohman
-SOURCEDIR       = ./../Src
-LIBDIR          = ./../..
-TOOLDIR         = ./../../../Tools/
-SOURCES         = $(wildcard $(SOURCEDIR)/*.cpp)
+ROOT_DIR        = ./../../..
+SOURCE_DIR      = ./../Src
 DEPENDENCIES    = Simulation AppUtils Math Core
-LINKS           = -lpthread
-INCLUDES        = -I$(EXTERNAL)
 LIBTARGET       = libsimcomponents.a
 
--include $(TOOLDIR)/build.mk
+-include $(ROOT_DIR)/Tools/build.mk

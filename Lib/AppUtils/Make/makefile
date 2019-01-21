@@ -1,11 +1,8 @@
 # Make a static library
 
-SOURCEDIR       = ./../Src
-LIBDIR          = ./../..
-TOOLDIR         = ./../../../Tools/
-SOURCES         = $(wildcard $(SOURCEDIR)/*.cpp)
+ROOT_DIR        = ./../../..
+SOURCE_DIR      = ./../Src
 DEPENDENCIES    = Core
-LINKS           = -lpthread
 LIBTARGET       = libapputils.a
 
--include $(TOOLDIR)/build.mk
+-include $(ROOT_DIR)/Tools/build.mk
