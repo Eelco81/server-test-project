@@ -5,8 +5,6 @@ import Vue from 'vue'
 import {GoogleCharts} from 'google-charts'
 
 import $ from 'jquery'
-import Simulator from './models/simulator.js'
-
 import ChartArea from "./components/chart-area.js"
 import ChartGraph from "./components/chart-graph.js"
 import HeaderBar from "./components/header-bar.js"
@@ -17,9 +15,6 @@ $(function() {
     GoogleCharts.load(function(){
         new Vue({
             el: '#vue-app',
-            data: {
-                sim: new Simulator()
-            },
             components: {
                 "chart-area": ChartArea,
                 "chart-graph": ChartGraph,

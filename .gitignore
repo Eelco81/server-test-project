@@ -29,6 +29,7 @@
 
 /Public/node_modules
 /Public/main.js
+/Public/package-lock.json
 
 /External
 /Downloads

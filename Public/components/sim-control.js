@@ -1,8 +1,9 @@
 
 'use strict';
 
+import simulator from "./../models/simulator.js"
+
 export default {
-    props: ['sim'],
     data: function () {
         return {
             selectedConfig: "",
@@ -11,27 +12,27 @@ export default {
     },
     mounted: function() {
         const self = this;
-        this.sim.getConfigs(function(configs) {
+        simulator.getConfigs(function(configs) {
             self.selectedConfig = configs[0];
             self.configs = configs;
         });
     },
     methods: {
         start: function() {
-            this.sim.start(this.selectedConfig);
+            simulator.start(this.selectedConfig);
         },
         stop: function() {
-            this.sim.stop();
+            simulator.stop();
         }
     },
     template: `
-        <form class="sim-control">
+        <form class="form-inline sim-control">
             <div class="form-group">
-                <select id="config-select" class="form-control" v-model="selectedConfig">
+                <select id="config-select" class="form-control mr-sm-2" v-model="selectedConfig">
                     <option v-for="config in configs" v-bind:value="config">{{config}}</option>
                 </select>
             </div>
-            <button id="button-start" type="button" class="btn btn-secondary" v-on:click="start">Start</button>
-            <button id="button-stop" type="button" class="btn btn-secondary" v-on:click="stop">Stop</button>
+            <button id="button-start" type="button" class="btn btn-outline-light mr-sm-2" v-on:click="start">Start</button>
+            <button id="button-stop" type="button" class="btn btn-outline-light mr-sm-2" v-on:click="stop">Stop</button>
         </form>`
 };

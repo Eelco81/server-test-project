@@ -90,4 +90,6 @@ class Simulator extends EventEmitter {
     }
 }
 
-export { Simulator as default }
+const SimulatorInstance = new Simulator();
+
+export { SimulatorInstance as default }

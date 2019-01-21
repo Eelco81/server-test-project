@@ -7,8 +7,6 @@ module.exports = {
     filename: 'main.js',
     path: path.resolve(__dirname)
   },
-  externals: {
-  },
   plugins: [
     new webpack.ProvidePlugin({
       $: 'jquery',

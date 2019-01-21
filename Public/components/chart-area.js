@@ -1,11 +1,12 @@
 
 'use strict';
 
-import ChartGraph from "./chart-graph.js"
 import $ from "jquery"
 
+import ChartGraph from "./chart-graph.js"
+import simulator from "./../models/simulator.js"
+
 export default {
-    props: ['sim'],
     components: {
         "chart-graph": ChartGraph
     },
@@ -16,12 +17,12 @@ export default {
     },
     mounted: function() {
         const self = this;
-        this.revokeStartSubscription = this.sim.subscribe("sim-started", function(){
-            self.sim.getSamplers(function(samplers){
+        this.revokeStartSubscription = simulator.subscribe("sim-started", function(){
+            simulator.getSamplers(function(samplers){
                 self.samplers = samplers;
             });
         });
-        this.revokeStopSubscription = this.sim.subscribe("sim-stopped", function(){
+        this.revokeStopSubscription = simulator.subscribe("sim-stopped", function(){
             self.samplers = [];
         });
     },
@@ -35,7 +36,6 @@ export default {
                 v-for="sampler in samplers" 
                 v-bind:key="sampler.id" 
                 v-bind:sampler="sampler"
-                v-bind:sim="sim"
             ></chart-graph>
         </div>`
 };

@@ -12,6 +12,9 @@ TARGET          = serveraplication
 
 -include $(TOOLDIR)/build.mk # DO NOT DELETE
 
+pip: 
+	pip install -r ../Test/requirements.txt
+
 integration-test : 
 	rm *.xml
 	cd ../Test; behave --junit --junit-directory ../Make

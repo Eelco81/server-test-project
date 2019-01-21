@@ -1,7 +1,7 @@
 
 'use strict';
 
-class EventEmitter {
+export default class EventEmitter {
     
     constructor() {
         this._events = {};
@@ -14,7 +14,7 @@ class EventEmitter {
         }
         this._events[eventName].push(fn);
         
-        return function () {
+        return function unsubscribe() {
             self._events[eventName] = self._events[eventName].filter(function(evFn) { return evFn !== fn; });
         }
     }
@@ -30,4 +30,4 @@ class EventEmitter {
     
 }
 
-export { EventEmitter as default }
+//export { EventEmitter as default }

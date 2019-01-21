@@ -1,7 +1,12 @@
 
 'use strict';
 
+import SimControl from "./sim-control.js"
+
 export default {
+    components: {
+        "sim-control": SimControl
+    },
     data: function() {
         return {
             version: "",
@@ -21,7 +26,11 @@ export default {
         }
     },
     template: `
-        <header class="header-bar">
-            <div>{{ name }}</div> 
-        </header>`
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark justify-content-between">
+            <a class="navbar-brand" href="#"> {{name}} </a>
+            <sim-control></sim-control>
+        </nav>
+    </header>
+    `
 };
