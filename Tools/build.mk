@@ -3,7 +3,7 @@
 
 CC              = g++
 AR              = ar
-CFLAGS          = -c -std=c++17 -std=gnu++17 -Wall
+CFLAGS          = -c -std=c++17 -std=gnu++17 -Wall -O3
 LINKS           = -lpthread -lstdc++fs
 
 #GCOVFLAGS       = -fprofile-arcs -ftest-coverage

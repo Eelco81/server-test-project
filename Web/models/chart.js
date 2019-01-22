@@ -3,7 +3,7 @@
 
 import {GoogleCharts} from 'google-charts'
 
-class Chart {
+export default class Chart {
     
     constructor(elem, id, type) {
         
@@ -59,5 +59,3 @@ class Chart {
     }
     
 };
-
-export { Chart as default }

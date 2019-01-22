@@ -10,7 +10,7 @@ def before_feature( context, feature ):
     context.websockurl = "ws://" + context.ip + ":" + context.websockport + "/web"
     context.server = Popen(
         [
-            '../Make/serveraplication.exe', 
+            '../Make/server.exe', 
             '-ip', context.ip, 
             '-port', context.port, 
             '-websockport', context.websockport, 
