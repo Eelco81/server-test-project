@@ -1,14 +1,12 @@
 
 'use strict';
 
-import $ from "jquery"
-
-import ChartGraph from "./chart-graph.js"
+import SimChart from "./sim-chart.js"
 import simulator from "./../models/simulator.js"
 
 export default {
     components: {
-        "chart-graph": ChartGraph
+        "sim-chart" : SimChart
     },
     data: function() {
         return {
@@ -32,10 +30,8 @@ export default {
     },
     template: `
         <div>
-            <chart-graph 
-                v-for="sampler in samplers" 
-                v-bind:key="sampler.id" 
-                v-bind:sampler="sampler"
-            ></chart-graph>
+            <div class="chart-graph" v-for="sampler in samplers" v-bind:key="sampler.id" >
+                <sim-chart v-bind:sampler="sampler"></sim-chart>
+            </div>
         </div>`
 };
