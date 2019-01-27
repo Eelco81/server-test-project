@@ -10,11 +10,11 @@ import '@fortawesome/fontawesome-free/css/all.min.css';
 import './style.css'
 
 import ChartArea from "./components/chart-area.js";
-import ChartGraph from "./components/chart-graph.js";
 import HeaderBar from "./components/header-bar.js";
 import PortTable from "./components/port-table.js";
 import SimControl from "./components/sim-control.js";
 import SimChart from "./components/sim-chart.js";
+import SimXyChart from "./components/sim-xy-chart.js";
 
 $(function() {
     
@@ -22,11 +22,11 @@ $(function() {
         el: '#vue-app',
         components: {
             "chart-area": ChartArea,
-            "chart-graph": ChartGraph,
             "header-bar": HeaderBar,
             "port-table": PortTable,
             "sim-control": SimControl,
-            "sim-chart": SimChart
+            "sim-chart": SimChart,
+            "sim-xy-chart": SimXyChart
         },
         template:`
             <div>
