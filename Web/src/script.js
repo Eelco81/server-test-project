@@ -7,7 +7,7 @@ import $ from 'jquery';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
-import './style.css'
+import './css/style.css'
 
 import ChartArea from "./components/chart-area.js";
 import HeaderBar from "./components/header-bar.js";

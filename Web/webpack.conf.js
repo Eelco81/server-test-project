@@ -2,10 +2,10 @@ const path = require('path');
 const webpack = require('webpack')
 
 module.exports = {
-  entry: './script.js',
+  entry: './src/script.js',
   output: {
     filename: 'main.js',
-    path: path.resolve(__dirname)
+    path: path.resolve(__dirname, "dist")
   },
   plugins: [
     new webpack.ProvidePlugin({

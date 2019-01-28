@@ -29,7 +29,7 @@
 
 /Web/node_modules
 /Web/package-lock.json
-/Web/main.js
+/Web/dist
 
 /External
 /Downloads
