@@ -1,9 +1,8 @@
 
 'use strict';
 
-import simulator from "./../models/simulator.js"
-
 export default {
+    inject: [ 'getSimulator' ],
     data: function() {
         return {
             ports: []
@@ -11,8 +10,8 @@ export default {
     },
     mounted: function() {
         const self = this;
-        this.revokeSubscription = simulator.subscribe("sim-started", function(){
-            simulator.getPorts(function(ports){
+        self.revokeSubscription = self.getSimulator().subscribe("sim-started", function(){
+            self.getSimulator().getPorts(function(ports){
                 self.ports = ports.filter(function(port) { 
                     return port.path.match(/\.par\./);
                 });
@@ -24,7 +23,7 @@ export default {
     },
     methods: {
         submit: function(port) {
-            simulator.setPort(port);
+            this.getSimulator.setPort(port);
         }
     },
     template: `

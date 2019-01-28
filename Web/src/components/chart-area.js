@@ -3,9 +3,9 @@
 
 import SimChart from "./sim-chart.js"
 import SimXyChart from "./sim-xy-chart.js"
-import simulator from "./../models/simulator.js"
 
 export default {
+    inject: [ 'getSimulator' ],
     components: {
         "sim-chart" : SimChart,
         "sim-xy-chart" : SimXyChart
@@ -17,12 +17,12 @@ export default {
     },
     mounted: function() {
         const self = this;
-        this.revokeStartSubscription = simulator.subscribe("sim-started", function(){
-            simulator.getSamplers(function(samplers){
+        self.revokeStartSubscription = self.getSimulator().subscribe("sim-started", function(){
+            self.getSimulator().getSamplers(function(samplers){
                 self.samplers = samplers;
             });
         });
-        this.revokeStopSubscription = simulator.subscribe("sim-stopped", function(){
+        this.revokeStopSubscription = this.getSimulator().subscribe("sim-stopped", function(){
             self.samplers = [];
         });
     },
@@ -34,7 +34,7 @@ export default {
         <div>
             <div class="chart-graph" v-for="sampler in samplers" v-bind:key="sampler.id" >
                 <sim-chart v-if="sampler.type==0" v-bind:sampler="sampler"></sim-chart>
-                <sim-xy-chart v-else v-bind:sampler="sampler"></sim-chart>
+                <sim-xy-chart v-else v-bind:sampler="sampler"></sim-xy-chart>
             </div>
         </div>`
 };

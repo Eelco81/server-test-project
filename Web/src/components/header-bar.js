@@ -26,11 +26,11 @@ export default {
         }
     },
     template: `
-    <header>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark justify-content-between">
-            <a class="navbar-brand" href="#"> <i class="fas fa-angle-double-right"></i> {{name}} </a>
-            <sim-control></sim-control>
-        </nav>
-    </header>
-    `
+        <header>
+            <nav class="navbar navbar-expand-lg navbar-dark bg-dark justify-content-between">
+                <a class="navbar-brand" href="#"> <i class="fas fa-angle-double-right"></i> {{name}} </a>
+                <sim-control></sim-control>
+            </nav>
+        </header>
+        `
 };

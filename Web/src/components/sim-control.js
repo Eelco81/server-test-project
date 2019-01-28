@@ -1,9 +1,8 @@
 
 'use strict';
 
-import simulator from "./../models/simulator.js"
-
 export default {
+    inject: [ 'getSimulator' ],
     data: function () {
         return {
             selectedConfig: "",
@@ -12,17 +11,17 @@ export default {
     },
     mounted: function() {
         const self = this;
-        simulator.getConfigs(function(configs) {
+        self.getSimulator().getConfigs(function(configs) {
             self.selectedConfig = configs[0];
             self.configs = configs;
         });
     },
     methods: {
         start: function() {
-            simulator.start(this.selectedConfig);
+            this.getSimulator().start(this.selectedConfig);
         },
         stop: function() {
-            simulator.stop();
+            this.getSimulator().stop();
         }
     },
     template: `

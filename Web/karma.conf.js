@@ -8,13 +8,13 @@ module.exports = function(config) {
         singleRun: true,
         browsers: [ 'ChromeHeadless' ], //  'Chrome'
         files: [
-            '*.js',
-            '**/*.js'
+            '*-test.js',
+            '**/*-test.js'
         ],
 
         preprocessors: {
-            '*.js': ['webpack'],
-            '**/*.js': ['webpack']
+            '*-test.js': ['webpack'],
+            '**/*-test.js': ['webpack']
         },
 
         webpack: {

@@ -8,7 +8,7 @@ const logSimulatorError = function (data) {
     console.log(data.responseJSON ? data.responseJSON.error : data.responseTEXT);
 };
 
-class Simulator extends EventEmitter {
+export default class Simulator extends EventEmitter {
 
     constructor() {
         
@@ -90,6 +90,5 @@ class Simulator extends EventEmitter {
     }
 }
 
-const SimulatorInstance = new Simulator();
-
-export { SimulatorInstance as default }
+//const SimulatorInstance = new Simulator();
+//export { SimulatorInstance as default }

@@ -5,10 +5,10 @@ ROOT_DIR=./..
 npm:
 	npm install
 
-all:
+webpack:
 	npx webpack --config webpack.conf.js
 
-install: all
+install: webpack
 	rm -rf $(INSTALL_DIR)/Public
 	mkdir $(INSTALL_DIR)/Public
 	cp index.html $(INSTALL_DIR)/Public
@@ -17,3 +17,5 @@ install: all
 distclean:
 	rm -rf node_modules
 
+karma:
+	npx karma start karma.conf.js
