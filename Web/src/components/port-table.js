@@ -2,7 +2,7 @@
 'use strict';
 
 export default {
-    inject: [ 'getSimulator' ],
+    inject: [ 'simService' ],
     data: function() {
         return {
             ports: []
@@ -10,8 +10,8 @@ export default {
     },
     mounted: function() {
         const self = this;
-        self.revokeSubscription = self.getSimulator().subscribe("sim-started", function(){
-            self.getSimulator().getPorts(function(ports){
+        self.revokeSubscription = self.simService().subscribe("sim-started", function(){
+            self.simService().getPorts(function(ports){
                 self.ports = ports.filter(function(port) { 
                     return port.path.match(/\.par\./);
                 });
@@ -23,7 +23,7 @@ export default {
     },
     methods: {
         submit: function(port) {
-            this.getSimulator.setPort(port);
+            this.simService.setPort(port);
         }
     },
     template: `

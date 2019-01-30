@@ -7,7 +7,7 @@ import Plotly from "plotly.js/dist/plotly-basic.min.js"
 const MAX_SAMPLES = 100;
 
 export default {
-    inject: [ 'getSimulator' ],
+    inject: [ 'simService' ],
     props: [ 'sampler' ],
     mounted: function() {
         
@@ -22,7 +22,7 @@ export default {
         
         Plotly.newPlot(element, data, ChartLayout(this.sampler.id), {displayModeBar: false});
         
-        this.revokeSubscription = this.getSimulator().subscribe(this.sampler.id, function(sampleData) {
+        this.revokeSubscription = this.simService().subscribe(this.sampler.id, function(sampleData) {
           
            const time = sampleData.shift();
            Plotly.restyle(element, { y: [ sampleData ] }, [0]);

@@ -2,7 +2,7 @@
 'use strict';
 
 export default {
-    inject: [ 'getSimulator' ],
+    inject: [ 'simService' ],
     data: function () {
         return {
             selectedConfig: "",
@@ -11,17 +11,17 @@ export default {
     },
     mounted: function() {
         const self = this;
-        self.getSimulator().getConfigs(function(configs) {
+        self.simService().getConfigs(function(configs) {
             self.selectedConfig = configs[0];
             self.configs = configs;
         });
     },
     methods: {
         start: function() {
-            this.getSimulator().start(this.selectedConfig);
+            this.simService().start(this.selectedConfig);
         },
         stop: function() {
-            this.getSimulator().stop();
+            this.simService().stop();
         }
     },
     template: `

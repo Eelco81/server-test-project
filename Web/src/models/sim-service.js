@@ -4,7 +4,7 @@
 import EventEmitter from './event-emitter.js'
 import $ from "jquery"
 
-const logSimulatorError = function (data) {
+const logError = function (data) {
     console.log(data.responseJSON ? data.responseJSON.error : data.responseTEXT);
 };
 
@@ -34,7 +34,7 @@ export default class Simulator extends EventEmitter {
             url: this._root, 
             type: 'PUT', 
             data: JSON.stringify({ id: id }),
-            error: logSimulatorError
+            error: logError
         });
     }
     
@@ -42,7 +42,7 @@ export default class Simulator extends EventEmitter {
         $.ajax({
             url: this._root, 
             type: 'DELETE',
-            error: logSimulatorError
+            error: logError
         });
     }
     
@@ -50,7 +50,7 @@ export default class Simulator extends EventEmitter {
         $.ajax( {
             url: this._root + "/config", 
             type: 'GET',
-            error: logSimulatorError,
+            error: logError,
             success: callback
         });
     }
@@ -59,7 +59,7 @@ export default class Simulator extends EventEmitter {
         $.ajax({
             url: this._root + "/samplers", 
             type: 'GET',
-            error: logSimulatorError,
+            error: logError,
             success: function(data){
                 callback(data.samplers);
             }
@@ -70,7 +70,7 @@ export default class Simulator extends EventEmitter {
         $.ajax({
             url: this._root + "/ports", 
             type: 'GET',
-            error: logSimulatorError,
+            error: logError,
             success: function(data){
                 callback(data.ports);
             }
@@ -82,13 +82,10 @@ export default class Simulator extends EventEmitter {
             url: this._root + "/ports/" + port.path,
             type: "PUT",
             data: JSON.stringify({ value: Number(port.value) }),
-            error: logSimulatorError,
+            error: logError,
             succes: function() {
                 console.log("Succesfully set <" + port.path + ">");
             }
         });
     }
 }
-
-//const SimulatorInstance = new Simulator();
-//export { SimulatorInstance as default }

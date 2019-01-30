@@ -16,18 +16,20 @@ import SimControl from "./components/sim-control.js";
 import SimChart from "./components/sim-chart.js";
 import SimXyChart from "./components/sim-xy-chart.js";
 
-import Simulator from "./models/simulator.js"
+import SimService from "./models/sim-service.js"
 
 $(function() {
     
     
-    const simulator = new Simulator();
+    const simService = new SimService();
 
     new Vue({
         el: '#vue-app',
-        provide:  function () {
+        provide: function () {
             return {
-                getSimulator: this.getSimulator
+                simService: function() {
+                    return simService;
+                }
             }
         },
         components: {
@@ -37,11 +39,6 @@ $(function() {
             "sim-control": SimControl,
             "sim-chart": SimChart,
             "sim-xy-chart": SimXyChart
-        },
-        methods: {
-            getSimulator: function() {
-                return simulator;
-            }
         },
         template:`
             <div>

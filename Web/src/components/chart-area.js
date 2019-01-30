@@ -5,7 +5,7 @@ import SimChart from "./sim-chart.js"
 import SimXyChart from "./sim-xy-chart.js"
 
 export default {
-    inject: [ 'getSimulator' ],
+    inject: [ 'simService' ],
     components: {
         "sim-chart" : SimChart,
         "sim-xy-chart" : SimXyChart
@@ -17,12 +17,12 @@ export default {
     },
     mounted: function() {
         const self = this;
-        self.revokeStartSubscription = self.getSimulator().subscribe("sim-started", function(){
-            self.getSimulator().getSamplers(function(samplers){
+        self.revokeStartSubscription = self.simService().subscribe("sim-started", function(){
+            self.simService().getSamplers(function(samplers){
                 self.samplers = samplers;
             });
         });
-        this.revokeStopSubscription = this.getSimulator().subscribe("sim-stopped", function(){
+        this.revokeStopSubscription = this.simService().subscribe("sim-stopped", function(){
             self.samplers = [];
         });
     },

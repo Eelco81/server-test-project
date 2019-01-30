@@ -1,4 +1,6 @@
 
+'use strict';
+
 export default function(id) {
     
     return {
