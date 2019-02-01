@@ -23,7 +23,7 @@ export default {
     },
     methods: {
         submit: function(port) {
-            this.simService.setPort(port);
+            this.simService().setPort(port);
         }
     },
     template: `

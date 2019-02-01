@@ -22,6 +22,9 @@ export default {
         },
         stop: function() {
             this.simService().stop();
+        },
+        visitGithub: function() {
+            window.open('https://github.com/Eelco81/server-test-project', '_blank');
         }
     },
     template: `
@@ -33,7 +36,10 @@ export default {
             </div>
             <button id="button-start" type="button" class="btn btn-outline-light mr-sm-2" v-on:click="start">Start</button>
             <button id="button-stop" type="button" class="btn btn-outline-light mr-sm-2" v-on:click="stop">Stop</button>
-            <button id="button-info" type="button" class="btn btn-outline-light mr-sm-2" >
+            <button id="button-info" type="button" class="btn btn-outline-light mr-sm-2" v-on:click="visitGithub">
+                <i class="fab fa-github"></i>
+            </button>
+            <button id="button-github" type="button" class="btn btn-outline-light mr-sm-2">
                 <i class="fas fa-info"></i>
             </button>
         </form>`

@@ -6,8 +6,8 @@ import sinon from 'sinon';
 import { mount } from '@vue/test-utils'
 
 // Unit under test
-import ChartArea from './../../src/components/chart-area.js'
-import Simulator from './../mocks/simulator-mock.js'
+import ChartArea from './../../src/components/chart-area.js';
+import Simulator from './../mocks/simulator-mock.js';
 
 describe('chart-area', function(){
     
