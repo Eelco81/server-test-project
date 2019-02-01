@@ -5,7 +5,7 @@ import EventEmitter from './../../src/models/event-emitter.js'
 
 import sinon from 'sinon'
 
-export default class Simulator extends EventEmitter {
+export default class SimService extends EventEmitter {
     
     constructor() {
         
