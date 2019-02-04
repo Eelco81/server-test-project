@@ -13,6 +13,7 @@ install: webpack
 	mkdir $(INSTALL_DIR)/Public
 	cp index.html $(INSTALL_DIR)/Public
 	cp dist/main.js $(INSTALL_DIR)/Public
+	cp dist/main.js.map $(INSTALL_DIR)/Public
 
 distclean:
 	rm -rf node_modules
