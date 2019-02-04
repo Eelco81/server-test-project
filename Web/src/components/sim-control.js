@@ -1,8 +1,13 @@
 
 'use strict';
 
+import LicenceModal from "./licence-modal.js"
+
 export default {
     inject: [ 'simService' ],
+    components: {
+        "licence-modal": LicenceModal
+    },
     data: function () {
         return {
             selectedConfig: "",
@@ -39,8 +44,6 @@ export default {
             <button id="button-info" type="button" class="btn btn-outline-light mr-sm-2" v-on:click="visitGithub">
                 <i class="fab fa-github"></i>
             </button>
-            <button id="button-github" type="button" class="btn btn-outline-light mr-sm-2">
-                <i class="fas fa-info"></i>
-            </button>
+            <licence-modal></licence-modal>
         </form>`
 };

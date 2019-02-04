@@ -7,12 +7,6 @@ import VueRouter from 'vue-router';
 import routes from './views/routes.js'; 
 import HeaderBar from './components/header-bar.js';
 import SideBar from './components/side-bar.js'; 
-import ChartArea from './components/chart-area.js';
-import PortTable from './components/port-table.js';
-import SimControl from './components/sim-control.js';
-import SimChart from './components/sim-chart.js';
-import SimXyChart from './components/sim-xy-chart.js';
-
 import SimService from './models/sim-service.js'
 
 Vue.use(VueRouter);
@@ -20,12 +14,14 @@ Vue.use(VueRouter);
 export default function (div) {
     
     const router = new VueRouter({ routes: routes, base: "/home/" });
-    router.replace("sim-view");
+    router.replace("sim-view"); // default route
     
     const simService = new SimService();
     
     return new Vue({
+        
         router: router,
+        
         provide: function () {
             return {
                 simService: function() {
@@ -33,15 +29,12 @@ export default function (div) {
                 }
             }
         },
+        
         components: {
             'header-bar': HeaderBar,
-            'side-bar': SideBar,
-            'chart-area': ChartArea,
-            'port-table': PortTable,
-            'sim-control': SimControl,
-            'sim-chart': SimChart,
-            'sim-xy-chart': SimXyChart
+            'side-bar': SideBar
         },
+        
         template:`
             <div>
                 <header-bar></header-bar>
@@ -53,5 +46,6 @@ export default function (div) {
                 </div>
             </div>
         `
+        
     }).$mount(div);
 }
