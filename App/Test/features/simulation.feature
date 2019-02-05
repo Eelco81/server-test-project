@@ -1,13 +1,5 @@
 
-Feature: Simulator
-
-  Scenario: Configuration management
-    When sending a GET request on /api/simulation/config
-    Then the received response has code 200
-    Then the received response contains all standard headers
-    Then the received response contains simulation "basic"
-    Then the received response contains simulation "heat"
-    Then the received response contains simulation "wave"
+Feature: Simulation service
 
   Scenario: Starting and stopping simulations
    Given the event service is connected

@@ -28,11 +28,6 @@ def step_impl( context ):
 def step_impl( context ):
     context.service.stop()
 
-@then( 'the received response contains simulation "{sim}"' )
-def step_impl( context, sim ):
-    body = context.response.json()
-    assert_that( body ).contains( sim )
-
 @when( 'simulation "{sim}" is started' )
 def step_impl( context, sim ):
     payload = json.dumps( { "id": sim } )

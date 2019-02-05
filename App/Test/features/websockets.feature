@@ -1,7 +1,7 @@
 
-Feature: Data streaming
+Feature: Websockets (RFC6455)
 
-  Scenario Outline: Connection heartbeats
+  Scenario Outline: Heartbeats
    Given the streaming connection is open
     When sending a ping with payload size <byte count>
     Then a pong is received with payload size <byte count>
