@@ -39,6 +39,7 @@ TEST (HttpCodesTester, CodeToString) {
     ASSERT_EQ (std::string ("OK"), CodeToString (Code::OK)); 
     ASSERT_EQ (std::string ("Created"), CodeToString (Code::CREATED)); 
     ASSERT_EQ (std::string ("Accepted"), CodeToString (Code::ACCEPTED)); 
+    ASSERT_EQ (std::string ("No Content"), CodeToString (Code::NO_CONTENT)); 
     ASSERT_EQ (std::string ("Not Modified"), CodeToString (Code::NOT_MODIFIED));
     ASSERT_EQ (std::string ("Bad Request"), CodeToString (Code::BAD_REQUEST)); 
     ASSERT_EQ (std::string ("Forbidden"), CodeToString (Code::FORBIDDEN));

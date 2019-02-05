@@ -13,7 +13,7 @@ class SupportThread : public PeriodicThread {
 
 public:
     SupportThread ();
-    ~SupportThread () = default;
+    virtual ~SupportThread ();
 
 };
 

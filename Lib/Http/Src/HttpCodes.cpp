@@ -39,6 +39,7 @@ std::string HTTP::CodeToString (HTTP::Code inCode) {
         case Code::OK : return "OK";
         case Code::CREATED : return "Created";
         case Code::ACCEPTED : return "Accepted";
+        case Code::NO_CONTENT : return "No Content";
         case Code::NOT_MODIFIED : return "Not Modified";
         case Code::BAD_REQUEST : return "Bad Request";
         case Code::FORBIDDEN : return "Forbidden";

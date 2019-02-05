@@ -2,10 +2,10 @@
 Feature: Websockets (RFC6455)
 
   Scenario Outline: Heartbeats
-   Given the streaming connection is open
+   Given the websocket connection is open
     When sending a ping with payload size <byte count>
     Then a pong is received with payload size <byte count>
-     And the streaming connection can be closed
+    Then the websocket connection can be closed
     
   Examples: Binary payloads
     | byte count |

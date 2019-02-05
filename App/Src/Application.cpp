@@ -15,6 +15,9 @@
 
 void Application::Run (const OS::CommandLine& inCommandLine) {
 
+    APP::SupportThread supportThread;
+    supportThread.Spawn ();
+    
     LOGINFO << "Starting " << OS::Version::GetApplicationName () << " " << OS::Version::GetApplicationVersion ();
 
     std::string ip ("127.0.0.1");
@@ -25,9 +28,6 @@ void Application::Run (const OS::CommandLine& inCommandLine) {
 
     std::string websockport ("1704");
     inCommandLine.HasOption ("websockport", websockport);
-
-    APP::SupportThread supportThread;
-    supportThread.Spawn ();
 
     auto service = std::make_shared<SIM::Service> (std::make_unique<SIM::COM::Factory> ());
 

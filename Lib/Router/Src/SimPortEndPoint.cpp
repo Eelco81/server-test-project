@@ -74,7 +74,7 @@ void API::SIM::PortEndPoint::Put (const HTTP::Request& inRequest, HTTP::Response
     
     try {
         mService->SetValue (value);
-        outResponse.mCode = HTTP::Code::OK;
+        outResponse.mCode = HTTP::Code::NO_CONTENT;
     }
     catch (std::exception& e) {
         API::Utils::SetErrorMessage (outResponse, HTTP::Code::INTERNAL_SERVER_ERROR, e.what ());

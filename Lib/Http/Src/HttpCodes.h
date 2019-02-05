@@ -33,6 +33,7 @@ enum Code : uint32_t {
     OK = 200u,
     CREATED = 201u,
     ACCEPTED = 202u,
+    NO_CONTENT = 204u,
     NOT_MODIFIED = 304u,
     BAD_REQUEST = 400u,
     FORBIDDEN = 403u,

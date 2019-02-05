@@ -3,7 +3,7 @@ from websocket import create_connection
 from behave import given, when, then, step
 from assertpy import assert_that
 
-@given( 'the streaming connection is open' )
+@given( 'the websocket connection is open' )
 def step_impl( context ):
     context.ws = create_connection( context.websockurl )
 
@@ -19,7 +19,7 @@ def step_impl( context, size ):
     if size > 0:
         assert_that( payload ).contains_only( 0xFE )
 
-@then( 'the streaming connection can be closed' )
+@then( 'the websocket connection can be closed' )
 def step_impl( context ):
     context.ws.close()
     

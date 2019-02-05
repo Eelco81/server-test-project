@@ -18,7 +18,8 @@ int main (int argc, char** argv) {
     Application::Run (commandLine);
     
     OS::Network::Done ();
-
+    OS::Log::Instance ().Flush ();
+    
     return 0;
 
 }

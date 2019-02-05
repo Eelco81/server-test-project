@@ -11,5 +11,5 @@ pip:
 	pip install -r ../Test/requirements.txt
 
 integration-test : 
-	rm *.xml
+	rm *.xml || :
 	cd ../Test; behave --junit --junit-directory ../Make
