@@ -22,7 +22,7 @@ def step_impl( context, code ):
 
 @then( 'the received response contains a header with key \'{key}\'' )
 def step_impl( context, key ):
-    assert_that( context.response.headers.get(key) ).is_not_none()
+    assert_that( context.response.headers.get( key ) ).is_not_none()
 
 @then( 'the received response contains header \'{key}: {value}\'' )
 def step_impl( context, key, value ):
@@ -32,9 +32,9 @@ def step_impl( context, key, value ):
 def step_impl( context ):
     context.execute_steps(u'''
         Then the received response contains a header with key 'Last-Modified'
-         And the received response contains header 'User-Agent: HttpServer/0.0.1'
+        Then the received response contains header 'User-Agent: HttpServer/0.0.1'
     ''')
-    
+
 @then( 'the received response has a body of size {bytes:d}' )
 def step_impl( context, bytes ):
     assert_that( context.response.content ).is_length( bytes )
@@ -43,10 +43,13 @@ def step_impl( context, bytes ):
 
 @then( 'the received response body has json element {{ {key} : {value} }}' )
 def step_imp( context, key, value ):
-    body = context.response.json()
-    assert_that( body ).contains_entry( { key : value } )
+    assert_that( context.response.json() ).contains_entry( { key : value } )
 
 @then( 'the received response body has json key "{key}"' )
 def step_imp( context, key ):
-    body = context.response.json()
-    assert_that( body ).contains( key )
+    assert_that( context.response.json() ).contains( key )
+
+@then( 'the received response body has json keys' )
+def step_imp( context ):
+    for row in context.table:
+        assert_that( context.response.json() ).contains( row['key'] )

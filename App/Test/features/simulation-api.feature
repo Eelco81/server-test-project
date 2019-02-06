@@ -1,5 +1,5 @@
 
-Feature: Simulation service
+Feature: Simulation API
 
   Scenario: Starting and stopping simulations
    Given the event service is connected
