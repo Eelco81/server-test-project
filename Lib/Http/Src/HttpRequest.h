@@ -2,29 +2,47 @@
 #ifndef _HTTP_REQUEST_H_
 #define _HTTP_REQUEST_H_
 
-#include <cstdint>
-#include <string>
 #include <map>
-
+#include <string>
+#include <vector>
+#include <cstdint>
 #include "HttpCodes.h"
+#include "HttpMessage.h"
 
 namespace HTTP {
 
-struct Request {
+/**
+ * The HTTP::Request struct contains a complete request message of the HTTP protocol.
+ */
+struct Request : public Message {
     
-    using HeaderMap = std::map<std::string,std::string>;
-    
+    /**
+     * Constructors
+     */
     Request ();
     Request (Method inMethod, const std::string& inPath);
+    Request (Method inMethod, const std::string& inPath, Version inVersion);
     
-    std::string ToString () const;
-    
+    /**
+     * HTTP Method
+     */
     Method mMethod;
+    
+    /**
+     * HTTP Version
+     */
     Version mVersion;
-    HeaderMap mHeaders; //todo: header keys are not case sensitive
+    
+    /**
+     * HTTP Path
+     */
     std::string mPath;
-    std::string mBody;
+    
+    /**
+     * Internal boolean used by the request decoder.
+     */
     bool mIsValid;
+    
 };
 
 } // end namespace HTTP

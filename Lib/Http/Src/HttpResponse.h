@@ -7,26 +7,30 @@
 #include <vector>
 #include <cstdint>
 #include "HttpCodes.h"
+#include "HttpMessage.h"
 
 namespace HTTP {
+
+/**
+ * The HTTP::Response struct contains a complete response message of the HTTP protocol.
+ */
+struct Response : public Message {
     
-struct Response {
-    
-    using HeaderMap = std::map<std::string,std::string>;
-    
+    /**
+     * Constructors
+     */
     Response ();
     Response (Code inCode, Version inVersion);
     
-    void SetBody (const std::string& inBody, const std::string& inContentType = "text/plain");
-    void SetBody (const std::vector<uint8_t>& inBuffer, const std::string& inContentType = "application/octet-stream");
-    const std::string& GetBody () const;
-    
+    /**
+     * HTTP Response Code
+     */
     Code mCode;
+    
+    /**
+     * HTTP Version
+     */
     Version mVersion;
-    HeaderMap mHeaders;  //todo: header keys are not case sensitive
-
-protected:
-    std::string mBody;
 };
 
 }

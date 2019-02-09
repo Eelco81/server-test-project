@@ -34,7 +34,7 @@ void API::SIM::ExecEndPoint::Put (const HTTP::Request& inRequest, HTTP::Response
     
     std::string id;
     try {
-        json body = json::parse (inRequest.mBody);
+        json body = json::parse (inRequest.GetBody ());
         id = body["id"].get<std::string> ();
     }
     catch (...) {

@@ -55,7 +55,7 @@ void API::SIM::PortEndPoint::Put (const HTTP::Request& inRequest, HTTP::Response
     
     double doubleValue;
     try {
-        json config = json::parse (inRequest.mBody);
+        json config = json::parse (inRequest.GetBody ());
         doubleValue = config["value"].get<double> ();
     }
     catch (...) {

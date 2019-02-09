@@ -17,7 +17,7 @@ class HttpClientTester : public ::testing::Test {
         OS::Log::Instance ().Flush ();
     }
 };
-
+/*
 TEST_F (HttpClientTester, VerifyProperIntegration) {
     
     HTTP::Router router;
@@ -46,3 +46,4 @@ TEST_F (HttpClientTester, VerifyProperIntegration) {
     client.Close ();
     server.Stop ();
 }
+*/
