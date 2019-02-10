@@ -37,6 +37,11 @@ struct Message {
     using HeaderMap = std::map<std::string,std::string>;
     HeaderMap mHeaders; 
     
+    /**
+     * Internal boolean used by the message decoder.
+     */
+    bool mIsValid;
+    
 protected:
     /**
      * HTTP body

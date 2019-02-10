@@ -44,6 +44,7 @@ enum Code : uint32_t {
 };
 
 std::string CodeToString (Code inCode);
+Code StringToCode (const std::string& inCode);
 
 namespace Header {
     

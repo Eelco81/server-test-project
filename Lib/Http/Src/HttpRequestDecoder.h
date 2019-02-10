@@ -4,14 +4,14 @@
 
 #include <memory>
 #include "HttpRequest.h"
-#include "MessageStream.h"
+#include "HttpMessageDecoder.h"
 
 namespace HTTP {
 
 /**
  * The RequestDecoder converts a stream of std::string to a stream of HTTP::Request.
  */
-class RequestDecoder : public OS::MessageStream<std::string, Request> {
+class RequestDecoder : public MessageDecoder<Request> {
 
 public:
     /**
@@ -25,32 +25,10 @@ public:
     virtual ~RequestDecoder ();
     
     /**
-     * Write a string to the Decoder, when a corresponding Request is assembled,
-     * the MessageStream::Done method is called.
-     */ 
-    void Write (const std::string& inData);
-
-private:
-    /**
-     * The request being assembled
+     * Override the line matcher
      */
-    std::unique_ptr<Request> mRequest;
+    bool MatchStartLine (const std::string& inLine) override;
     
-    /**
-     * State of the decoder
-     */
-    enum State : uint8_t {
-        kSearchStart = 0x00,
-        kProcessHeaders = 0x01,
-        kProcessBody = 0x02
-    };
-    State mState;
-    
-    /**
-     * The body size of the currently assembled request.
-     */
-    std::size_t mBodySize;
-    std::string mBody;
 };
 
 } // end namespace HTTP

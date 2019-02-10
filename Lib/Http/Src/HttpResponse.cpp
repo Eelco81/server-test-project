@@ -4,7 +4,9 @@
 #include "Version.h"
 
 HTTP::Response::Response () :
-    HTTP::Response::Response (Code::UNKNOWN_CODE, Version::UNKNOWN_VERSION) 
+    Message (),
+    mCode (Code::UNKNOWN_CODE),
+    mVersion (Version::UNKNOWN_VERSION)
 {
 }
 

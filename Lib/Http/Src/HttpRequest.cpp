@@ -6,8 +6,7 @@
 HTTP::Request::Request () :
     Message (), 
     mMethod (HTTP::Method::UNKNOWN_METHOD),
-    mVersion (HTTP::Version::UNKNOWN_VERSION),
-    mIsValid (true)
+    mVersion (HTTP::Version::UNKNOWN_VERSION)
 {
 }
 
@@ -20,8 +19,7 @@ HTTP::Request::Request (Method inMethod, const std::string& inPath, Version inVe
     Message (), 
     mMethod (inMethod),
     mVersion (inVersion),
-    mPath (inPath),
-    mIsValid (true)
+    mPath (inPath)
 {
     mHeaders[Header::LAST_MODIFIED] = OS::Timing::ToStdString (OS::Timing::Now ());
     mHeaders[Header::USER_AGENT] = OS::Version::GetApplicationName () + std::string ("/") + OS::Version::GetApplicationVersion ();

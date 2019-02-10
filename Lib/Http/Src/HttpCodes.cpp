@@ -49,5 +49,8 @@ std::string HTTP::CodeToString (HTTP::Code inCode) {
         case Code::HTTP_VERSION_NOT_SUPPORTED : return "HTTP Version Not Supported";
         default : return "Unknown";
     }
-    
+}
+
+HTTP::Code HTTP::StringToCode (const std::string& inCode) {
+    return static_cast<Code> (atoi (inCode.c_str ()));
 }

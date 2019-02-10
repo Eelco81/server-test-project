@@ -2,7 +2,8 @@
 #include "HttpMessage.h"
 #include "HttpCodes.h"
 
-HTTP::Message::Message ()
+HTTP::Message::Message () :
+    mIsValid (true)
 {
     mHeaders[Header::CONTENT_LENGTH] = "0";
 }

@@ -29,11 +29,6 @@ class Client : public TCP::Client {
 
 public:
     /**
-     * Deleted default constructor
-     */
-    Client () = delete;
-    
-    /**
      * Constructor
      */
     Client (std::unique_ptr <OS::Socket> inSocket, const Router& inRouter);

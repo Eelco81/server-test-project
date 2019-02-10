@@ -37,12 +37,6 @@ struct Request : public Message {
      * HTTP Path
      */
     std::string mPath;
-    
-    /**
-     * Internal boolean used by the request decoder.
-     */
-    bool mIsValid;
-    
 };
 
 } // end namespace HTTP

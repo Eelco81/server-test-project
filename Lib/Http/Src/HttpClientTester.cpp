@@ -4,6 +4,7 @@
 #include "Timing.h"
 #include "Log.h"
 #include "HttpClient.h"
+#include "HttpRemoteClient.h"
 #include "HttpRequest.h"
 #include "HttpRouter.h"
 #include "TcpServer.h"
@@ -17,33 +18,22 @@ class HttpClientTester : public ::testing::Test {
         OS::Log::Instance ().Flush ();
     }
 };
-/*
+
 TEST_F (HttpClientTester, VerifyProperIntegration) {
     
     HTTP::Router router;
     auto factory (std::make_shared<HTTP::ClientFactory> (router));
     TCP::Server server (IP_FOR_TESTING, PORT_FOR_TESTING, factory);
     
-    server.Start();
+    server.Start ();
     OS::Timing::Sleep (100u);
     
-    OS::Socket client (IP_FOR_TESTING, PORT_FOR_TESTING);
-    client.Initialize ();
-    
-    ASSERT_TRUE (client.Connect ());
-    
+    HTTP::RemoteClient client (IP_FOR_TESTING, PORT_FOR_TESTING);
     HTTP::Request request (HTTP::Method::GET, "/hello");
-    auto strReq (request.ToString ());
-    client.Send (reinterpret_cast<const uint8_t*> (strReq.c_str ()), strReq.size ());
     
-    std::vector<uint8_t> buffer (100u);
-    ASSERT_LE (0, client.Receive (buffer)); // blocking call
+    auto response = client.Send (request);
     
-    std::string strRes;
-    strRes.assign (reinterpret_cast<char*> (buffer.data ()));
-    ASSERT_THAT (strRes, ::testing::HasSubstr ("HTTP/1.1 404 Not Found"));
-    
-    client.Close ();
-    server.Stop ();
+    ASSERT_EQ (response.mCode, HTTP::Code::NOT_FOUND);
+
+    // Server and client stopped in destructor
 }
-*/
