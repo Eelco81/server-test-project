@@ -8,15 +8,18 @@ npm:
 webpack:
 	npx webpack --config webpack.conf.js
 
-install: webpack
+install:
 	rm -rf $(INSTALL_DIR)/Public
 	mkdir $(INSTALL_DIR)/Public
 	cp index.html $(INSTALL_DIR)/Public
 	cp dist/main.js $(INSTALL_DIR)/Public
-	cp dist/main.js.map $(INSTALL_DIR)/Public
+	cp dist/main.js.map $(INSTALL_DIR)/Public || :
 
-distclean:
-	rm -rf node_modules
+clean:
+	rm 
+    
+distclean: clean
+	rm -rf dist
 
 karma:
 	npx karma start karma.conf.js

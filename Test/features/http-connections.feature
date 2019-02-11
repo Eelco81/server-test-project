@@ -5,7 +5,7 @@ Feature: HTTP Connections
     When sending a GET request on /i/do/not/exist
     Then the received response has code 404
     Then the received response contains a header with key 'Last-Modified'
-    Then the received response contains header 'User-Agent: HttpServer/0.0.1'
+    Then the received response contains header 'User-Agent: Server/0.0.1'
     Then the received response contains header 'Content-Length: 0'
     Then the received response contains all standard headers
     
@@ -32,7 +32,7 @@ Feature: HTTP Connections
     Then the received response contains header 'Content-Type: application/json'
     Then the received response contains all standard headers
     Then the received response body has json element { version : 0.0.1 }
-    Then the received response body has json element { application : HttpServer }
+    Then the received response body has json element { application : Server }
      
   Scenario: Retrieving the server time
     When sending a GET request on /api/time

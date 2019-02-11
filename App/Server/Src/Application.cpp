@@ -18,6 +18,8 @@ void Application::Run (const OS::CommandLine& inCommandLine) {
     APP::SupportThread supportThread;
     supportThread.Spawn ();
     
+    OS::Version::SetApplicationName ("Server");
+    
     LOGINFO << "Starting " << OS::Version::GetApplicationName () << " " << OS::Version::GetApplicationVersion ();
 
     std::string ip ("127.0.0.1");

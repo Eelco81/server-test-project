@@ -32,7 +32,7 @@ def step_impl( context, key, value ):
 def step_impl( context ):
     context.execute_steps(u'''
         Then the received response contains a header with key 'Last-Modified'
-        Then the received response contains header 'User-Agent: HttpServer/0.0.1'
+        Then the received response contains header 'User-Agent: Server/0.0.1'
     ''')
 
 @then( 'the received response has a body of size {bytes:d}' )

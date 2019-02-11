@@ -6,9 +6,10 @@ ROOT_DIR=.
 
 application:
 	make all -C $(APP_DIR)/Server/Make
+	make all -C $(APP_DIR)/Client/Make
 
-client:
-	make all -C $(WEB_DIR)
+web:
+	make webpack -C $(WEB_DIR)
 
 test: external
 	make test -C $(LIB_DIR)/AppUtils/Make
@@ -26,5 +27,7 @@ integration-test:
 
 clean: 
 	make clean -C $(APP_DIR)/Server/Make
+	make clean -C $(APP_DIR)/Client/Make
+
 
 distclean: clean clean-external clean-install

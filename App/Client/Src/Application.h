@@ -5,8 +5,9 @@
 #include "CommandLine.h"
 
 /**
- * The Server Application is a command line interface to the 
- * HTTP server. It serves as the heart of this software suite.
+ * The Client Application is a command line interface to the 
+ * HTTP remote client. It functions as a 'curl' like tool. 
+ * It is mainly used for development and integration testing.
  */
 namespace Application {
 
