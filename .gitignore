@@ -14,22 +14,24 @@
 /Lib/*/Make/html/*
 /Lib/Core/Test/Files/tmp*
 
-/App/Win32/*.sdf
-/App/Win32/*.user
-/App/Win32/*.suo
-/App/Win32/*.opensdf
-/App/Win32/Debug*
-/App/Win32/Release*
-/App/Src/*.o
-/App/Src/*.gcda
-/App/Src/*.gcno
-/App/Src/*.TMP
-/App/Make/*.exe
-/App/Make/*.xml
+/App/*/Win32/*.sdf
+/App/*/Win32/*.user
+/App/*/Win32/*.suo
+/App/*/Win32/*.opensdf
+/App/*/Win32/Debug*
+/App/*/Win32/Release*
+/App/*/Src/*.o
+/App/*/Src/*.gcda
+/App/*/Src/*.gcno
+/App/*/Src/*.TMP
+/App/*/Make/*.exe
+/App/*/Make/*.xml
 
 /Web/node_modules
 /Web/package-lock.json
 /Web/dist
+
+/Test/*.xml
 
 /External
 /Downloads

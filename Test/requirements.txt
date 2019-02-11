@@ -2,3 +2,4 @@ behave
 websocket-client
 requests
 assertpy
+chromedriver-binary

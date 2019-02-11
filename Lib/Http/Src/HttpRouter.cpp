@@ -21,8 +21,7 @@ void HTTP::Router::AddEndPoint (HTTP::Router::EndPointPtr inEndPoint) {
 
 void HTTP::Router::Write (const HTTP::Request& inRequest) {
     
-    HTTP::Response response;
-    response.mVersion = inRequest.mVersion;
+    HTTP::Response response (Code::UNKNOWN_CODE, inRequest.mVersion);
     
     if (inRequest.mVersion != Version::V11) {
         response.mCode = Code::HTTP_VERSION_NOT_SUPPORTED;

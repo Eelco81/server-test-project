@@ -10,14 +10,14 @@ def before_feature( context, feature ):
     context.websockurl = "ws://" + context.ip + ":" + context.websockport + "/web"
     context.server = Popen(
         [
-            '../Make/server.exe', 
+            '../Install/server.exe', 
             '-ip', context.ip, 
             '-port', context.port, 
             '-websockport', context.websockport, 
             '-loglevel', 'NONE'
         ], 
         stdin=PIPE, stderr=PIPE, stdout=PIPE,
-        cwd = "../.."
+        cwd = "../Install"
     )
     time.sleep( 3 )
 

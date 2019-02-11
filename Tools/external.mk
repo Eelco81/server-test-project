@@ -2,7 +2,7 @@
 -include ${ROOT_DIR}/Tools/config.mk
 
 pip:
-	make pip -C ${APP_DIR}/Make
+	make pip -C ${TEST_DIR}
 
 npm:
 	make npm -C ${WEB_DIR}

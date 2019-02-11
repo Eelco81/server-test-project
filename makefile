@@ -5,7 +5,7 @@ ROOT_DIR=.
 -include $(ROOT_DIR)/Tools/install.mk
 
 application:
-	make all -C App/Make
+	make all -C $(APP_DIR)/Server/Make
 
 client:
 	make all -C $(WEB_DIR)
@@ -22,9 +22,9 @@ test: external
 	make test -C $(LIB_DIR)/WebSockets/Make
 
 integration-test:
-	make integration-test -C $(APP_DIR)/Make
+	make integration-test -C $(TEST_DIR)
 
 clean: 
-	make clean -C $(APP_DIR)/Make
+	make clean -C $(APP_DIR)/Server/Make
 
 distclean: clean clean-external clean-install

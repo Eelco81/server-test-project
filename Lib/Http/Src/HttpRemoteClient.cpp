@@ -16,7 +16,7 @@ HTTP::RemoteClient::RemoteClient (std::string inAddress, std::string inPort) :
     mEncoder.Pipe (mToPacketConverter).Pipe (GetWriteStream ());
     
     // Start the listener thread
-    TCP::Client::Start();
+    TCP::Client::Start ();
 }
 
 HTTP::RemoteClient::~RemoteClient () = default;
