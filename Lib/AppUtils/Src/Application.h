@@ -18,7 +18,7 @@ public:
     /**
      * Constructor
      */
-    Application (int argc, char** argv, const std::string& inAppName);
+    Application (const std::string& inAppName);
     
     /**
      * Destructor
@@ -26,7 +26,12 @@ public:
     virtual ~Application ();
 
     /**
-     * Main function
+     * Execute the application.
+     */
+    int Execute (int argc, char** argv);
+    
+    /**
+     * Main function to be overloaded
      */
     virtual int Run () = 0;
     

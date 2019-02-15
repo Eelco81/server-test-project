@@ -4,35 +4,63 @@
 
 #include <string>
 #include <vector>
+#include <cstdint>
 
 namespace OS {
 
+
+/**
+ * The CommandLine parser allows to parse command line
+ * arguments and assign default values to them.
+ */
 class CommandLine {
 
 public: 
 
-    void Parse (int inArgc, const char* const* inArgv);
-    bool HasOption (const std::string& inKey) const;
-    bool HasOption (const std::string& inKey, std::string& outValue) const;
-
-private:
-    
-    struct Option {
-        Option () = default;
-        Option (const Option& inOption) = default;
-        ~Option () = default;
-        Option (const std::string& inKey);
-        Option (const std::string& inKey, const std::string& inValue);
-        std::string mKey;
-        std::string mValue;
-        bool mHasValue;
+    /**
+     * Argument type.
+     */
+    enum Type : uint8_t {
+        OPTIONAL = 0x00,
+        MANDATORY =0x01
     };
 
-    std::vector <Option> mOptions;
+    /**
+     * Add a command line option.
+     */
+    void AddOption (const std::string& inKey, const std::string& inDefaultValue, Type inType = OPTIONAL);
 
-    bool FindOption (const std::string& inKey, Option& outOption) const;
+    /**
+     * Get the value of an option
+     */
+    std::string GetOption (const std::string& inKey) const;
+
+    /**
+     * Parse the command line. Returns false if not all MANDATORY arguments could be found.
+     */
+    bool Parse (int inArgc, const char* const* inArgv);
+
+    /**
+     * Retrieve the command line help text.
+     */
+    std::string GetHelpText () const;
+
+private:
+
+    /**
+     * Command line options implementation
+     */
+    struct Option {
+    public:
+        Option (const std::string& inKey, const std::string& inValue, const Type inType);
+        std::string mKey;
+        std::string mValue;
+        Type mType;
+        bool mFound;
+    };
+    std::vector <Option> mOptions;
 };
 
-}
+} // end namespace OS
 
-#endif
+#endif // _COMMANDLINE_H_

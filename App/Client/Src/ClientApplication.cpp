@@ -7,29 +7,21 @@
 #include "HttpRemoteClient.h"
 #include "HttpRequest.h"
 
-ClientApplication::ClientApplication (int argc, char** argv) :
-    APP::Application (argc, argv, "Client") 
+ClientApplication::ClientApplication () :
+    APP::Application ("Client") 
 {
+    mCommandLine.AddOption ("ip", "127.0.0.1", OS::CommandLine::OPTIONAL);
+    mCommandLine.AddOption ("port", "1703", OS::CommandLine::OPTIONAL);
+    mCommandLine.AddOption ("method", "GET", OS::CommandLine::OPTIONAL);
+    mCommandLine.AddOption ("path", "/", OS::CommandLine::OPTIONAL);
 }
 
 ClientApplication::~ClientApplication () = default;
 
 int ClientApplication::Run () {
 
-    std::string ip ("127.0.0.1");
-    mCommandLine.HasOption ("ip", ip);
-
-    std::string port ("1703");
-    mCommandLine.HasOption ("port", port);
-    
-    std::string method ("GET");
-    mCommandLine.HasOption ("method", method);
-    
-    std::string path ("/");
-    mCommandLine.HasOption ("path", path);
-    
-    HTTP::RemoteClient client (ip, port);
-    HTTP::Request request (HTTP::StringToMethod (method), path);
+    HTTP::RemoteClient client (mCommandLine.GetOption ("ip"), mCommandLine.GetOption ("port"));
+    HTTP::Request request (HTTP::StringToMethod (mCommandLine.GetOption ("method")), mCommandLine.GetOption ("path"));
     
     auto response = client.Send (request);
     

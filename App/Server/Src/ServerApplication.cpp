@@ -14,39 +14,33 @@
 #include "SimComFactory.h"
 #include "Router.h"
 
-ServerApplication::ServerApplication (int argc, char** argv) :
-    APP::Application (argc, argv, "Server") 
+ServerApplication::ServerApplication () :
+    APP::Application ("Server") 
 {
+    mCommandLine.AddOption ("ip", "127.0.0.1", OS::CommandLine::OPTIONAL);
+    mCommandLine.AddOption ("port", "1703", OS::CommandLine::OPTIONAL);
+    mCommandLine.AddOption ("websockport", "1704", OS::CommandLine::OPTIONAL);
 }
 
 ServerApplication::~ServerApplication () = default;
 
 int ServerApplication::Run () {
     
-    std::string ip ("127.0.0.1");
-    mCommandLine.HasOption ("ip", ip);
-
-    std::string port ("1703");
-    mCommandLine.HasOption ("port", port);
-
-    std::string websockport ("1704");
-    mCommandLine.HasOption ("websockport", websockport);
-
     auto service = std::make_shared<SIM::Service> (std::make_unique<SIM::COM::Factory> ());
 
     SystemRouter router (service);
     auto httpFactory (std::make_shared<HTTP::ClientFactory> (router));
-    TCP::Server httpServer (ip, port, httpFactory);
+    TCP::Server httpServer (mCommandLine.GetOption ("ip"), mCommandLine.GetOption ("port"), httpFactory);
     httpServer.Start ();
 
-    RFC6455::Server websockServer (ip, websockport);
+    RFC6455::Server websockServer (mCommandLine.GetOption ("ip"), mCommandLine.GetOption ("websockport"));
     websockServer.Start ();
 
     service->GetStream ().Pipe (&websockServer, &RFC6455::Server::BroadCast);
     
-    std::string name;
+    std::string temp;
     LOGMESSAGE (OS::Log::kInfo, "Quit the app using ENTER on the command line.");
-    std::getline (std::cin, name);
+    std::getline (std::cin, temp);
 
     // Cannot rely on destructors to clean this up. The service is a shared_ptr
     // and will be cleaned up all the way at the end.

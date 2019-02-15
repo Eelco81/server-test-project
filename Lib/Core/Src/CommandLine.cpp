@@ -1,71 +1,73 @@
 
 #include <algorithm>
 #include "CommandLine.h"
+#include "Version.h"
 
-OS::CommandLine::Option::Option (const std::string& inKey) :
-    mKey (inKey),
-    mValue (""),
-    mHasValue (false) 
-{
-}
-
-OS::CommandLine::Option::Option (const std::string& inKey, const std::string& inValue) :
+OS::CommandLine::Option::Option (const std::string& inKey, const std::string& inValue, const Type inType):
     mKey (inKey),
     mValue (inValue),
-    mHasValue (true)
+    mType (inType),
+    mFound (false)
 {
 }
 
-void OS::CommandLine::Parse (int inArgc, const char* const* inArgv) {
-
-    const char kIndicatorPrefix ('-');
-
-    for (int i = 0; i < inArgc; i++) {
-        
-        if (inArgv [i][0] == kIndicatorPrefix) {
-            if (i + 1 < inArgc && inArgv [i + 1][0] != kIndicatorPrefix) {
-                std::string keyString (inArgv [i]);
-                std::string valString (inArgv [i+1]);
-                keyString.erase (0u, 1u);
-                mOptions.emplace_back (Option (keyString, valString));
-            }
-            else {
-                std::string keyString (inArgv [i]);
-                keyString.erase (0u, 1u);
-                mOptions.emplace_back (Option (keyString));
-            }
-        }
-    }
+void OS::CommandLine::AddOption (const std::string& inKey, const std::string& inDefaultValue, Type inType) {
+    mOptions.push_back (Option (inKey, inDefaultValue, inType));
 }
 
-bool OS::CommandLine::HasOption (const std::string& inKey)const  {
-    Option option;
-    if (FindOption (inKey, option)) {
-        return true;
-    }
-    return false;
-}
-
-bool OS::CommandLine::HasOption (const std::string& inKey, std::string& outValue) const {
-    Option option;
-    if (FindOption (inKey, option)) {
-        if (option.mHasValue) {
-            outValue = option.mValue;
-        }
-        return true;
-    }
-    return false;
-}
-
-bool OS::CommandLine::FindOption (const std::string& inKey, Option& outOption) const {
+std::string OS::CommandLine::GetOption (const std::string& inKey) const {
 
     const auto equals ([inKey] (const Option& option) { return option.mKey == inKey; });
-    const auto optionIterator (std::find_if (mOptions.begin (), mOptions.end (), equals));
+    const auto option (std::find_if (mOptions.begin (), mOptions.end (), equals));
 
-    if (optionIterator != mOptions.end ()) {
-        outOption = *optionIterator;
-        return true;
+    if (option != mOptions.end ()) {
+        return (*option).mValue;
+    }
+    return "";
+}
+
+bool OS::CommandLine::Parse (int inArgc, const char* const* inArgv) {
+
+    const char kIndicatorPrefix ('-');
+    
+    for (int i (0); i < inArgc; i+=1) {
+    
+        if (inArgv [i][0] == kIndicatorPrefix && i + 1 < inArgc) {
+            
+            std::string key (std::string (inArgv [i]).erase (0u, 1u));
+            std::string value (inArgv [i+1]);
+        
+            const auto equals ([key] (const Option& option) { return option.mKey == key; });
+            const auto option (std::find_if (mOptions.begin (), mOptions.end (), equals));
+            
+            if (option != mOptions.end ()) {
+                (*option).mValue = value;
+                (*option).mFound = true;
+            }
+        }
     }
 
-    return false;
+    return std::all_of (mOptions.begin (), mOptions.end (), [](const auto& option) {
+        return (option.mType == OPTIONAL) || (option.mType == MANDATORY && option.mFound);
+    });
+}
+
+std::string OS::CommandLine::GetHelpText () const {
+    
+    std::string result;
+    
+    result += "-----------------------------------\n";
+    result +=  " name    :    " + OS::Version::GetApplicationName() + "\n";
+    result +=  " version :    " + OS::Version::GetApplicationVersion() + "\n";
+    result += "-----------------------------------\n";
+    
+    for (const auto& option : mOptions) {
+        result += std::string ("  -") + option.mKey + "\n";
+        result += std::string ("    default : ") + option.mValue + std::string ("\n");
+        result += std::string ("    type    : ") + std::string (option.mType == OPTIONAL ? "optional" : "mandatory") + std::string ("\n");
+    }
+    
+    result += "-----------------------------------\n";
+    
+    return result;
 }

@@ -15,7 +15,7 @@ public:
     /**
      * Constructor
      */
-    ClientApplication (int argc, char** argv);
+    ClientApplication ();
     
     /**
      * Destructor

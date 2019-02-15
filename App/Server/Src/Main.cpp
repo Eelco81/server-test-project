@@ -2,5 +2,5 @@
 #include "ServerApplication.h"
 
 int main (int argc, char** argv) {
-    return ServerApplication (argc, argv).Run ();
+    return ServerApplication ().Execute (argc, argv);
 }

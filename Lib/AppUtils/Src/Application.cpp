@@ -3,20 +3,17 @@
 #include "Network.h"
 #include "Log.h"
 #include "Version.h"
+#include <iostream>
 
-APP::Application::Application (int argc, char** argv, const std::string& inAppName) 
+APP::Application::Application (const std::string& inAppName) 
 {
     mSupportThread.Spawn ();
-    mCommandLine.Parse (argc, argv);
     
-    std::string logLevel ("INFO");
-    mCommandLine.HasOption ("loglevel", logLevel);
+    mCommandLine.AddOption ("loglevel", "NONE", OS::CommandLine::OPTIONAL);
+    mCommandLine.AddOption ("help", "", OS::CommandLine::OPTIONAL);
     
-    OS::Log::Instance ().Initialize (logLevel);
     OS::Network::Initialize ();
-    
     OS::Version::SetApplicationName (inAppName);
-    LOGINFO << "Starting " << OS::Version::GetApplicationName () << " " << OS::Version::GetApplicationVersion ();
 }
 
 APP::Application::~Application () {
@@ -27,3 +24,17 @@ APP::Application::~Application () {
     OS::Log::Instance ().Flush ();
 }
 
+APP::Application::Execute (int argc, char** argv) {
+    
+    if (!mCommandLine.Parse (argc, argv) || mCommandLine.GetOption ("help") != "" ) {
+        OS::Log::Instance ().Initialize ("NONE");
+        std::cout << mCommandLine.GetHelpText () << std::endl;
+        return 1;
+    }
+    
+    OS::Log::Instance ().Initialize (mCommandLine.GetOption ("loglevel"));
+    
+    LOGINFO << "Starting " << OS::Version::GetApplicationName () << " " << OS::Version::GetApplicationVersion ();
+    
+    return Run ();
+}
