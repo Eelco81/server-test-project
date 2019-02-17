@@ -5,11 +5,11 @@ from behave import given, when, then, step
 from assertpy import assert_that
 
 class Response() :
-    def __init__( self, body ):
-        self._body = body
+    def __init__( self, content ):
+        self.content = content
         
     def json( self ) :
-        return json.loads( self._body )
+        return json.loads( self.content )
 
 @when( 'sending a {method} request on {route} using the command line client' )
 def step_impl( context, method, route ):
@@ -28,6 +28,21 @@ def step_impl( context, method, route ):
     )
     
     assert_that (completedProcess.returncode).is_equal_to (0)
+    
+    context.response = Response( completedProcess.stdout )
+    
+@when( 'calling {call} on the command line client' )
+def step_impl( context, call ):
+
+    completedProcess = run(
+        [
+            '../Install/client.exe', 
+            '-' + call,
+        ],
+        stdin=PIPE, stderr=PIPE, stdout=PIPE,
+        cwd = "../Install" 
+    )
+    assert_that (completedProcess.returncode).is_equal_to (1)
     
     context.response = Response( completedProcess.stdout )
     

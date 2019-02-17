@@ -8,7 +8,6 @@
 
 namespace OS {
 
-
 /**
  * The CommandLine parser allows to parse command line
  * arguments and assign default values to them.
@@ -26,15 +25,20 @@ public:
     };
 
     /**
-     * Add a command line option.
+     * Add a command line option with multiple keys
      */
-    void AddOption (const std::string& inKey, const std::string& inDefaultValue, Type inType = OPTIONAL);
+    void AddOption (const std::vector<std::string>& inKeys, const std::string& inDefaultValue, Type inType = OPTIONAL);
 
     /**
      * Get the value of an option
      */
-    std::string GetOption (const std::string& inKey) const;
+    std::string GetOption (const std::string& inKey);
 
+    /**
+     * Verify of the command line contained an option
+     */
+    bool ContainsOption (const std::string& inKey);
+    
     /**
      * Parse the command line. Returns false if not all MANDATORY arguments could be found.
      */
@@ -45,6 +49,11 @@ public:
      */
     std::string GetHelpText () const;
 
+    /**
+     * Retrieve the command line version text
+     */
+    std::string GetVersionText () const;
+    
 private:
 
     /**
@@ -52,13 +61,18 @@ private:
      */
     struct Option {
     public:
-        Option (const std::string& inKey, const std::string& inValue, const Type inType);
-        std::string mKey;
+        Option (const std::vector<std::string>& inKey, const std::string& inValue, const Type inType);
+        std::vector<std::string> mKeys;
         std::string mValue;
         Type mType;
         bool mFound;
     };
     std::vector <Option> mOptions;
+
+    /**
+     * Internal utility function
+     */
+    auto FindOption (const std::string& inKey);
 };
 
 } // end namespace OS

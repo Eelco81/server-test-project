@@ -17,9 +17,9 @@
 ServerApplication::ServerApplication () :
     APP::Application ("Server") 
 {
-    mCommandLine.AddOption ("ip", "127.0.0.1", OS::CommandLine::OPTIONAL);
-    mCommandLine.AddOption ("port", "1703", OS::CommandLine::OPTIONAL);
-    mCommandLine.AddOption ("websockport", "1704", OS::CommandLine::OPTIONAL);
+    mCommandLine.AddOption ({"ip", "i"}, "127.0.0.1", OS::CommandLine::OPTIONAL);
+    mCommandLine.AddOption ({"port", "p"}, "1703", OS::CommandLine::OPTIONAL);
+    mCommandLine.AddOption ({"websockport", "w"}, "1704", OS::CommandLine::OPTIONAL);
 }
 
 ServerApplication::~ServerApplication () = default;

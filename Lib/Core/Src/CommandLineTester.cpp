@@ -5,7 +5,7 @@
 TEST (CommandLine, OptionsRetrieval) {
 
     OS::CommandLine commandLine;
-    commandLine.AddOption ("key1", "default", OS::CommandLine::MANDATORY);
+    commandLine.AddOption ({"key1"}, "default", OS::CommandLine::MANDATORY);
 
     const int kArgc = 3;
     const char* const kArgv [kArgc] = { "program_name", "-key1", "value1" };
@@ -16,10 +16,39 @@ TEST (CommandLine, OptionsRetrieval) {
     ASSERT_EQ (std::string (""), commandLine.GetOption ("key2"));
 }
 
+TEST (CommandLine, NoValueOptions) {
+
+    OS::CommandLine commandLine;
+    commandLine.AddOption ({"key1"}, "", OS::CommandLine::OPTIONAL);
+    commandLine.AddOption ({"key2"}, "", OS::CommandLine::OPTIONAL);
+
+    const int kArgc = 6;
+    const char* const kArgv [kArgc] = { "program_name", "-key1", "-otherkey", "value1", "yetanotherkey", "-key2" };
+    
+    ASSERT_TRUE (commandLine.Parse (kArgc, kArgv));
+    
+    ASSERT_TRUE (commandLine.ContainsOption ("key1"));
+    ASSERT_TRUE (commandLine.ContainsOption ("key2"));
+}
+
+TEST (CommandLine, MultipleKeys) {
+
+    OS::CommandLine commandLine;
+    commandLine.AddOption ({"key1", "k1"}, "default1", OS::CommandLine::MANDATORY);
+    
+    const int kArgc = 3;
+    const char* const kArgv [kArgc] = { "program_name", "-key1", "value1" };
+    
+    ASSERT_TRUE (commandLine.Parse (kArgc, kArgv));
+    
+    ASSERT_EQ (std::string ("value1"), commandLine.GetOption ("key1"));
+    ASSERT_EQ (std::string ("value1"), commandLine.GetOption ("k1"));
+}
+
 TEST (CommandLine, MissingMandatoryOptions) {
 
     OS::CommandLine commandLine;
-    commandLine.AddOption ("key1", "default1", OS::CommandLine::MANDATORY);
+commandLine.AddOption ({"key1"}, "default1", OS::CommandLine::MANDATORY);
     
     const int kArgc = 3;
     const char* const kArgv [kArgc] = { "program_name", "-key2", "value2" };
@@ -30,7 +59,7 @@ TEST (CommandLine, MissingMandatoryOptions) {
 TEST (CommandLine, DefaultValues) {
 
     OS::CommandLine commandLine;
-    commandLine.AddOption ("key1", "default1", OS::CommandLine::OPTIONAL);
+    commandLine.AddOption ({"key1"}, "default1", OS::CommandLine::OPTIONAL);
     
     const int kArgc = 3;
     const char* const kArgv [kArgc] = { "program_name", "-key2", "value2" };
@@ -43,9 +72,16 @@ TEST (CommandLine, DefaultValues) {
 TEST (CommandLine, HelpText) {
     
     OS::CommandLine commandLine;
-    commandLine.AddOption ("key1", "default1", OS::CommandLine::OPTIONAL);
-    commandLine.AddOption ("key2", "default2", OS::CommandLine::MANDATORY);
-    commandLine.AddOption ("key3", "default3", OS::CommandLine::OPTIONAL);
+    commandLine.AddOption ({"key1"}, "default1", OS::CommandLine::OPTIONAL);
+    commandLine.AddOption ({"key2"}, "default2", OS::CommandLine::MANDATORY);
+    commandLine.AddOption ({"key3"}, "default3", OS::CommandLine::OPTIONAL);
     
-    ASSERT_EQ ("-----------------------------------\n name    :    Unknown\n version :    0.0.1\n-----------------------------------\n  -key1\n    default : default1\n    type    : optional\n  -key2\n    default : default2\n    type    : mandatory\n  -key3\n    default : default3\n    type    : optional\n-----------------------------------\n", commandLine.GetHelpText ());
+    ASSERT_EQ ("-----------------------------------\n name    :    Unknown\n version :    0.0.1\n-----------------------------------\n-key1 \n    default : default1\n    type    : optional\n-key2 \n    default : default2\n    type    : mandatory\n-key3 \n    default : default3\n    type    : optional\n-----------------------------------\n", commandLine.GetHelpText ());
+}
+
+TEST (CommandLine, VersionText) {
+    
+    OS::CommandLine commandLine;
+    
+    ASSERT_EQ ("Unknown : 0.0.1", commandLine.GetVersionText ());
 }

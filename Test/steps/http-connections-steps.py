@@ -53,3 +53,7 @@ def step_imp( context, key ):
 def step_imp( context ):
     for row in context.table:
         assert_that( context.response.json() ).contains( row['key'] )
+
+@then( 'the received response body equals' )
+def step_impl( context ):
+    assert_that( str( context.response.content.decode('utf-8') ).replace ("\r", "") ).is_equal_to( str( context.text ).replace ("\r", "") )

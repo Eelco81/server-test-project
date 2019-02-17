@@ -9,8 +9,9 @@ APP::Application::Application (const std::string& inAppName)
 {
     mSupportThread.Spawn ();
     
-    mCommandLine.AddOption ("loglevel", "NONE", OS::CommandLine::OPTIONAL);
-    mCommandLine.AddOption ("help", "", OS::CommandLine::OPTIONAL);
+    mCommandLine.AddOption ({"loglevel", "l"}, "NONE", OS::CommandLine::OPTIONAL);
+    mCommandLine.AddOption ({"help", "h"}, "", OS::CommandLine::OPTIONAL);
+    mCommandLine.AddOption ({"version", "v"}, "", OS::CommandLine::OPTIONAL);
     
     OS::Network::Initialize ();
     OS::Version::SetApplicationName (inAppName);
@@ -26,9 +27,23 @@ APP::Application::~Application () {
 
 APP::Application::Execute (int argc, char** argv) {
     
-    if (!mCommandLine.Parse (argc, argv) || mCommandLine.GetOption ("help") != "" ) {
+    const auto correctLine (mCommandLine.Parse (argc, argv));
+    
+    if (mCommandLine.ContainsOption ("version")) {
+        OS::Log::Instance ().Initialize ("NONE");
+        std::cout << mCommandLine.GetVersionText () << std::endl;
+        return 1;
+    }
+    
+    if (mCommandLine.ContainsOption ("help")) {
         OS::Log::Instance ().Initialize ("NONE");
         std::cout << mCommandLine.GetHelpText () << std::endl;
+        return 1;
+    }
+    
+    if (!correctLine) {
+        OS::Log::Instance ().Initialize ("NONE");
+        std::cout << "Incorrect command line, please call \"-help\"." << std::endl;
         return 1;
     }
     
