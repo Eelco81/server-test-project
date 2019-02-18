@@ -37,6 +37,8 @@ void RFC6455::Client::HandleHandshake (const HTTP::Request& inRequest) {
             response.mHeaders["Upgrade"] = "websocket";
             response.mHeaders["Sec-WebSocket-Accept"] = std::string (base64);
             
+            // \todo: Method MUST be GET according to RFC6455 standard
+            // \todo: Version MUST be 1.1 or greater according to RFC6455 standard
             isUpgraded = true;
         }
     } 

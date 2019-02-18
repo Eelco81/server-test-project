@@ -10,7 +10,7 @@ RFC6455::Server::Server (const std::string& inAddress, const std::string& inPort
 {
 }
 
-RFC6455::Server::~Server() = default;
+RFC6455::Server::~Server () = default;
 
 void RFC6455::Server::BroadCast (const std::string& inPacket) {
     
@@ -19,5 +19,13 @@ void RFC6455::Server::BroadCast (const std::string& inPacket) {
     for (auto& client : mClients) {
         client->SendData (inPacket);
     }
+}
+
+void RFC6455::Server::BroadCast (const std::vector<uint8_t>& inPacket) {
     
+    OS::SingleLock lock (*mMutex);
+    
+    for (auto& client : mClients) {
+        client->SendData (inPacket);
+    }
 }

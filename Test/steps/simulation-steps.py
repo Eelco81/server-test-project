@@ -51,4 +51,3 @@ def step_impl( context, path, value ):
     assert_that( response.status_code ).is_equal_to( 200 )
     assert_that( response.json() ).contains( "value" )
     assert_that( response.json()["value"] ).is_equal_to( value )
-

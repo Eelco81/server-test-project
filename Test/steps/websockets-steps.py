@@ -10,7 +10,7 @@ def step_impl( context ):
 @when( 'sending a ping with payload size {size:d}' )
 def step_impl( context, size ):
     context.ws.ping( bytearray( [0xFE]*size ) )
-    
+
 @then( 'a pong is received with payload size {size:d}' )
 def step_impl( context, size ):
     ( opcode, payload ) = context.ws.recv_data( True )
@@ -22,4 +22,3 @@ def step_impl( context, size ):
 @then( 'the websocket connection can be closed' )
 def step_impl( context ):
     context.ws.close()
-    

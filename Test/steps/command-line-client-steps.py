@@ -26,11 +26,9 @@ def step_impl( context, method, route ):
         stdin=PIPE, stderr=PIPE, stdout=PIPE,
         cwd = "../Install" 
     )
-    
     assert_that (completedProcess.returncode).is_equal_to (0)
-    
     context.response = Response( completedProcess.stdout )
-    
+
 @when( 'calling {call} on the command line client' )
 def step_impl( context, call ):
 
@@ -43,6 +41,4 @@ def step_impl( context, call ):
         cwd = "../Install" 
     )
     assert_that (completedProcess.returncode).is_equal_to (1)
-    
     context.response = Response( completedProcess.stdout )
-    

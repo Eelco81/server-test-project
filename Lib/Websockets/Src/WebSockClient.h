@@ -48,7 +48,7 @@ public:
     /**
      * Send data over the RFC6455 connection
      */
-    void SendData (const std::vector<uint8_t>& inData);
+    virtual void SendData (const std::vector<uint8_t>& inData) override;
 
     /**
      * Send data over the RFC6455 connection

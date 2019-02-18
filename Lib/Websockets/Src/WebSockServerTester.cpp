@@ -1,6 +1,7 @@
 
 #include "gmock/gmock.h"
 #include "WebSockServer.h"
+#include "WebSockRemoteClient.h"
 #include "HttpRequest.h"
 #include "Socket.h"
 #include "Log.h"
@@ -15,58 +16,48 @@ class WebSockServerTester : public ::testing::Test {
     }
 };
 
-TEST_F (WebSockServerTester, BadRequest) {
+TEST_F (WebSockServerTester, StringPayloads) {
     
     RFC6455::Server server (IP_FOR_TESTING, PORT_FOR_TESTING);
     
     server.Start ();
     OS::Timing::Sleep (100u);
-
-    OS::Socket client (IP_FOR_TESTING, PORT_FOR_TESTING);
-    client.Initialize ();
-    ASSERT_TRUE (client.Connect ());
-
-    HTTP::Request request (HTTP::Method::GET, "/hello");
-    auto strReq (request.ToString ());
-    client.Send (reinterpret_cast<const uint8_t*> (strReq.c_str ()), strReq.size ());
     
-    std::vector<uint8_t> buffer (100u);
-    ASSERT_LE (0, client.Receive (buffer)); // blocking call
+    RFC6455::RemoteClient client (IP_FOR_TESTING, PORT_FOR_TESTING);
+    OS::Timing::Sleep (100u);
     
-    std::string strRes;
-    strRes.assign (reinterpret_cast<char*> (buffer.data ()));
-    ASSERT_THAT (strRes, ::testing::HasSubstr ("HTTP/1.1 400 Bad Request"));
+    const std::string sendPayload ("HELLO");
+    std::string receivedPayload;
     
-    client.Close ();
-    server.Stop ();
+    client.GetStringDecoder ().Pipe ([&] (const std::string& payload) {
+        receivedPayload = payload;
+    });
+    
+    server.BroadCast (sendPayload);
+    OS::Timing::Sleep (100u);
+    
+    ASSERT_EQ (sendPayload, receivedPayload);
 }
 
-TEST_F (WebSockServerTester, Handshake) {
+TEST_F (WebSockServerTester, BinaryPayloads) {
     
     RFC6455::Server server (IP_FOR_TESTING, PORT_FOR_TESTING);
     
     server.Start ();
     OS::Timing::Sleep (100u);
-
-    OS::Socket client (IP_FOR_TESTING, PORT_FOR_TESTING);
-    client.Initialize ();
-    ASSERT_TRUE (client.Connect ());
-
-    HTTP::Request request (HTTP::Method::GET, "/hello");
-    request.mHeaders["Connection"] = "Upgrade";
-    request.mHeaders["Upgrade"] = "websocket";
-    request.mHeaders["Sec-WebSocket-Key"] = "key";
     
-    auto strReq (request.ToString ());
-    client.Send (reinterpret_cast<const uint8_t*> (strReq.c_str ()), strReq.size ());
+    RFC6455::RemoteClient client (IP_FOR_TESTING, PORT_FOR_TESTING);
+    OS::Timing::Sleep (100u);
     
-    std::vector<uint8_t> buffer (100u);
-    ASSERT_LE (0, client.Receive (buffer)); // blocking call
+    const std::vector<uint8_t> sendPayload (10000, 0x01);
+    std::vector<uint8_t> receivedPayload;
     
-    std::string strRes;
-    strRes.assign (reinterpret_cast<char*> (buffer.data ()));
-    ASSERT_THAT (strRes, ::testing::HasSubstr ("HTTP/1.1 101 Switching Protocols"));
+    client.GetBinaryDecoder ().Pipe ([&] (const std::vector<uint8_t>& payload) {
+        receivedPayload = payload;
+    });
     
-    client.Close ();
-    server.Stop ();
+    server.BroadCast (sendPayload);
+    OS::Timing::Sleep (100u);
+    
+    ASSERT_TRUE (std::equal(sendPayload.begin (), sendPayload.end (), receivedPayload.begin ()));
 }

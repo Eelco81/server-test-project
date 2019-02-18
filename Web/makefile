@@ -17,7 +17,7 @@ install:
 
 clean:
 	rm 
-    
+
 distclean: clean
 	rm -rf dist
 

@@ -89,9 +89,14 @@ public:
     void WaitForData ();
     
     /**
-     * Virtual method. Used for braodcasting. 
+     * Virtual method. Used for broadcasting. 
      */
     virtual void SendData (const std::string& inPacket) {}
+    
+    /**
+     * Virtual method. Used for broadcasting. 
+     */
+    virtual void SendData (const std::vector<uint8_t>& inPacket) {}
     
 protected:
     /**
