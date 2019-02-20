@@ -24,7 +24,7 @@ void RFC6455::Client::HandleHandshake (const HTTP::Request& inRequest) {
     bool isUpgraded (false);
 
     try {
-        if (inRequest.mHeaders.at ("Connection") == "Upgrade" && inRequest.mHeaders.at ("Upgrade") == "websocket") {
+        if (inRequest.mHeaders.at ("Connection") == "Upgrade" && inRequest.mHeaders.at ("Upgrade") == "websocket" && inRequest.mMethod == HTTP::Method::GET && inRequest.mVersion == HTTP::Version::V11) {
             
             const auto key (inRequest.mHeaders.at ("Sec-WebSocket-Key"));
             const auto keyWithMagicString (key + "258EAFA5-E914-47DA-95CA-C5AB0DC85B11");
@@ -37,8 +37,6 @@ void RFC6455::Client::HandleHandshake (const HTTP::Request& inRequest) {
             response.mHeaders["Upgrade"] = "websocket";
             response.mHeaders["Sec-WebSocket-Accept"] = std::string (base64);
             
-            // \todo: Method MUST be GET according to RFC6455 standard
-            // \todo: Version MUST be 1.1 or greater according to RFC6455 standard
             isUpgraded = true;
         }
     } 
@@ -50,7 +48,7 @@ void RFC6455::Client::HandleHandshake (const HTTP::Request& inRequest) {
     
     {
         using namespace HTTP;
-        LOGINFO << "HTTP/" << VersionToString (response.mVersion) << " " << MethodToString (inRequest.mMethod) 
+        LOGINFO << "HTTP/" << VersionToString (response.mVersion) << "(RFC6455) " << MethodToString (inRequest.mMethod) 
                 << " " << inRequest.mPath << " - " << response.mCode << " " << CodeToString (response.mCode);
     }
  

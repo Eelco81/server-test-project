@@ -8,6 +8,7 @@
 #include "Socket.h"
 #include "HttpClient.h"
 #include "WebSockServer.h"
+#include "SseServer.h"
 #include "TcpServer.h"
 #include "SupportThread.h"
 #include "SimService.h"
@@ -20,6 +21,7 @@ ServerApplication::ServerApplication () :
     mCommandLine.AddOption ({"ip", "i"}, "127.0.0.1", OS::CommandLine::OPTIONAL);
     mCommandLine.AddOption ({"port", "p"}, "1703", OS::CommandLine::OPTIONAL);
     mCommandLine.AddOption ({"websockport", "w"}, "1704", OS::CommandLine::OPTIONAL);
+    mCommandLine.AddOption ({"sseport", "w"}, "1705", OS::CommandLine::OPTIONAL);
 }
 
 ServerApplication::~ServerApplication () = default;
@@ -35,8 +37,11 @@ int ServerApplication::Run () {
 
     RFC6455::Server websockServer (mCommandLine.GetOption ("ip"), mCommandLine.GetOption ("websockport"));
     websockServer.Start ();
-
     service->GetStream ().Pipe (&websockServer, &RFC6455::Server::BroadCast);
+    
+    SSE::Server sseServer (mCommandLine.GetOption ("ip"), mCommandLine.GetOption ("sseport"));
+    sseServer.Start ();
+    service->GetStream ().Pipe (&sseServer, &SSE::Server::BroadCast);
     
     std::string temp;
     LOGMESSAGE (OS::Log::kInfo, "Quit the app using ENTER on the command line.");
