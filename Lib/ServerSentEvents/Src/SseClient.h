@@ -25,16 +25,11 @@ namespace SSE {
 
 /**
  * The SSE::Client is a TCP::Client which is launched by the SSE::Server when a TCP connection
- * is accepted.  
+ * is accepted. This client enables Server-Sent-Events connections. 
  */
 class Client : public TCP::Client {
 
 public:
-    /**
-     * Deleted default constructor
-     */
-    Client () = delete;
-    
     /**
      * Constructor
      */

@@ -10,13 +10,12 @@
 
 #define IP_FOR_TESTING "127.0.0.1"
 #define PORT_FOR_TESTING "1703"
-#define TESTING_WAIT 500u
+#define TESTING_WAIT 100u
 
 class WebSockServerTester : public ::testing::Test {
 
     void TearDown () {
         OS::Log::Instance ().Flush ();
-        OS::Timing::Sleep (TESTING_WAIT);
     }
     
 protected:
@@ -34,6 +33,11 @@ protected:
         auto response = client.Send (inRequest);
         
         ASSERT_EQ (HTTP::Code::BAD_REQUEST, response.mCode);
+        
+        server.Stop ();
+        client.Stop ();
+        
+        OS::Timing::Sleep (TESTING_WAIT);
     }
 
 };

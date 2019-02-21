@@ -32,24 +32,22 @@ void RFC6455::Client::HandleHandshake (const HTTP::Request& inRequest) {
             char base64[SHA1_BASE64_SIZE];
             sha1 (keyWithMagicString.c_str ()).finalize().print_base64 (base64);
             
-            response.mCode = HTTP::Code::SWITCHING_PROTOCOLS;
             response.mHeaders["Connection"] = "Upgrade";
             response.mHeaders["Upgrade"] = "websocket";
             response.mHeaders["Sec-WebSocket-Accept"] = std::string (base64);
             
+            response.mCode = HTTP::Code::SWITCHING_PROTOCOLS;
             isUpgraded = true;
         }
     } 
-    catch (...) {
-        response.mCode = HTTP::Code::BAD_REQUEST;
-    }
+    catch (...) {}
     
     mResponseEncoder.Write (response);
     
     {
         using namespace HTTP;
-        LOGINFO << "HTTP/" << VersionToString (response.mVersion) << "(RFC6455) " << MethodToString (inRequest.mMethod) 
-                << " " << inRequest.mPath << " - " << response.mCode << " " << CodeToString (response.mCode);
+        LOGINFO << "HTTP/" << VersionToString (response.mVersion) << " " << MethodToString (inRequest.mMethod) 
+                << " " << inRequest.mPath << " - " << response.mCode << " " << CodeToString (response.mCode) << " - RFC6455";
     }
  
     if (!isUpgraded) {

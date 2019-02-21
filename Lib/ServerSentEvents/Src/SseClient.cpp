@@ -60,8 +60,8 @@ void SSE::Client::HandleHandshake (const HTTP::Request& inRequest) {
     
     {
         using namespace HTTP;
-        LOGINFO << "HTTP/" << VersionToString (response.mVersion) << "(SSE) " << MethodToString (inRequest.mMethod) 
-                << " " << inRequest.mPath << " - " << response.mCode << " " << CodeToString (response.mCode);
+        LOGINFO << "HTTP/" << VersionToString (response.mVersion) << " " << MethodToString (inRequest.mMethod) 
+                << " " << inRequest.mPath << " - " << response.mCode << " " << CodeToString (response.mCode) << " - SSE";
     }
  
     if (!isUpgraded) {
@@ -69,9 +69,12 @@ void SSE::Client::HandleHandshake (const HTTP::Request& inRequest) {
     }
     else {
         // Clear the read stream (SSE only contains outgoing events)
-        GetReadStream ().Clear ();;
+        GetReadStream ().Clear ();
         mResponseEncoder.Clear ();
-        
+        mToStringConverter.Clear ();
+        mToPacketConverter.Clear ();
+        mRequestDecoder.Clear ();
+        mResponseEncoder.Clear ();
         mEventEncoder.Pipe (mToPacketConverter).Pipe (GetWriteStream ());
     }
 }

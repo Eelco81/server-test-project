@@ -21,7 +21,10 @@ void SSE::EventDecoder::Write (const std::string& inBuffer) {
         std::regex reDataLine ("^data: (.+)");
         std::smatch matchLine;
         if (std::regex_search (line, matchLine, reDataLine)) {
-            mBuffer += matchLine[1].str () + "\n";
+            if (!mBuffer.empty ()) {
+                mBuffer += "\n";
+            }
+            mBuffer += matchLine[1].str ();
         }
         
     }

@@ -24,14 +24,14 @@ namespace HTTP {
 namespace RFC6455 {
 
 /**
- * The HTTP::RemoteClient class forwards HTTP Requests to an open TCP socket to 
- * and waits for a resulting HTTP Responses to arrive on the same socket.
+ * The RFC6455::RemoteClient class forwards establishes a WebSocket
+ * connection to a remote server.
  */
 class RemoteClient : public TCP::Client {
 
 public:
     /**
-     * Create a HTTP remote client, which connects to inAddress:inPort
+     * Create a RFC6455 remote client, which connects to inAddress:inPort
      */
     RemoteClient (std::string inAddress, std::string inPort);
     
@@ -84,6 +84,6 @@ private:
     
 };
 
-} // end namespace HTTP
+} // end namespace RFC6455
 
-#endif // _HTTP_REMOTECLIENT_H_
+#endif // _RFC6455_REMOTECLIENT_H_
