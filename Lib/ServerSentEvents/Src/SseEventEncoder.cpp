@@ -10,7 +10,7 @@ namespace {
 
 void SSE::EventEncoder::Write (const std::string& inPayload) {
     
-    // \todo: Set 'retry: ' on first call
+    // \todo: Set 'retry' on first call
     
     std::string buffer;
     buffer += std::string ("id: " + std::to_string (++mLastId)) + newLine;

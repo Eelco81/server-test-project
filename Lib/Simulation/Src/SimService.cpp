@@ -72,6 +72,9 @@ void SIM::Service::Stop () {
     mRunner.reset (nullptr);
     mLoop.reset (nullptr);
     
+    // \todo: Remove this fix for SSE connections in the integration tests.
+    //        The last event seems to be dropped, so sent this twice.
+    mStream.Write (Event ("sim-stopped"));
     mStream.Write (Event ("sim-stopped"));
 }
 

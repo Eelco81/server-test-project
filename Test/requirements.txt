@@ -1,5 +1,6 @@
 behave
 websocket-client
+sseclient-py
 requests
 assertpy
 chromedriver-binary
