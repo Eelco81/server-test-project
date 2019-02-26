@@ -13,7 +13,7 @@
 TCP::Server::Server (const std::string& inAddress, const std::string& inPort, std::shared_ptr<ClientFactory> inFactory) :
     mMutex (std::make_unique <OS::Mutex> ()),
     mListener (std::make_unique <APP::HoldingThread<Server>> ("ServerListener", this, &TCP::Server::WaitForConnections)),
-    mCleaner (std::make_unique <APP::TriggerThread<Server>> ("ServerCleaner", 1000u, this, &TCP::Server::CleanUp)),
+    mCleaner (std::make_unique <APP::TriggerThread<Server>> ("ServerCleaner", 1000000u, this, &TCP::Server::CleanUp)),
     mFactory (inFactory),
     mSocket (inAddress, inPort)
 {

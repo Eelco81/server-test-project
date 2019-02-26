@@ -1,4 +1,5 @@
 
+@fixture.server
 Feature: Command Line Client
 
   Scenario Outline: Calling the echo endpoint

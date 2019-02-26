@@ -42,7 +42,7 @@ TEST (SimServiceTester, Run) {
     SIM::Service service (std::move (factory));
     
     const auto config = R"({
-        "step": 100,
+        "step": 100000,
         "blocks" : [{
             "name" : "MyName", 
             "type" : "MyType"
@@ -61,7 +61,7 @@ TEST (SimServiceTester, Run) {
     ASSERT_THROW (service.Start (), std::exception);
     ASSERT_THROW (service.Load (config), std::exception);
     
-    OS::Timing::Sleep (150u);
+    OS::Timing::Sleep (150000u);
     
     EXPECT_EQ (0.0, service.GetValue (SIM::Path ("MyName", "input", SIM::Path::INPUT)).mValue);
     

@@ -1,6 +1,6 @@
 
 #include "Application.h"
-#include "Network.h"
+#include "OS.h"
 #include "Log.h"
 #include "Version.h"
 #include <iostream>
@@ -13,7 +13,7 @@ APP::Application::Application (const std::string& inAppName)
     mCommandLine.AddOption ({"help", "h"}, "", OS::CommandLine::OPTIONAL);
     mCommandLine.AddOption ({"version", "v"}, "", OS::CommandLine::OPTIONAL);
     
-    OS::Network::Initialize ();
+    OS::Initialize ();
     OS::Version::SetApplicationName (inAppName);
 }
 
@@ -21,7 +21,7 @@ APP::Application::~Application () {
 
     LOGINFO << "Stopped " << OS::Version::GetApplicationName () << " " << OS::Version::GetApplicationVersion ();
     
-    OS::Network::Done ();
+    OS::Finalize ();
     OS::Log::Instance ().Flush ();
 }
 

@@ -21,7 +21,7 @@ public:
 }
 
 APP::SupportThread::SupportThread () :
-    PeriodicThread ("Support", 100u)
+    PeriodicThread ("Support", 1000000u)
 {
     AddTask (std::make_unique <LogTask> ());
 }

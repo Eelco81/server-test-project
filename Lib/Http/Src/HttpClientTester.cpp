@@ -26,7 +26,7 @@ TEST_F (HttpClientTester, VerifyProperIntegration) {
     TCP::Server server (IP_FOR_TESTING, PORT_FOR_TESTING, factory);
     
     server.Start ();
-    OS::Timing::Sleep (100u);
+    OS::Timing::Sleep (100000u);
     
     HTTP::RemoteClient client (IP_FOR_TESTING, PORT_FOR_TESTING);
     HTTP::Request request (HTTP::Method::GET, "/hello");

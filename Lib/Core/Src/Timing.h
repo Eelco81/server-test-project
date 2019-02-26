@@ -11,24 +11,29 @@ namespace OS {
 namespace Timing {
     
     /**
-     * Get the current system time in milliseconds
+     * Setup the clock
+     */
+    void Initialize ();
+    
+    /**
+     * Get the current system time in microseconds
      */
     uint64_t Now ();
     
     /**
-     * Convert a timestamp to string
+     * Convert a timestamp in microseconds to string
      */
     std::string ToString (uint64_t inTime);
     
     /**
-     * Convert a timestamp to http compatible string
+     * Convert a timestamp in microseconds to http compatible string
      */
     std::string ToStdString (uint64_t inTime);
     
     /**
-     * Sleep for a given ammount of milliseconds
+     * Sleep for a given ammount of microseconds
      */
-    void Sleep (uint64_t inMilliSeconds);
+    void Sleep (uint64_t inSleep);
     
 } // end namespace Timing
 

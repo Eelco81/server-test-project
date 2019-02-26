@@ -4,14 +4,17 @@ ROOT_DIR=.
 -include $(ROOT_DIR)/Tools/external.mk
 -include $(ROOT_DIR)/Tools/install.mk
 
+.PHONY: all test clean
+
 application:
 	make all -C $(APP_DIR)/Server/Make
 	make all -C $(APP_DIR)/Client/Make
+	make all -C $(APP_DIR)/TestApp/Make
 
 web:
 	make webpack -C $(WEB_DIR)
 
-test: external
+test:
 	make test -C $(LIB_DIR)/AppUtils/Make
 	make test -C $(LIB_DIR)/Core/Make
 	make test -C $(LIB_DIR)/Http/Make
@@ -28,6 +31,8 @@ integration-test:
 clean: 
 	make clean -C $(APP_DIR)/Server/Make
 	make clean -C $(APP_DIR)/Client/Make
-
+	make clean -C $(APP_DIR)/TestApp/Make
 
 distclean: clean clean-external clean-install
+
+all: application install

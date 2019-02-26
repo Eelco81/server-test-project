@@ -57,5 +57,5 @@ TEST_P (HttpResponseEncoderTester, ContainsLastModified) {
 
 TEST_P (HttpResponseEncoderTester, ContainsUserAgent) {
     HTTP::Response response (std::get<1> (GetParam ()), std::get<2> (GetParam ()));
-    EXPECT_THAT ( Encode (response), ::testing::HasSubstr ("\r\nUser-Agent: HttpServer/0.0.1"));
+    EXPECT_THAT ( Encode (response), ::testing::HasSubstr ("\r\nUser-Agent: Unknown/0.0.1"));
 }

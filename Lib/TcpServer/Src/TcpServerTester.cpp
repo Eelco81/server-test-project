@@ -57,17 +57,17 @@ TEST_F (TcpServerTester, DataTransfer) {
     TCP::Server server (IP_FOR_TESTING, PORT_FOR_TESTING, std::move (factory));
     
     server.Start();
-    OS::Timing::Sleep (100u);
+    OS::Timing::Sleep (100000u);
 
     HarvestClient client (IP_FOR_TESTING, PORT_FOR_TESTING);
     EXPECT_TRUE (client.Start ());
     
-    OS::Timing::Sleep (100u);
+    OS::Timing::Sleep (100000u);
     
     const std::vector<uint8_t> buffer (1000, 0xFF);
     client.Send (buffer);
     
-    OS::Timing::Sleep (100u);
+    OS::Timing::Sleep (100000u);
     
     EXPECT_EQ (buffer.size (), client.mData.size ());
     EXPECT_TRUE (std::equal (buffer.begin (), buffer.end (), client.mData.begin ()));
@@ -81,7 +81,7 @@ TEST_F (TcpServerTester, MultipleConnnections) {
     
     server.Start();
     
-    OS::Timing::Sleep (100u);
+    OS::Timing::Sleep (100000u);
     EXPECT_EQ (0u, server.GetClientCount ());
     
     std::vector<std::unique_ptr<HarvestClient>> clients;
@@ -90,7 +90,7 @@ TEST_F (TcpServerTester, MultipleConnnections) {
         EXPECT_TRUE (clients.back ()->Start ());
     }
     
-    OS::Timing::Sleep (100u);
+    OS::Timing::Sleep (100000u);
     EXPECT_EQ (clients.size (), server.GetClientCount ());
     
     for (auto& client : clients) {
@@ -98,7 +98,7 @@ TEST_F (TcpServerTester, MultipleConnnections) {
         EXPECT_FALSE (client->IsConnected ());
     }
     
-    OS::Timing::Sleep (2000u); // Make sure cleaner ticked once
+    OS::Timing::Sleep (2000000u); // Make sure cleaner ticked once
     EXPECT_EQ (0u, server.GetClientCount ());
 }
 
@@ -109,7 +109,7 @@ TEST_F (TcpServerTester, ClosingServer) {
     
     server.Start ();
     
-    OS::Timing::Sleep (100u);
+    OS::Timing::Sleep (100000u);
     EXPECT_EQ (0u, server.GetClientCount ());
     
     std::vector<std::unique_ptr<HarvestClient>> clients;
@@ -118,11 +118,11 @@ TEST_F (TcpServerTester, ClosingServer) {
         EXPECT_TRUE (clients.back ()->Start ());
     }
     
-    OS::Timing::Sleep (100u);
+    OS::Timing::Sleep (100000u);
     EXPECT_EQ (clients.size (), server.GetClientCount ());
     
     server.Stop ();
-    OS::Timing::Sleep (100u);
+    OS::Timing::Sleep (100000u);
     
     for (auto& client : clients) {
         EXPECT_FALSE (client->IsConnected ());

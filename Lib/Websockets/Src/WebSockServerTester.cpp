@@ -10,7 +10,7 @@
 
 #define IP_FOR_TESTING "127.0.0.1"
 #define PORT_FOR_TESTING "1703"
-#define TESTING_WAIT 100u
+#define TESTING_WAIT 100000u
 
 class WebSockServerTester : public ::testing::Test {
 

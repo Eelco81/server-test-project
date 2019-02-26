@@ -1,7 +1,7 @@
 
+@fixture.server
 Feature: Simulation API
 
-  @wip
   Scenario: Starting and stopping simulations
    Given the event service is connected
     When simulation "basic" is started

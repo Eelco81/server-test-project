@@ -1,4 +1,5 @@
 
+@fixture.server
 Feature: HTTP Connections
 
   Scenario: Calling non existing endpoints

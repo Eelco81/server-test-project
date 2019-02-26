@@ -45,8 +45,8 @@ TEST (PeriodicThreadTester, TasksInOneThread) {
 
 TEST (PeriodicThreadTester, TasksInMultipleThreads) {
 
-    APP::PeriodicThread thread1 ("PeriodicThread1", 1u);
-    APP::PeriodicThread thread2 ("PeriodicThread2", 1u);
+    APP::PeriodicThread thread1 ("PeriodicThread1", 0u);
+    APP::PeriodicThread thread2 ("PeriodicThread2", 0u);
 
     auto task1 = std::make_unique <TestTask> ("Task1");
     auto task2 = std::make_unique <TestTask> ("Task2");

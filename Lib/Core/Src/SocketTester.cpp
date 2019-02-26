@@ -66,7 +66,7 @@ namespace {
 class SocketTester : public ::testing::Test {
     void TearDown () {
         OS::Log::Instance ().Flush ();
-        OS::Timing::Sleep (100u); // give the OS some time to clean up the socket
+        OS::Timing::Sleep (1000000u); // give the OS some time to clean up the socket
     }
 };
 
@@ -105,7 +105,7 @@ TEST_F (SocketTester, BasicDataTransfer) {
     server.Spawn ();
 
     while (!server.IsListening ()) {}
-    OS::Timing::Sleep(1000u);
+    OS::Timing::Sleep (1000000u);
     
     client.Initialize ();
     client.Spawn ();
@@ -150,7 +150,7 @@ TEST_F (SocketTester, ClosingClients) {
     server.Spawn ();
 
     while (!server.IsListening ()) {}
-    OS::Timing::Sleep(1000u);
+    OS::Timing::Sleep (1000000u);
     
     client.Initialize ();
     client.Spawn ();
@@ -192,7 +192,7 @@ TEST_F (SocketTester, ServerClosesConnection) {
     server.Spawn ();
 
     while (!server.IsListening ()) {}
-    OS::Timing::Sleep(1000u);
+    OS::Timing::Sleep (1000000u);
     
     client.Initialize ();
     client.Spawn ();
@@ -236,7 +236,7 @@ TEST_F (SocketTester, ServerCloses) {
     server.Spawn ();
 
     while (!server.IsListening ()) {}
-    OS::Timing::Sleep (1000u);
+    OS::Timing::Sleep (1000000u);
     
     client.Initialize ();
     client.Spawn ();

@@ -25,6 +25,7 @@ void APP::PeriodicThread::Execute () {
     mRunning = true;
 
     while (mRunning) {
+        
         const auto tick (OS::Timing::Now ());
         for (const auto& it : mTasks) {
             if (!it->Step ()) {
@@ -32,12 +33,17 @@ void APP::PeriodicThread::Execute () {
                 break;
             }
         }
+        
         const auto duration (OS::Timing::Now () - tick);
+        const auto sleeptime (mWaitTime - duration);
+        
+        // LOGINFO << GetName() << " " << duration << " " << mWaitTime << " " << sleeptime;
+        
         if (mWaitTime > 0u && duration >= mWaitTime) {
-            LOGMESSAGE (OS::Log::kWarning, std::string ("Overrun in ") + GetName() + std::string (": WaitTime [") + std::to_string (mWaitTime) + std::string ("ms] Duration [") + std::to_string (duration) + std::string("]"));
+            LOGWARNING << "Overrun in " << GetName() << ": WaitTime [" << mWaitTime << "ms] Duration [" << duration << "]";
         }
         else if (mWaitTime > 0u) {
-            OS::Timing::Sleep (mWaitTime - duration);
+            OS::Timing::Sleep (sleeptime);
         }
     }
 

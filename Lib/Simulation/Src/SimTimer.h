@@ -13,7 +13,7 @@ class Timer {
 
 public:
     /**
-     * Constructor, timestep in milliseconds, 
+     * Constructor, timestep in microseconds, 
      */
     Timer (uint64_t mTimeStep);
 
@@ -39,7 +39,7 @@ public:
      double GetTimeStepValue() const;
      
     /**
-     * Get the current time as tick in milliseconds.
+     * Get the current time as tick in microseconds.
      */
     uint64_t GetTimeStamp () const;
     

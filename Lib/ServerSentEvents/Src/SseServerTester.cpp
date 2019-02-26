@@ -10,7 +10,7 @@
 
 #define IP_FOR_TESTING "127.0.0.1"
 #define PORT_FOR_TESTING "1703"
-#define TESTING_WAIT 50u
+#define TESTING_WAIT 50000u
 
 class SseServerTester : public ::testing::Test {
 

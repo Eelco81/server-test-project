@@ -1,4 +1,5 @@
 
+@fixture.server
 Feature: Configuration management
 
   Scenario: Get all configurations
