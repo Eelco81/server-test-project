@@ -81,7 +81,7 @@ void RFC6455::FrameDecoder::Write (const std::vector<uint8_t>& inBuffer) {
         
         // Handle the frame
         LOGMESSAGE (OS::Log::kTrace, std::string ("Decoded ") + frame.GetStatusMessage ());
-        Done (frame);
+        Emit (frame);
         
         // Erase the data from the buffer (not needed anymore)
         mBuffer.erase (mBuffer.begin (), mBuffer.begin () + index + payloadSize);

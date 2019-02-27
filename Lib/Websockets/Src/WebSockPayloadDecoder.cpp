@@ -25,7 +25,7 @@ void RFC6455::PayloadStringDecoder::Write (const Frame& inFrame) {
         }
         
         if (inFrame.mFin) {
-            Done (std::string (reinterpret_cast<char*> (mBuffer.data()), mBuffer.size ()));
+            Emit (std::string (reinterpret_cast<char*> (mBuffer.data()), mBuffer.size ()));
             mIsDecoding = false;
         }
         else {
@@ -44,7 +44,7 @@ void RFC6455::PayloadStringDecoder::Write (const Frame& inFrame) {
         std::copy (payload.begin (), payload.end (), std::back_inserter (mBuffer));
         
         if (inFrame.mFin) {
-            Done (std::string (reinterpret_cast<char*> (mBuffer.data())));
+            Emit (std::string (reinterpret_cast<char*> (mBuffer.data())));
             mIsDecoding = false;
         }
     }
@@ -66,7 +66,7 @@ void RFC6455::PayloadBinaryDecoder::Write (const Frame& inFrame) {
         }
         
         if (inFrame.mFin) {
-            Done (mBuffer);
+            Emit (mBuffer);
             mIsDecoding = false;
         }
         else {
@@ -85,7 +85,7 @@ void RFC6455::PayloadBinaryDecoder::Write (const Frame& inFrame) {
         std::copy (payload.begin (), payload.end (), std::back_inserter (mBuffer));
         
         if (inFrame.mFin) {
-            Done (mBuffer);
+            Emit (mBuffer);
             mIsDecoding = false;
         }
     }

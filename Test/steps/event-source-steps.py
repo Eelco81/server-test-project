@@ -9,17 +9,20 @@ from eventsource import EventSource
 def step_impl( context ):
     
     context.events = []
-    def onMessage( message ):
+    def onMessage( id, message ):
         event = json.loads( message )
         event['size'] = len( message )
         event['recv'] = time.time() * 1000 * 1000
+        event['id'] = id
         context.events.append( event )
-    
+        
     context.service = EventSource( context.sseurl, onMessage )
     
     time.sleep( 0.1 )
 
 @then( 'the event source can be closed' )
 def step_impl( context ):
+    time.sleep( 4.0 )
     context.service.stop()
+
 

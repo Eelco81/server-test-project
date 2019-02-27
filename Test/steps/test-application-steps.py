@@ -19,31 +19,35 @@ def step_impl( context, type, step, count, size ):
 def step_impl( context, count, type, size, step ):
     
     assert_that( context.events ).is_length( count )
-    
-    rstamps = [ float( e['recv'] ) for e in context.events ]
-    sizes   = [ float( e['size'] ) for e in context.events ]
-    sstamps = [ float( e['time'] ) for e in context.events ]
-    ticks   = [ float( e['tick'] ) for e in context.events ]
+   
+    rstamps = [ float( e['recv']  ) for e in context.events ]
+    sizes   = [ float( e['size']  ) for e in context.events ]
+    sstamps = [ float( e['time']  ) for e in context.events ]
+    ticks   = [ float( e['tick']  ) for e in context.events ]
     counts  = [ float( e['count'] ) for e in context.events ]
+    ids     = [ float( e['id']    ) for e in context.events ]
     
     rframes = [ x-y for (x,y) in zip( rstamps[1:], rstamps[:-1] ) ]
     sframes = [ x-y for (x,y) in zip( sstamps[1:], sstamps[:-1] ) ]
     drifts  = [ y-x for (x,y) in zip( sstamps, rstamps ) ]
     incrmts = [ x-y for (x,y) in zip( ticks[1:], ticks[:-1] ) ]
+    incrids = [ x-y for (x,y) in zip( ids[1:], ids[:-1] ) ]
     
     assert_that( sizes ).contains_only( size )
     assert_that( counts ).contains_only( count )
     assert_that( incrmts ).contains_only( 1 )
+    assert_that( incrids ).contains_only( 1 )
     
     assert_that( sum( sframes ) / len( sframes ) ).is_close_to( step, 2001 )
     assert_that( min( sframes ) ).is_close_to( step, 5001 )
     assert_that( max( sframes ) ).is_close_to( step, 5002 )
     
     assert_that( sum( rframes ) / len( rframes ) ).is_close_to( step, 2002 )
-    assert_that( min( rframes ) ).is_close_to( step, 10001 )
-    assert_that( max( rframes ) ).is_close_to( step, 10002 )
+    #assert_that( min( rframes ) ).is_close_to( step, 10001 )
+    #assert_that( max( rframes ) ).is_close_to( step, 10002 )
     
-    assert_that( sum( drifts ) / len( drifts ) ).is_less_than( 20003 )
-    assert_that( min( drifts ) ).is_close_to( 0, 50001 )
-    assert_that( max( drifts ) ).is_close_to( 0, 50002 )
+    meandrift = sum( drifts ) / len( drifts )
+    assert_that( meandrift ).is_less_than( 100003 )
+    assert_that( min( drifts ) ).is_close_to( meandrift, 20001 )
+    assert_that( max( drifts ) ).is_close_to( meandrift, 20002 )
     

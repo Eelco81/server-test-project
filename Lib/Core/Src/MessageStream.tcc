@@ -5,7 +5,7 @@ void OS::MessageStream<Input_t,Output_t>::Pipe (OS::MessageStream<Input_t,Output
 }
 
 template<typename Input_t, typename Output_t>
-void OS::MessageStream<Input_t,Output_t>::Done (const Output_t& inMessage) {
+void OS::MessageStream<Input_t,Output_t>::Emit (const Output_t& inMessage) {
     for (auto callback : mCallbacks) {
         callback (inMessage);
     }
@@ -19,5 +19,5 @@ OS::MessageStream<Input_t,Output_t>& OS::MessageStream<Input_t,Output_t>::Clear 
 
 template<typename T>
 void OS::ForwardStream<T>::Write (const T& inMessage) {
-    this->Done (inMessage);
+    this->Emit (inMessage);
 }

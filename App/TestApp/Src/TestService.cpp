@@ -30,6 +30,7 @@ bool TEST::Service::GenerateStringMessage () {
     
     // Stop the stream if we have reached the data count
     if (mCounter++ >= mDataCount) {
+        mStringStream.Write ("{id:\"CLOSE\"}");
         return false;
     }
     

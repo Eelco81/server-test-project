@@ -11,6 +11,9 @@
 
 namespace HTTP {
 
+/**
+ * The HTTP::MessageDecoder is the base for the RequestDecoder and ResponseEncoder.
+ */
 template<class Message_t>
 class MessageDecoder : public OS::MessageStream<std::string, Message_t> {
 
@@ -27,7 +30,7 @@ public:
     
     /**
      * Write a string to the Decoder, when a corresponding Message_t is assembled,
-     * the MessageStream::Done method is called.
+     * the MessageStream::Emit method is called.
      */ 
     void Write (const std::string& inData);
 

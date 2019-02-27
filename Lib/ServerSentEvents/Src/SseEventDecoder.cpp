@@ -14,7 +14,7 @@ void SSE::EventDecoder::Write (const std::string& inBuffer) {
     for (std::string line; std::getline (iss, line); ) {
         
         if (line == "" && !mBuffer.empty ()) {
-            Done (mBuffer);
+            Emit (mBuffer);
             mBuffer.clear ();
         }
         

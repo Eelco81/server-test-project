@@ -24,7 +24,7 @@ void HTTP::MessageDecoder<Message_t>::Write (const std::string& inData) {
         std::copy (body.begin (), body.end (), std::back_inserter (mBody));
         if (mBody.size () >= mBodySize) {
             mMessage->SetBody (mBody);
-            this->Done (*mMessage);
+            this->Emit (*mMessage);
             mState = kSearchStart;
         }
     }
@@ -46,7 +46,7 @@ void HTTP::MessageDecoder<Message_t>::Write (const std::string& inData) {
                 if (line == "\r" || line == "") {
                     const auto contentLength (mMessage->mHeaders.find (Header::CONTENT_LENGTH));
                     if (contentLength == mMessage->mHeaders.end ()) {
-                        this->Done (*mMessage);
+                        this->Emit (*mMessage);
                         mState = kSearchStart;
                     }
                     else {
@@ -58,7 +58,7 @@ void HTTP::MessageDecoder<Message_t>::Write (const std::string& inData) {
                             mMessage->mIsValid = false;
                         }
                         if (mBodySize == 0u) {
-                            this->Done (*mMessage);
+                            this->Emit (*mMessage);
                             mState = kSearchStart;
                         }
                         else {
@@ -73,7 +73,7 @@ void HTTP::MessageDecoder<Message_t>::Write (const std::string& inData) {
                             }
                             else {
                                 mMessage->SetBody (mBody);
-                                this->Done (*mMessage);
+                                this->Emit (*mMessage);
                                 mState = kSearchStart;
                             }
                         }

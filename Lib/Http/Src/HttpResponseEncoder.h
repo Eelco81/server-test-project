@@ -13,9 +13,10 @@ namespace HTTP {
 class ResponseEncoder : public OS::MessageStream<Response, std::string> {
 
 public:
+
     /**
      * Write a Response to the Encoder, when a corresponding string is assembled,
-     * the MessageStream::Done method is called.
+     * the MessageStream::Emit method is called.
      */ 
     void Write (const Response& inData);
 

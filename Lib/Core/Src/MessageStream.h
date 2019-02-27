@@ -8,6 +8,9 @@
 
 namespace OS {
 
+/**
+ * The MessageStream allows event based data streaming.
+ */
 template <typename Input_t, typename Output_t>
 class MessageStream {
 
@@ -56,16 +59,19 @@ public:
     
 protected:
     /**
-     * In function Write (), call Done () when a packet is done for 
+     * In function Write (), call Emit () when a packet is done for 
      * further processing.
      */
-    void Done (const Output_t& inMessage);
+    void Emit (const Output_t& inMessage);
     
 private:
     std::vector<Callback> mCallbacks;
 
 };
 
+/**
+ * The ForwardStream transforms the MessageStream in an EventEmitter.
+ */
 template <typename T>
 class ForwardStream : public MessageStream<T,T> {
 public:

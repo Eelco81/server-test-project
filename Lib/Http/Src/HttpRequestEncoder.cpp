@@ -19,6 +19,6 @@ void HTTP::RequestEncoder::Write (const HTTP::Request& inRequest) {
     request += NEWLINE;
     request += inRequest.GetBody ();
 
-    Done (request);
+    Emit (request);
 
 }

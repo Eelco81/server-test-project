@@ -18,6 +18,7 @@ def step_impl( context ):
         event = json.loads( message )
         event['size'] = len( message )
         event['recv'] = time.time() * 1000 * 1000
+        event['id'] = event['tick']
         context.events.append( event )
     
     context.service = WebSocketService( context.websockurl, onMessage )

@@ -14,6 +14,7 @@ namespace SIM {
 class EventStream : public OS::MessageStream<Event, std::string> {
 
 public:
+
     /**
      * Constructor
      */

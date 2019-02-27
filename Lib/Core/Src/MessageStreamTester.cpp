@@ -11,7 +11,7 @@ public:
     void Write (const std::vector<char>& inMessage) override {
         std::string data;
         data.assign (inMessage.data (), inMessage.data () + inMessage.size ());
-        Done (data);
+        Emit (data);
     }
 };
 
@@ -20,7 +20,7 @@ public:
     void Write (const std::string& inMessage) override {
         std::vector<char> data;
         data.assign (inMessage.data (), inMessage.data () + inMessage.size ());
-        Done (data);
+        Emit (data);
     }
 };
 

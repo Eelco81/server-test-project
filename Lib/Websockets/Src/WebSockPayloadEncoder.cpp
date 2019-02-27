@@ -9,7 +9,7 @@ void RFC6455::PayloadStringEncoder::Write (const std::string& inData) {
     frame.mIsMasked = false;
     frame.mPayload.assign (reinterpret_cast<const uint8_t*> (inData.data ()), reinterpret_cast<const uint8_t*> (inData.data ()) + inData.size ());
     
-    Done (frame);
+    Emit (frame);
 }
 
 void RFC6455::PayloadBinaryEncoder::Write (const std::vector<uint8_t>& inData) {
@@ -20,5 +20,5 @@ void RFC6455::PayloadBinaryEncoder::Write (const std::vector<uint8_t>& inData) {
     frame.mIsMasked = false;
     frame.mPayload.assign (inData.begin (), inData.end ());
     
-    Done (frame);
+    Emit (frame);
 }

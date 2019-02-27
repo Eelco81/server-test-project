@@ -14,16 +14,43 @@
 
 namespace HTTP {
 
+/**
+ * The HTTP::Router is a MessageStream which handles
+ * an HTTP::Request and yields a HTTP::Response.
+ */
 class Router : public OS::MessageStream <Request, Response> {
-    
+
 public:
+    
+    /**
+     * Convenience definition.
+     */
     using EndPointPtr = std::shared_ptr <AbstractEndPoint>;
+    
+    /**
+     * Copy constructor 
+     */
     Router (const Router& inRouter);
+    
+    /**
+     * Default constructor
+     */
     Router ();
+    
+    /**
+     * Virtual destructor
+     */
     virtual ~Router ();
     
-public:
+    /**
+     * Write to a HTTP::Request to the Router, when a HTTP::Response
+     * is computed, it is passed through MessageStream::Emit
+     */
     void Write (const Request& inRequest) override;
+    
+    /**
+     * Add an EndPoint to the Router
+     */
     void AddEndPoint (EndPointPtr inEndPoint);
 
 private:

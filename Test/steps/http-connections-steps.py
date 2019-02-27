@@ -14,7 +14,7 @@ def step_impl( context, method, route ):
 
 @when( 'sending an echo request of {bytes:d} bytes' )
 def step_impl( context, bytes ) :
-    context.response = requests.put( context.url + "/api/echo", data = bytearray( [0xFE]*bytes ) )
+    context.response = requests.put( context.url + "/echo", data = bytearray( [0xFE]*bytes ) )
 
 @then( 'the received response has code {code:d}' )
 def step_impl( context, code ):
@@ -32,8 +32,8 @@ def step_impl( context, key, value ):
 def step_impl( context ):
     context.execute_steps(u'''
         Then the received response contains a header with key 'Last-Modified'
-        Then the received response contains header 'User-Agent: Server/0.0.1'
-    ''')
+        Then the received response contains header 'User-Agent: {0}/0.0.1'
+    '''.format(context.serverName))
 
 @then( 'the received response has a body of size {bytes:d}' )
 def step_impl( context, bytes ):

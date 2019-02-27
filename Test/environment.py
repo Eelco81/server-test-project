@@ -30,6 +30,7 @@ def server( context, timeout=30, **kwargs ):
         stdin=PIPE, stderr=PIPE, stdout=PIPE,
         cwd = "../Install"
     )
+    context.serverName = "Server"
     time.sleep( 1 )
     
     yield context.server
@@ -53,6 +54,7 @@ def testapp( context, timeout=30, **kwargs ):
         stdin=PIPE, stderr=PIPE, stdout=PIPE,
         cwd = "../Install"
     )
+    context.serverName = "test-app"
     time.sleep( 1 )
     
     yield context.server

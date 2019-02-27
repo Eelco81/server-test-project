@@ -10,4 +10,8 @@ Feature: Event Source (SSE)
     
   Examples:
     | step    | size | count | type   |
-    | 20000   | 50   | 10   | string |
+    | 20000   | 50   | 100   | string |
+    | 20000   | 100  | 100   | string |
+    | 20000   | 200  | 100   | string |
+    | 50000   | 500  | 100   | string |
+    | 100000  | 2000 | 100   | string |
