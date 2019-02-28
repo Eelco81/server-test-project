@@ -18,7 +18,8 @@ export default class Simulator extends EventEmitter {
         
         this._root = "api/simulation";
         
-        const websock = new WebSocket("ws://localhost:1704");
+        /*
+        const websock = new WebSocket("ws://localhost:1704/ws");
         websock.onmessage = function(evt) { 
         
             const data = JSON.parse(evt.data);
@@ -27,6 +28,18 @@ export default class Simulator extends EventEmitter {
             
             self.emit(eventId, eventData);
         }
+        */
+        
+        const source = new EventSource("http://localhost:1705/sse");
+        source.addEventListener('message', function(evt) {
+
+            const data = JSON.parse(evt.data);
+            const eventId = data["event-id"];
+            const eventData = data["event-data"];
+            
+            self.emit(eventId, eventData);
+        }, false);
+
     }
     
     start(id) {

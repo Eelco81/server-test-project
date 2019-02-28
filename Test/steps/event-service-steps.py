@@ -1,13 +1,8 @@
 
-import _thread as thread
 import json
-import requests
-import sseclient
 import time
-from websocket import WebSocketApp
 from behave import given, when, then, step
 from assertpy import assert_that
-
 from eventsource import EventSource
 from websocketservice import WebSocketService
 

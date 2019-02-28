@@ -4,7 +4,7 @@ ROOT_DIR=.
 -include $(ROOT_DIR)/Tools/external.mk
 -include $(ROOT_DIR)/Tools/install.mk
 
-.PHONY: all test clean
+.PHONY: applicatiom all web test clean
 
 application:
 	make all -C $(APP_DIR)/Server/Make

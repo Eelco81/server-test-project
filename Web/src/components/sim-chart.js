@@ -51,5 +51,5 @@ export default {
         this.revokeSubscription();
         Plotly.purge(this.$el);
     },
-    template: '<div class="sim-chart"></div>'
+    template: '<div class="sim-chart" v-bind:id="sampler.id"></div>'
 };

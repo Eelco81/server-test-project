@@ -22,7 +22,6 @@ def step_impl( context ):
 
 @then( 'the event source can be closed' )
 def step_impl( context ):
-    time.sleep( 4.0 )
     context.service.stop()
 
 

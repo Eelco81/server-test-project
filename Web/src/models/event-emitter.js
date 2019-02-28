@@ -29,5 +29,3 @@ export default class EventEmitter {
     }
     
 }
-
-//export { EventEmitter as default }

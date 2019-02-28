@@ -1,9 +1,6 @@
 
 import _thread as thread
-import requests
 import sseclient
-import time
-from assertpy import assert_that
 
 class EventSource():
     
@@ -14,10 +11,10 @@ class EventSource():
         def runSSE( service ):
             try:
                 for event in service._sseclient:
-                    onMessage (event.id, event.data)
+                    onMessage( event.id, event.data )
                 
-            except Exception as e: print(e)
-                
+            except Exception as e: print( e )
+        
         thread.start_new_thread( runSSE, ( self, ) )
         
     def stop( self ):

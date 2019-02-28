@@ -8,9 +8,9 @@ sys.path.append ("lib")
 
 @fixture 
 def options( context, timeout=30, **kwargs ):
-    context.port = "1704"
-    context.websockport = "1706"
-    context.sseport = "1708" 
+    context.port = "1703"
+    context.websockport = "1704"
+    context.sseport = "1705" 
     context.ip = "127.0.0.1"
     context.url = "http://" + context.ip + ":" + context.port
     context.websockurl = "ws://" + context.ip + ":" + context.websockport + "/web"
@@ -25,7 +25,7 @@ def server( context, timeout=30, **kwargs ):
             '-port', context.port, 
             '-websockport', context.websockport, 
             '-sseport', context.sseport,
-            '-loglevel', 'NONE'
+            '-loglevel', 'INFO'
         ], 
         stdin=PIPE, stderr=PIPE, stdout=PIPE,
         cwd = "../Install"
