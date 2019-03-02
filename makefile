@@ -4,35 +4,30 @@ ROOT_DIR=.
 -include $(ROOT_DIR)/Tools/external.mk
 -include $(ROOT_DIR)/Tools/install.mk
 
-.PHONY: applicatiom all web test clean
+.PHONY: web test clean
 
-application:
-	make all -C $(APP_DIR)/Server/Make
-	make all -C $(APP_DIR)/Client/Make
-	make all -C $(APP_DIR)/TestApp/Make
+%-all:
+	$(eval APPS:=$(dir $(wildcard $(APP_DIR)/*/.)))
+	for app in $(APPS) ; do \
+		$(MAKE) $@ -C $$app/Make ; \
+	done
 
 web:
-	make webpack -C $(WEB_DIR)
+	$(MAKE) webpack -C $(WEB_DIR)
 
 test:
-	make test -C $(LIB_DIR)/AppUtils/Make
-	make test -C $(LIB_DIR)/Core/Make
-	make test -C $(LIB_DIR)/Http/Make
-	make test -C $(LIB_DIR)/Math/Make
-	make test -C $(LIB_DIR)/Router/Make
-	make test -C $(LIB_DIR)/SimComponents/Make
-	make test -C $(LIB_DIR)/Simulation/Make
-	make test -C $(LIB_DIR)/TcpServer/Make
-	make test -C $(LIB_DIR)/WebSockets/Make
+	$(eval LIBS:=$(dir $(wildcard $(LIB_DIR)/*/.)))
+	for lib in $(LIBS) ; do \
+		$(MAKE) $@ -C $$lib/Make ; \
+	done
 
 integration-test:
-	make integration-test -C $(TEST_DIR)
+	$(MAKE) $@ -C $(TEST_DIR)
 
 clean: 
-	make clean -C $(APP_DIR)/Server/Make
-	make clean -C $(APP_DIR)/Client/Make
-	make clean -C $(APP_DIR)/TestApp/Make
+	$(MAKE) $@ -C $(APP_DIR)/Server/Make
+	$(MAKE) $@ -C $(APP_DIR)/Client/Make
+	$(MAKE) $@ -C $(APP_DIR)/TestApp/Make
+	$(MAKE) $@ -C $(TEST_DIR)
 
 distclean: clean clean-external clean-install
-
-all: application install

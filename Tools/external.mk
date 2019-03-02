@@ -2,10 +2,10 @@
 -include ${ROOT_DIR}/Tools/config.mk
 
 pip:
-	make pip -C ${TEST_DIR}
+	$(MAKE) $@ -C ${TEST_DIR}
 
 npm:
-	make npm -C ${WEB_DIR}
+	$$MAKE) $@ -C ${WEB_DIR}
 
 download: clean-external
 	mkdir ${DOWNLOAD_DIR}
