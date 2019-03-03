@@ -16,9 +16,6 @@ install:
 	cp dist/main.js.map $(INSTALL_DIR)/Public || :
 
 clean:
-	rm 
-
-distclean: clean
 	rm -rf dist
 
 karma:

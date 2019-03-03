@@ -21,13 +21,20 @@ test:
 		$(MAKE) $@ -C $$lib/Make ; \
 	done
 
+coverage:
+	$(eval LIBS:=$(dir $(wildcard $(LIB_DIR)/*/.)))
+	for lib in $(LIBS) ; do \
+		$(MAKE) $@ -C $$lib/Make ; \
+	done
+
 integration-test:
 	$(MAKE) $@ -C $(TEST_DIR)
 
 clean: 
-	$(MAKE) $@ -C $(APP_DIR)/Server/Make
-	$(MAKE) $@ -C $(APP_DIR)/Client/Make
-	$(MAKE) $@ -C $(APP_DIR)/TestApp/Make
+	$(eval APPS:=$(dir $(wildcard $(APP_DIR)/*/.)))
+	for app in $(APPS) ; do \
+		$(MAKE) $@ -C $$app/Make ; \
+	done
 	$(MAKE) $@ -C $(TEST_DIR)
 
 distclean: clean clean-external clean-install

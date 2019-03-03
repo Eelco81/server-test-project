@@ -1,20 +1,27 @@
 
 -include $(ROOT_DIR)/Tools/config.mk
 
-ifeq ($(MAKECMDGOALS),release-all) 
-    BUILD_TARGET=release
-    OPTFLAGS=-O3
-else 
-    BUILD_TARGET=debug
-endif
-
 CC              = g++
 AR              = ar
-CFLAGS          = -c -std=c++17 -std=gnu++17 -Wall $(OPTFLAGS)
+CFLAGS          = -c -std=c++17 -std=gnu++17 -Wall
 LINKS           = -lpthread -lstdc++fs
+DEFINES         = -DOS_FAMILY=$(OS_FAMILY) -DBUILD_TARGET=$(BUILD_TARGET)
+
+ifeq ($(MAKECMDGOALS), release-all) 
+	BUILD_TARGET=release
+	CFLAGS += -O3
+else ifeq ($(MAKECMDGOALS), install) 
+	BUILD_TARGET=release
+	CFLAGS += -O3 
+else 
+	BUILD_TARGET=debug
+	GCOVFLAGS = -fprofile-arcs -ftest-coverage
+	GCOV = -lgcov
+	HTMLDIR = $(BUILD_TARGET)/html
+endif
 
 ifeq ($(OS_FAMILY), WINDOWS) 
-    LINKS += -lntdll
+	LINKS += -lntdll
 endif
 
 BINTARGET       = $(addprefix $(BUILD_TARGET)/, $(TARGET))
@@ -29,10 +36,6 @@ GMOCKDIR        = $(EXTERNAL_DIR)/gmock/googlemock
 GMOCKSOURCES    = $(GMOCKDIR)/src/gmock-all.cc $(GMOCKDIR)/gtest/src/gtest-all.cc 
 GMOCKOBJECTS    = $(GMOCKSOURCES:.cc=.o)
 GMOCKINCLUDES   = -I$(GMOCKDIR) -I$(GMOCKDIR)/include -I$(GMOCKDIR)/gtest -I$(GMOCKDIR)/gtest/include 
-
-DEFINES+=\
-	-DOS_FAMILY=$(OS_FAMILY)\
-	-DBUILD_TARGET=$(BUILD_TARGET)
 
 INCLUDES+=\
 	-I$(SOURCE_DIR) \
@@ -52,7 +55,7 @@ LIBLINKS=\
 $(DEPENDENCIES):
 	$(MAKE) $(BUILD_TARGET)-all -C $(LIB_DIR)/$@/Make
 
-$(BINLIBTARGET): $(DEPENDENCIES) $(PRODOBJECTS)
+$(BINLIBTARGET): $(PRODOBJECTS)
 	$(AR) $(ARFLAGS) $@ $(PRODOBJECTS)
 
 $(BINTARGET): $(DEPENDENCIES) $(PRODOBJECTS)
@@ -82,17 +85,12 @@ clean:
 	rm -rf debug release $(GMOCKOBJECTS) *.xml
 
 test: setup $(TESTTARGET)
-	./$(TESTTARGET) --gtest_filter="*" --gtest_output="xml:GoogleTestOutput.xml"
+	./$(TESTTARGET) --gtest_filter="*" --gtest_output="xml:$(BUILD_TARGET)/GoogleTestOutput.xml"
 
+install: release-all
+	cp $(BINTARGET) $(INSTALL_DIR)
 
-# --- WIP ---
-
-# $(TESTOBJECTS) $(GMOCKOBJECTS) $(LIBTARGET) $(TARGET) $(TESTTARGET) $(TESTOBJECTS:.o=.gcda) $(TESTOBJECTS:.o=.gcno) $(HTMLDIR)
-
-#GCOVFLAGS       = -fprofile-arcs -ftest-coverage
-#GCOV            = -lgcov
-#HTMLDIR         = ./html
-
-#coverage: clean test
-#	mkdir $(HTMLDIR)
-#	gcovr $(SOURCEDIR) --html --html-details -o $(HTMLDIR)/$(TESTTARGET).html
+coverage:
+	rm -rf $(HTMLDIR)
+	mkdir $(HTMLDIR)
+	gcovr --filter=../Src --exclude=.*Tester.cpp --html --html-details --output=$(HTMLDIR)/index.html --object-directory=./$(BUILD_TARGET)

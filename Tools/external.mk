@@ -5,7 +5,7 @@ pip:
 	$(MAKE) $@ -C ${TEST_DIR}
 
 npm:
-	$$MAKE) $@ -C ${WEB_DIR}
+	$(MAKE) $@ -C ${WEB_DIR}
 
 download: clean-external
 	mkdir ${DOWNLOAD_DIR}
