@@ -2,7 +2,6 @@
 @fixture.server
 Feature: Web Client
 
-  @wip
   Scenario: Starting and stopping simulations
    Given the user opened the web client
     When the user starts the simulation

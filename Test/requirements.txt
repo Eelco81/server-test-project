@@ -4,3 +4,5 @@ sseclient
 requests
 assertpy
 chromedriver-binary
+selenium
+gcovr

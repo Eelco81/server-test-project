@@ -35,6 +35,10 @@ clean:
 	for app in $(APPS) ; do \
 		$(MAKE) $@ -C $$app/Make ; \
 	done
+	$(eval LIBS:=$(dir $(wildcard $(LIB_DIR)/*/.)))
+	for lib in $(LIBS) ; do \
+		$(MAKE) $@ -C $$lib/Make ; \
+	done
 	$(MAKE) $@ -C $(TEST_DIR)
 
 distclean: clean clean-external clean-install

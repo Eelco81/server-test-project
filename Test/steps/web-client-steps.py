@@ -16,7 +16,7 @@ def step_impl( context ):
 def step_impl( context ):
     start_button = context.driver.find_element_by_id( 'button-start' )
     start_button.click()
-    time.sleep( 30 )
+    time.sleep( 3 )
 
 @when( 'the user stops the simulation' )
 def step_impl( context ):
