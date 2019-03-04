@@ -1,11 +1,10 @@
 
 -include ${ROOT_DIR}/Tools/config.mk
 
-GMOCK_VERSION   = 1.7.0
-GMOCK_LIB       = googlemock-release-${GMOCK_VERSION}
-GTEST_LIB       = googletest-release-${GMOCK_VERSION}
-GMOCK_DIR       = $(EXTERNAL_DIR)/$(GMOCK_LIB)
-GTEST_DIR       = $(EXTERNAL_DIR)/$(GTEST_LIB)
+GTEST_VERSION   = 1.8.1
+GTEST_LIB       = googletest-release-${GTEST_VERSION}
+GMOCK_DIR       = $(EXTERNAL_DIR)/$(GTEST_LIB)/googlemock
+GTEST_DIR       = $(EXTERNAL_DIR)/$(GTEST_LIB)/googletest
 
 pip:
 	$(MAKE) $@ -C ${TEST_DIR}
@@ -15,12 +14,9 @@ npm:
 
 gtest:
 	mkdir ${DOWNLOAD_DIR} || :
-	wget -P ${DOWNLOAD_DIR} https://github.com/google/googlemock/archive/release-${GMOCK_VERSION}.zip
-	mv ${DOWNLOAD_DIR}/release-${GMOCK_VERSION}.zip ${DOWNLOAD_DIR}/${GMOCK_LIB}.zip
-	wget -P ${DOWNLOAD_DIR} https://github.com/google/googletest/archive/release-${GMOCK_VERSION}.zip
-	mv ${DOWNLOAD_DIR}/release-${GMOCK_VERSION}.zip ${DOWNLOAD_DIR}/${GTEST_LIB}.zip
+	wget -P ${DOWNLOAD_DIR} https://github.com/google/googletest/archive/release-${GTEST_VERSION}.zip
+	mv ${DOWNLOAD_DIR}/release-${GTEST_VERSION}.zip ${DOWNLOAD_DIR}/${GTEST_LIB}.zip
 	mkdir ${EXTERNAL_DIR} || :
-	unzip ${DOWNLOAD_DIR}/${GMOCK_LIB}.zip -d ${EXTERNAL_DIR}
 	unzip ${DOWNLOAD_DIR}/${GTEST_LIB}.zip -d ${EXTERNAL_DIR}
 
 json:
@@ -39,7 +35,7 @@ sha1:
 	mkdir ${EXTERNAL_DIR}/sha1
 	cp ${DOWNLOAD_DIR}/sha1.hpp ${EXTERNAL_DIR}/sha1
 
-external: pip npm json sha1 gtest download
+external: pip npm json sha1 gtest
 
 clean-external:
 	rm -rf ${DOWNLOAD_DIR}

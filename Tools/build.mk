@@ -70,10 +70,10 @@ $(BUILD_TARGET)/%.o: $(SOURCE_DIR)/%.cpp
 	$(CC) $(DEFINES) $(CFLAGS) $(INCLUDES) $< -o $@
 
 $(BUILD_TARGET)/%.o: $(GMOCK_DIR)/src/%.cc
-	$(CC) $(DEFINES) $(CFLAGS) $(INCLUDES) -I$(GMOCK_DIR) -I$(GTEST_DIR) $< -o $@
+	$(CC) $(CFLAGS) $(INCLUDES) -I$(GMOCK_DIR) -I$(GTEST_DIR) $< -o $@
 
 $(BUILD_TARGET)/%.o: $(GTEST_DIR)/src/%.cc 
-	$(CC) $(DEFINES) $(CFLAGS) $(INCLUDES) -I$(GMOCK_DIR) -I$(GTEST_DIR) $< -o $@
+	$(CC) $(CFLAGS) $(INCLUDES) -I$(GMOCK_DIR) -I$(GTEST_DIR) $< -o $@
 
 # --- TARGETS ---
 
