@@ -1,36 +1,45 @@
 
 -include ${ROOT_DIR}/Tools/config.mk
 
+GMOCK_VERSION   = 1.7.0
+GMOCK_LIB       = googlemock-release-${GMOCK_VERSION}
+GTEST_LIB       = googletest-release-${GMOCK_VERSION}
+GMOCK_DIR       = $(EXTERNAL_DIR)/$(GMOCK_LIB)
+GTEST_DIR       = $(EXTERNAL_DIR)/$(GTEST_LIB)
+
 pip:
 	$(MAKE) $@ -C ${TEST_DIR}
 
 npm:
 	$(MAKE) $@ -C ${WEB_DIR}
 
-download: clean-external
-	mkdir ${DOWNLOAD_DIR}
-	wget -P ${DOWNLOAD_DIR} https://github.com/google/googlemock/archive/release-1.7.0.zip
-	mv ${DOWNLOAD_DIR}/release-1.7.0.zip ${DOWNLOAD_DIR}/gmock-release-1.7.0.zip
-	wget -P ${DOWNLOAD_DIR} https://github.com/google/googletest/archive/release-1.7.0.zip
-	mv ${DOWNLOAD_DIR}/release-1.7.0.zip ${DOWNLOAD_DIR}/gtest-release-1.7.0.zip
-	wget -P ${DOWNLOAD_DIR} https://raw.githubusercontent.com/983/SHA1/master/sha1.hpp
-	wget -P ${DOWNLOAD_DIR} https://github.com/nlohmann/json/releases/download/v3.3.0/json.hpp
+gtest:
+	mkdir ${DOWNLOAD_DIR} || :
+	wget -P ${DOWNLOAD_DIR} https://github.com/google/googlemock/archive/release-${GMOCK_VERSION}.zip
+	mv ${DOWNLOAD_DIR}/release-${GMOCK_VERSION}.zip ${DOWNLOAD_DIR}/${GMOCK_LIB}.zip
+	wget -P ${DOWNLOAD_DIR} https://github.com/google/googletest/archive/release-${GMOCK_VERSION}.zip
+	mv ${DOWNLOAD_DIR}/release-${GMOCK_VERSION}.zip ${DOWNLOAD_DIR}/${GTEST_LIB}.zip
+	mkdir ${EXTERNAL_DIR} || :
+	unzip ${DOWNLOAD_DIR}/${GMOCK_LIB}.zip -d ${EXTERNAL_DIR}
+	unzip ${DOWNLOAD_DIR}/${GTEST_LIB}.zip -d ${EXTERNAL_DIR}
 
-external: pip npm download
-	mkdir ${EXTERNAL_DIR}
-	mkdir ${EXTERNAL_DIR}/gmock
-	mkdir ${EXTERNAL_DIR}/gmock/googlemock
-	mkdir ${EXTERNAL_DIR}/gmock/googlemock/gtest
-	unzip ${DOWNLOAD_DIR}/gmock-release-1.7.0.zip -d ${EXTERNAL_DIR}
-	mv ${EXTERNAL_DIR}/googlemock-release-1.7.0/* ${EXTERNAL_DIR}/gmock/googlemock
-	rm -rf ${EXTERNAL_DIR}/googlemock-release-1.7.0
-	unzip ${DOWNLOAD_DIR}/gtest-release-1.7.0.zip -d ${EXTERNAL_DIR}
-	mv ${EXTERNAL_DIR}/googletest-release-1.7.0/* ${EXTERNAL_DIR}/gmock/googlemock/gtest
-	rm -rf ${EXTERNAL_DIR}/googletest-release-1.7.0
-	mkdir ${EXTERNAL_DIR}/sha1
-	cp ${DOWNLOAD_DIR}/sha1.hpp ${EXTERNAL_DIR}/sha1
+json:
+	mkdir ${DOWNLOAD_DIR} || :
+	wget -P ${DOWNLOAD_DIR} https://github.com/nlohmann/json/releases/download/v3.3.0/json.hpp
+	mkdir ${EXTERNAL_DIR} || :
+	rm -rf ${EXTERNAL_DIR}/nlohman || :
 	mkdir ${EXTERNAL_DIR}/nlohman
 	cp ${DOWNLOAD_DIR}/json.hpp ${EXTERNAL_DIR}/nlohman
+
+sha1:
+	mkdir ${DOWNLOAD_DIR} || :
+	wget -P ${DOWNLOAD_DIR} https://raw.githubusercontent.com/983/SHA1/master/sha1.hpp
+	mkdir ${EXTERNAL_DIR} || :
+	rm -rf ${EXTERNAL_DIR}/sha1 || :
+	mkdir ${EXTERNAL_DIR}/sha1
+	cp ${DOWNLOAD_DIR}/sha1.hpp ${EXTERNAL_DIR}/sha1
+
+external: pip npm json sha1 gtest download
 
 clean-external:
 	rm -rf ${DOWNLOAD_DIR}
