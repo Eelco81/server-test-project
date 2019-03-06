@@ -63,6 +63,7 @@ TEST (FileSystemTester, FileExists) {
 TEST (FileSystemTester, CreateDirectory) {
     
     const std::string kTestDir ("../Test/Files/tmp");
+    OS::FileSystem::Remove (kTestDir);
     ASSERT_FALSE (OS::FileSystem::Exists (kTestDir));
     ASSERT_TRUE (OS::FileSystem::CreateDir (kTestDir));
     ASSERT_TRUE (OS::FileSystem::Exists (kTestDir));
@@ -73,24 +74,26 @@ TEST (FileSystemTester, CreateDirectory) {
 TEST (FileSystemTester, ListDirectory) {
     
     const std::vector<uint8_t> writeBuffer (10u, 0xFF);
-    
+
     const std::string kTestDir ("../Test/Files/tmp");
+	// Make sure that the test dir is empty
+    OS::FileSystem::Remove (kTestDir);
     ASSERT_TRUE (OS::FileSystem::CreateDir (kTestDir));
+    ASSERT_TRUE (OS::FileSystem::Exists (kTestDir));
     ASSERT_TRUE (OS::FileSystem::Write (kTestDir + "/tmp1.txt", writeBuffer));
     ASSERT_TRUE (OS::FileSystem::Write (kTestDir + "/tmp2.txt", writeBuffer));
     ASSERT_TRUE (OS::FileSystem::Write (kTestDir + "/tmp3.txt", writeBuffer));
     
     std::vector<std::string> files;
     ASSERT_TRUE (OS::FileSystem::ListDir (kTestDir, files));
-    ASSERT_EQ (std::string ("tmp1.txt"), files[0]);
-    ASSERT_EQ (std::string ("tmp2.txt"), files[1]);
-    ASSERT_EQ (std::string ("tmp3.txt"), files[2]);
-    
+    ASSERT_NE (std::find (std::begin (files), std::end (files), std::string ("tmp1.txt")), std::end (files));
+    ASSERT_NE (std::find (std::begin (files), std::end (files), std::string ("tmp2.txt")), std::end (files));
+    ASSERT_NE (std::find (std::begin (files), std::end (files), std::string ("tmp3.txt")), std::end (files));
     
     ASSERT_TRUE (OS::FileSystem::ListDir (kTestDir, files, false));
-    ASSERT_EQ (std::string ("tmp1"), files[0]);
-    ASSERT_EQ (std::string ("tmp2"), files[1]);
-    ASSERT_EQ (std::string ("tmp3"), files[2]);
+    ASSERT_NE (std::find (std::begin (files), std::end (files), std::string ("tmp1")), std::end (files));
+	ASSERT_NE (std::find (std::begin (files), std::end (files), std::string ("tmp2")), std::end (files));
+	ASSERT_NE (std::find (std::begin (files), std::end (files), std::string ("tmp3")), std::end (files));
     
     ASSERT_TRUE (OS::FileSystem::Remove (kTestDir));
     ASSERT_FALSE (OS::FileSystem::Exists (kTestDir));
