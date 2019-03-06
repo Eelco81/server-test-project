@@ -42,8 +42,8 @@ DEFINES=\
 
 INCLUDES+=\
 	-I$(SOURCE_DIR) \
-	-I$(EXTERNAL_DIR)\nlohman \
-	-I$(EXTERNAL_DIR)\sha1 \
+	-I$(EXTERNAL_DIR)/nlohman \
+	-I$(EXTERNAL_DIR)/sha1 \
 	$(patsubst %, -I$(LIB_DIR)/%/Src, $(DEPENDENCIES)) 
 
 LIBPATHS=\

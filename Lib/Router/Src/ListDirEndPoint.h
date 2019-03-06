@@ -2,7 +2,7 @@
 #ifndef _API_LISTDIRENDPOINT_H_
 #define _API_LISTDIRENDPOINT_H_
 
-#include "HttpEndPoint.h"
+#include "HttpEndpoint.h"
 
 namespace API {
 

@@ -25,7 +25,7 @@ APP::Application::~Application () {
     OS::Log::Instance ().Flush ();
 }
 
-APP::Application::Execute (int argc, char** argv) {
+int APP::Application::Execute (int argc, char** argv) {
     
     const auto correctLine (mCommandLine.Parse (argc, argv));
     
