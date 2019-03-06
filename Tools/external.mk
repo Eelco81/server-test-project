@@ -17,7 +17,7 @@ gtest:
 	wget -P ${DOWNLOAD_DIR} https://github.com/google/googletest/archive/release-${GTEST_VERSION}.zip
 	mv ${DOWNLOAD_DIR}/release-${GTEST_VERSION}.zip ${DOWNLOAD_DIR}/${GTEST_LIB}.zip
 	mkdir ${EXTERNAL_DIR} || :
-	unzip ${DOWNLOAD_DIR}/${GTEST_LIB}.zip -d ${EXTERNAL_DIR}
+	unzip -u ${DOWNLOAD_DIR}/${GTEST_LIB}.zip -d ${EXTERNAL_DIR}
 
 json:
 	mkdir ${DOWNLOAD_DIR} || :
