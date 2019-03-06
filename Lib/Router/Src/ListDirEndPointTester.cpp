@@ -1,4 +1,7 @@
 
+#include <json.hpp>
+using json = nlohmann::json;
+
 #include "gmock/gmock.h"
 #include "FileSystem.h"
 #include "ListDirEndPoint.h"
@@ -25,7 +28,21 @@ TEST (ListDirEndPointTester, ListFiles) {
     endPoint.Route (request, response);
     
     EXPECT_EQ (response.mCode, HTTP::Code::OK);
-    EXPECT_EQ (std::string ("[\"file.css\",\"file.csv\",\"file.html\",\"file.js\",\"file.json\",\"file.txt\"]"), response.GetBody ());
+
+    json body;
+    try {
+        body = json::parse (response.GetBody ());
+    }
+    catch (...) {
+        ASSERT_TRUE (false);
+    }
+
+    ASSERT_NE (std::find (std::begin (body), std::end (body), std::string ("file.css")), std::end (body));
+    ASSERT_NE (std::find (std::begin (body), std::end (body), std::string ("file.csv")), std::end (body));
+    ASSERT_NE (std::find (std::begin (body), std::end (body), std::string ("file.html")), std::end (body));
+    ASSERT_NE (std::find (std::begin (body), std::end (body), std::string ("file.txt")), std::end (body));
+    ASSERT_NE (std::find (std::begin (body), std::end (body), std::string ("file.css")), std::end (body));
+
 }
 
 TEST (ListDirEndPointTester, ListFilesWithoutExtensions) {
