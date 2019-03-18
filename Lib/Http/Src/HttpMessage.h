@@ -2,10 +2,10 @@
 #ifndef _HTTP_MESSAGE_H_
 #define _HTTP_MESSAGE_H_
 
-#include <map>
 #include <string>
 #include <vector>
 #include <cstdint>
+#include "HttpHeader.h"
 
 namespace HTTP {
 
@@ -32,10 +32,38 @@ struct Message {
     
     /**
      * HTTP headers 
-     * \todo: header keys are not case sensitive
      */
-    using HeaderMap = std::map<std::string,std::string>;
-    HeaderMap mHeaders; 
+    using HeaderMap = std::vector<Header>;
+    
+    /**
+     * Get Headers corresponding to inKey
+     */
+    HeaderMap GetHeaders (const std::string& inKey) const;
+    
+    /**
+     * Get Headers corresponding to inKey (stop at first match)
+     */
+    std::string GetHeaderValue (const std::string& inKey) const;
+    
+    /**
+     * Get Headers corresponding to inKey
+     */
+    const HeaderMap& GetAllHeaders () const;
+    
+    /**
+     * Set header to the list (overwrites existing value).
+     */
+    void SetHeader (const Header& inHeader);
+    
+    /**
+     * Add header to the list.
+     */
+    void AddHeader (const Header& inHeader);
+    
+    /**
+     * Remove header to the list.
+     */
+    void RemoveHeaders (const std::string& inKey);
     
     /**
      * Internal boolean used by the message decoder.
@@ -46,7 +74,8 @@ protected:
     /**
      * HTTP body
      */
-    std::string mBody;
+    HeaderMap mHeaders;
+    std::string mBody; 
     
 };
 

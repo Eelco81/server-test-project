@@ -21,6 +21,6 @@ HTTP::Request::Request (Method inMethod, const std::string& inPath, Version inVe
     mVersion (inVersion),
     mPath (inPath)
 {
-    mHeaders[Header::LAST_MODIFIED] = OS::Timing::ToStdString (OS::Timing::Now ());
-    mHeaders[Header::USER_AGENT] = OS::Version::GetApplicationName () + std::string ("/") + OS::Version::GetApplicationVersion ();
+    SetHeader (Header (Header::LAST_MODIFIED, OS::Timing::ToStdString (OS::Timing::Now ())));
+    SetHeader (Header (Header::USER_AGENT, OS::Version::GetApplicationName () + std::string ("/") + OS::Version::GetApplicationVersion ()));
 }

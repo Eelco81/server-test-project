@@ -17,7 +17,7 @@ SSE::RemoteClient::RemoteClient (std::string inAddress, std::string inPort) :
     TCP::Client::Start ();
     
     HTTP::Request request (HTTP::Method::GET, "/");
-    request.mHeaders["Accept"] = "text/event-stream";
+    request.SetHeader (HTTP::Header ("Accept", "text/event-stream"));
     mRequestEncoder.Write (request);
 }
 
@@ -27,7 +27,10 @@ void SSE::RemoteClient::HandleHandshake (const HTTP::Response& inResponse) {
     
     bool isUpgraded (false);
     try {
-        if (inResponse.mHeaders.at ("Content-Type") == "text/event-stream" && inResponse.mHeaders.at ("Connection") == "keep-alive" && inResponse.mCode == HTTP::Code::OK) {
+        if (inResponse.GetHeaderValue ("Content-Type") == "text/event-stream" && 
+            inResponse.GetHeaderValue ("Connection") == "keep-alive" && 
+            inResponse.mCode == HTTP::Code::OK
+        ) {
             isUpgraded = true;
         }
     }

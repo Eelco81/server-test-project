@@ -69,14 +69,14 @@ TEST_F (SseServerTester, StringPayloads) {
 TEST_F (SseServerTester, FailedHandshakes_NoGet) {
     
     HTTP::Request request (HTTP::Method::PUT, "/");
-    request.mHeaders["Accept"] = "text/event-stream";
+    request.SetHeader (HTTP::Header ("Accept", "text/event-stream"));
     VerifyBadRequest (request);
 }
 
 TEST_F (SseServerTester, FailedHandshakes_WrongAccept) {
     
     HTTP::Request request (HTTP::Method::GET, "/");
-    request.mHeaders["Accept"] = "no-an-event-stream";
+    request.SetHeader (HTTP::Header ("Accept", "no-an-event-stream"));
     VerifyBadRequest (request);
 }
 
@@ -89,6 +89,6 @@ TEST_F (SseServerTester, FailedHandshakes_NoAccept) {
 TEST_F (SseServerTester, FailedHandshakes_WrongVersion) {
     
     HTTP::Request request (HTTP::Method::GET, "/", HTTP::Version::V10);
-    request.mHeaders["Accept"] = "text/event-stream";
+    request.SetHeader (HTTP::Header ("Accept", "text/event-stream"));
     VerifyBadRequest (request);
 }

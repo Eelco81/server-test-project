@@ -24,17 +24,22 @@ void RFC6455::Client::HandleHandshake (const HTTP::Request& inRequest) {
     bool isUpgraded (false);
 
     try {
-        if (inRequest.mHeaders.at ("Connection") == "Upgrade" && inRequest.mHeaders.at ("Upgrade") == "websocket" && inRequest.mMethod == HTTP::Method::GET && inRequest.mVersion == HTTP::Version::V11) {
+        if (inRequest.GetHeaderValue ("Connection") == "Upgrade" && 
+            inRequest.GetHeaderValue ("Upgrade") == "websocket" &&  
+            inRequest.GetHeaderValue ("Sec-WebSocket-Key") != "" && 
+            inRequest.mMethod == HTTP::Method::GET && 
+            inRequest.mVersion == HTTP::Version::V11 
+        ) {
             
-            const auto key (inRequest.mHeaders.at ("Sec-WebSocket-Key"));
+            const auto key (inRequest.GetHeaderValue ("Sec-WebSocket-Key"));
             const auto keyWithMagicString (key + "258EAFA5-E914-47DA-95CA-C5AB0DC85B11");
             
             char base64[SHA1_BASE64_SIZE];
             sha1 (keyWithMagicString.c_str ()).finalize().print_base64 (base64);
             
-            response.mHeaders["Connection"] = "Upgrade";
-            response.mHeaders["Upgrade"] = "websocket";
-            response.mHeaders["Sec-WebSocket-Accept"] = std::string (base64);
+            response.SetHeader (HTTP::Header ("Connection", "Upgrade"));
+            response.SetHeader (HTTP::Header ("Upgrade", "websocket"));
+            response.SetHeader (HTTP::Header ("Sec-WebSocket-Accept", std::string (base64)));
             
             response.mCode = HTTP::Code::SWITCHING_PROTOCOLS;
             isUpgraded = true;

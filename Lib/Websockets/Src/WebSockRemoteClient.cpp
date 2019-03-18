@@ -16,9 +16,9 @@ RFC6455::RemoteClient::RemoteClient (std::string inAddress, std::string inPort) 
     TCP::Client::Start ();
     
     HTTP::Request request (HTTP::Method::GET, "/");
-    request.mHeaders["Connection"] = "Upgrade";
-    request.mHeaders["Upgrade"] = "websocket";
-    request.mHeaders["Sec-WebSocket-Key"] = "dGhlIHNhbXBsZSBub25jZQ==";
+    request.SetHeader (HTTP::Header ("Connection", "Upgrade"));
+    request.SetHeader (HTTP::Header ("Upgrade", "websocket"));
+    request.SetHeader (HTTP::Header ("Sec-WebSocket-Key", "dGhlIHNhbXBsZSBub25jZQ=="));
     mRequestEncoder.Write (request);
 }
 
@@ -28,7 +28,10 @@ void RFC6455::RemoteClient::HandleHandshake (const HTTP::Response& inResponse) {
     
     bool isUpgraded (false);
     try {
-        if (inResponse.mHeaders.at ("Connection") == "Upgrade" && inResponse.mHeaders.at ("Upgrade") == "websocket" && inResponse.mCode == HTTP::Code::SWITCHING_PROTOCOLS) {
+        if (inResponse.GetHeaderValue ("Connection") == "Upgrade" && 
+            inResponse.GetHeaderValue ("Upgrade") == "websocket" && 
+            inResponse.mCode == HTTP::Code::SWITCHING_PROTOCOLS
+        ) {
             
             // \todo: implement response.mHeaders.at ("Sec-WebSocket-Accept")
             isUpgraded = true;

@@ -12,8 +12,8 @@ void HTTP::ResponseEncoder::Write (const HTTP::Response& inResponse) {
         CodeToString (inResponse.mCode) + NEWLINE
     );
 
-    for (const auto& pair : inResponse.mHeaders) {
-        response += pair.first + std::string (": ") + pair.second + NEWLINE;
+    for (const auto& header : inResponse.GetAllHeaders ()) {
+        response += header.GetKey () + std::string (": ") + header.GetValue () + NEWLINE;
     }
 
     response += NEWLINE;

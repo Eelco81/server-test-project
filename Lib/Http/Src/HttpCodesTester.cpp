@@ -2,6 +2,7 @@
 #include "gtest/gtest.h"
 
 #include "HttpCodes.h"
+#include "HttpHeader.h"
 
 using namespace HTTP;
 

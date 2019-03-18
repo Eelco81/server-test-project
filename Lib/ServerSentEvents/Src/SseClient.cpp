@@ -22,29 +22,35 @@ void SSE::Client::HandleHandshake (const HTTP::Request& inRequest) {
     bool isUpgraded (false);
 
     try {
-        if (inRequest.mHeaders.at ("Accept") == "text/event-stream" && inRequest.mMethod == HTTP::Method::GET && inRequest.mVersion == HTTP::Version::V11) {
+        if (inRequest.GetHeaderValue ("Accept") == "text/event-stream" && 
+            inRequest.mMethod == HTTP::Method::GET && 
+            inRequest.mVersion == HTTP::Version::V11
+        ) {
             
             // Standard SSE headers
-            response.mHeaders["Connection"] = "keep-alive";
-            response.mHeaders["Content-Type"] = "text/event-stream";
+            response.SetHeader (HTTP::Header ("Connection", "keep-alive"));
+            response.SetHeader (HTTP::Header ("Content-Type", "text/event-stream"));
             
             // Prevent caching
-            response.mHeaders["Cache-Control"] = "no-cache";
+            response.SetHeader (HTTP::Header ("Cache-Control", "no-cache"));
             
             // This SSE server most likely does not host the origin of the request
             // ==> Enable CORS.
-            response.mHeaders["Access-Control-Allow-Origin"] = "*";
-            response.mHeaders["Access-Control-Allow-Credentials"] = "true";
+            response.SetHeader (HTTP::Header ("Access-Control-Allow-Origin", "*"));
+            response.SetHeader (HTTP::Header ("Access-Control-Allow-Credentials", "true"));
             
             // The response constructor sets the length to zero, this makes connections
             // assume there is no more data coming. Note: there is a stream in response, so the body 
             // has variable length! Remove this header.
-            response.mHeaders.erase("Content-Length"); 
+            response.RemoveHeaders ("Content-Length"); 
             
             // Optionally check for last event ID.
             try {
-                uint8_t lastId = std::stoi (inRequest.mHeaders.at ("Last-Event-ID"));
-                mEventEncoder.SetLastId (lastId);
+                const auto list = inRequest.GetHeaders ("Last-Event-ID");
+                if (!list.empty ()) {
+                    uint8_t lastId = std::stoi (list[0].GetValue ());
+                    mEventEncoder.SetLastId (lastId);
+                }
             }
             catch (...) {}
             

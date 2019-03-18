@@ -44,14 +44,16 @@ void HTTP::MessageDecoder<Message_t>::Write (const std::string& inData) {
             }
             case kProcessHeaders : {
                 if (line == "\r" || line == "") {
-                    const auto contentLength (mMessage->mHeaders.find (Header::CONTENT_LENGTH));
-                    if (contentLength == mMessage->mHeaders.end ()) {
+                    const auto contentLength (mMessage->GetHeaders (Header::CONTENT_LENGTH));
+                    if (contentLength.empty ()) {
                         this->Emit (*mMessage);
                         mState = kSearchStart;
                     }
                     else {
                         try {
-                           mBodySize = std::stoi (contentLength->second);
+                            // \todo: CONTENT_LENGTH is set twice (in constructor and through list). 
+                            //        for now take the last one. 
+                            mBodySize = std::stoi (contentLength.back ().GetValue ());
                         }
                         catch (...) {
                             mBodySize = 0u;
@@ -83,7 +85,7 @@ void HTTP::MessageDecoder<Message_t>::Write (const std::string& inData) {
                     std::regex reHeader ("^(.+)\\s*:\\s*(.+)\r$");
                     std::smatch matchLine;
                     if (std::regex_search (line, matchLine, reHeader)) {
-                        mMessage->mHeaders[matchLine[1].str ()] = matchLine[2].str ();
+                        mMessage->AddHeader (Header (matchLine[1].str (), matchLine[2].str ()));
                     }
                 }
                 break;

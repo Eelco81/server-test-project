@@ -12,8 +12,8 @@ void HTTP::RequestEncoder::Write (const HTTP::Request& inRequest) {
         std::string ("HTTP/") + VersionToString (inRequest.mVersion) + NEWLINE
     );
 
-    for (const auto& pair : inRequest.mHeaders) {
-        request += pair.first + std::string (": ") + pair.second + std::string ("\r\n");
+    for (const auto& header : inRequest.GetAllHeaders ()) {
+        request += header.GetKey () + std::string (": ") + header.GetValue () + std::string ("\r\n");
     }
 
     request += NEWLINE;

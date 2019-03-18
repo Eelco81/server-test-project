@@ -91,50 +91,50 @@ TEST_F (WebSockServerTester, BinaryPayloads) {
 TEST_F (WebSockServerTester, FailedHandshakes_NoGet) {
     
     HTTP::Request request (HTTP::Method::PUT, "/");
-    request.mHeaders["Connection"] = "Upgrade";
-    request.mHeaders["Upgrade"] = "websocket";
-    request.mHeaders["Sec-WebSocket-Key"] = "dGhlIHNhbXBsZSBub25jZQ==";
+    request.SetHeader (HTTP::Header ("Connection", "Upgrade"));
+    request.SetHeader (HTTP::Header ("Upgrade", "websocket"));
+    request.SetHeader (HTTP::Header ("Sec-WebSocket-Key", "dGhlIHNhbXBsZSBub25jZQ=="));
     VerifyBadRequest (request);
 }
 
 TEST_F (WebSockServerTester, FailedHandshakes_WrongUpgrade) {
     
     HTTP::Request request (HTTP::Method::GET, "/");
-    request.mHeaders["Connection"] = "ThisIsNotUpgrade";
-    request.mHeaders["Upgrade"] = "websocket";
-    request.mHeaders["Sec-WebSocket-Key"] = "dGhlIHNhbXBsZSBub25jZQ==";
+    request.SetHeader (HTTP::Header ("Connection", "ThisIsNotUpgrade"));
+    request.SetHeader (HTTP::Header ("Upgrade", "websocket"));
+    request.SetHeader (HTTP::Header ("Sec-WebSocket-Key", "dGhlIHNhbXBsZSBub25jZQ=="));
     VerifyBadRequest (request);
 }
 
 TEST_F (WebSockServerTester, FailedHandshakes_NoUpgrade) { 
 
     HTTP::Request request (HTTP::Method::GET, "/");
-    request.mHeaders["Upgrade"] = "websocket";
-    request.mHeaders["Sec-WebSocket-Key"] = "dGhlIHNhbXBsZSBub25jZQ==";
+    request.SetHeader (HTTP::Header ("Upgrade", "websocket"));
+    request.SetHeader (HTTP::Header ("Sec-WebSocket-Key", "dGhlIHNhbXBsZSBub25jZQ=="));
     VerifyBadRequest (request);
 }
 
 TEST_F (WebSockServerTester, FailedHandshakes_WrongWebSocket) {
     
     HTTP::Request request (HTTP::Method::GET, "/");
-    request.mHeaders["Connection"] = "Upgrade";
-    request.mHeaders["Upgrade"] = "NotWebsocket";
-    request.mHeaders["Sec-WebSocket-Key"] = "dGhlIHNhbXBsZSBub25jZQ==";
+    request.SetHeader (HTTP::Header ("Connection", "Upgrade"));
+    request.SetHeader (HTTP::Header ("Upgrade", "NotWebsocket"));
+    request.SetHeader (HTTP::Header ("Sec-WebSocket-Key", "dGhlIHNhbXBsZSBub25jZQ=="));
     VerifyBadRequest (request);
 }
 
 TEST_F (WebSockServerTester, FailedHandshakes_NoWebSocket) {
     
     HTTP::Request request (HTTP::Method::GET, "/");
-    request.mHeaders["Connection"] = "Upgrade";
-    request.mHeaders["Sec-WebSocket-Key"] = "dGhlIHNhbXBsZSBub25jZQ==";
+    request.SetHeader (HTTP::Header ("Connection", "Upgrade"));
+    request.SetHeader (HTTP::Header ("Sec-WebSocket-Key", "dGhlIHNhbXBsZSBub25jZQ=="));
     VerifyBadRequest (request);
 }
 
 TEST_F (WebSockServerTester, FailedHandshakes_NoKey) {
     
     HTTP::Request request (HTTP::Method::GET, "/");
-    request.mHeaders["Connection"] = "Upgrade";
-    request.mHeaders["Upgrade"] = "websocket";
+    request.SetHeader (HTTP::Header ("Connection", "Upgrade"));
+    request.SetHeader (HTTP::Header ("Upgrade", "websocket"));
     VerifyBadRequest (request);
 }

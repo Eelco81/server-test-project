@@ -15,7 +15,6 @@ HTTP::Response::Response (HTTP::Code inCode, HTTP::Version inVersion) :
     mCode (inCode),
     mVersion (inVersion)
 {
-    mHeaders[Header::LAST_MODIFIED] = OS::Timing::ToStdString (OS::Timing::Now ());
-    mHeaders[Header::USER_AGENT] = OS::Version::GetApplicationName () + std::string ("/") + OS::Version::GetApplicationVersion ();
+    SetHeader (Header (Header::LAST_MODIFIED, OS::Timing::ToStdString (OS::Timing::Now ())));
+    SetHeader (Header (Header::USER_AGENT, OS::Version::GetApplicationName () + std::string ("/") + OS::Version::GetApplicationVersion ()));
 }
-

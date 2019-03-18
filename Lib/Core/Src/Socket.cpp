@@ -8,7 +8,6 @@
 
 #define SOCKET_MAX_CONNECTIONS 20
 
-/* ------------------------------------- */
 #if (defined __CYGWIN__ || defined __GNUC__)
 
 #include <unistd.h>
@@ -28,7 +27,6 @@ namespace {
     }
 }
 
-/* ------------------------------------- */
 #elif _MSC_VER >= 1800
 
 #undef UNICODE
@@ -47,11 +45,9 @@ namespace {
     }
 }
 
-/* ------------------------------------- */
 #else 
 static_assert (true, "Incompatible compiler");
 #endif
-/* ------------------------------------- */
 
 class OS::Socket::Implementation {
 
@@ -264,8 +260,6 @@ private:
     std::atomic<bool> mIsConnected;
     std::atomic<bool> mIsListening;
 };
-
-/* ------------------------------------- */
 
 OS::Socket::Socket (const std::string& inAddress, const std::string& inPortNumber) :
     mAddress (inAddress),

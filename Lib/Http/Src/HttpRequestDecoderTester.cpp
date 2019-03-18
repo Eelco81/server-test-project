@@ -51,7 +51,7 @@ TEST_P (HttpRequestDecoderSuccessTester, ParseInitialLine) {
     ASSERT_EQ (std::get<2> (GetParam ()), decoder.mRequests[0].mVersion);
     ASSERT_EQ (std::string ("/some/path"), decoder.mRequests[0].mPath);
     ASSERT_EQ (1u, decoder.mRequests.size ());
-    ASSERT_EQ (1u, decoder.mRequests[0].mHeaders.size ());
+    ASSERT_EQ (1u, decoder.mRequests[0].GetAllHeaders ().size ());
     ASSERT_EQ (std::string (""), decoder.mRequests[0].GetBody ());
     ASSERT_TRUE (decoder.mRequests[0].mIsValid);
 }
@@ -65,7 +65,7 @@ TEST_P (HttpRequestDecoderSuccessTester, ParseMultipleMessages) {
         ASSERT_EQ (std::get<1> (GetParam ()), request.mMethod);
         ASSERT_EQ (std::get<2> (GetParam ()), request.mVersion);
         ASSERT_EQ (std::string ("/some/path"), request.mPath);
-        ASSERT_EQ (1u, request.mHeaders.size ());
+        ASSERT_EQ (1u, request.GetAllHeaders ().size ());
         ASSERT_EQ (std::string (""), request.GetBody ());
         ASSERT_TRUE (request.mIsValid);
     }
@@ -98,14 +98,14 @@ TEST (HttpRequestDecoderTester, Headers){
         RequestHarvester decoder;
         decoder.Write ("GET /some/path HTTP/1.0\r\nHeader-Name: Header-Value\r\n\r\n" );
         ASSERT_EQ (1u, decoder.mRequests.size ());
-        ASSERT_EQ (std::string ("Header-Value"), decoder.mRequests[0].mHeaders["Header-Name"]);
+        ASSERT_EQ (std::string ("Header-Value"), decoder.mRequests[0].GetHeaders ("Header-Name")[0].GetValue ());
     }
     {
         RequestHarvester decoder;
         decoder.Write ("GET /some/path HTTP/1.0\r\nHeader-Name: Header-Value\r\nHeader-Name-123: Header-Value-123\r\n\r\n" );
         ASSERT_EQ (1u, decoder.mRequests.size ());
-        ASSERT_EQ (std::string ("Header-Value"), decoder.mRequests[0].mHeaders["Header-Name"]);
-        ASSERT_EQ (std::string ("Header-Value-123"), decoder.mRequests[0].mHeaders["Header-Name-123"]);
+        ASSERT_EQ (std::string ("Header-Value"), decoder.mRequests[0].GetHeaders ("Header-Name")[0].GetValue ());
+        ASSERT_EQ (std::string ("Header-Value-123"), decoder.mRequests[0].GetHeaders ("Header-Name-123")[0].GetValue ());
     }
     //todo: parametrize this test, add failure cases.
 }
@@ -113,32 +113,32 @@ TEST (HttpRequestDecoderTester, Headers){
 TEST (HttpRequestDecoderTester, Bodies){
     {
         RequestHarvester decoder;
-        decoder.Write ("GET /some/path HTTP/1.0\r\nContent-Length: 20\r\n\r\n01234567890123456789");
+        decoder.Write ("GET /some/path HTTP/1.0\r\ncontent-length: 20\r\n\r\n01234567890123456789");
         ASSERT_EQ (1u, decoder.mRequests.size ());
         ASSERT_EQ (std::string ("01234567890123456789"), decoder.mRequests[0].GetBody ());
     }
     {
         RequestHarvester decoder;
-        decoder.Write ("GET /some/path HTTP/1.0\r\nContent-Length: 22\r\n\r\n0123456789\r\n0123456789");
+        decoder.Write ("GET /some/path HTTP/1.0\r\ncontent-length: 22\r\n\r\n0123456789\r\n0123456789");
         ASSERT_EQ (1u, decoder.mRequests.size ());
         ASSERT_EQ (std::string ("0123456789\r\n0123456789"), decoder.mRequests[0].GetBody ());
     }
     {
         RequestHarvester decoder;
-        decoder.Write ("GET /some/path HTTP/1.0\r\nContent-Length: 20\r\n\r\n0123456789");
+        decoder.Write ("GET /some/path HTTP/1.0\r\ncontent-length: 20\r\n\r\n0123456789");
         decoder.Write ("9876543210");
         ASSERT_EQ (1u, decoder.mRequests.size ());
         ASSERT_EQ (std::string ("01234567899876543210"), decoder.mRequests[0].GetBody ());
     }
     {
         RequestHarvester decoder;
-        decoder.Write ("GET /some/path HTTP/1.0\r\nContent-Length: 0\r\n\r\n");
+        decoder.Write ("GET /some/path HTTP/1.0\r\ncontent-length: 0\r\n\r\n");
         ASSERT_EQ (1u, decoder.mRequests.size ());
         ASSERT_EQ (std::string (""), decoder.mRequests[0].GetBody ());
     }
     {
         RequestHarvester decoder;
-        decoder.Write ("GET /some/path HTTP/1.0\r\nContent-Length: ABC\r\n\r\n");
+        decoder.Write ("GET /some/path HTTP/1.0\r\ncontent-length: ABC\r\n\r\n");
         ASSERT_EQ (std::string (""), decoder.mRequests[0].GetBody ());
         ASSERT_EQ (1u, decoder.mRequests.size ());
         ASSERT_FALSE (decoder.mRequests[0].mIsValid);

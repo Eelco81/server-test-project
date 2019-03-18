@@ -42,15 +42,15 @@ TEST_P (HttpRequestEncoderTester, BuildInitialLine) {
 
 TEST_P (HttpRequestEncoderTester, ContainsZeroContentLength) {
     HTTP::Request request (std::get<1> (GetParam ()), std::get<3> (GetParam ()), std::get<2> (GetParam ()));
-    EXPECT_THAT ( Encode (request), ::testing::HasSubstr ("\r\nContent-Length: 0\r\n"));
+    EXPECT_THAT ( Encode (request), ::testing::HasSubstr ("\r\ncontent-length: 0\r\n"));
 }
 
 TEST_P (HttpRequestEncoderTester, ContainsLastModified) {
     HTTP::Request request (std::get<1> (GetParam ()), std::get<3> (GetParam ()), std::get<2> (GetParam ()));
-    EXPECT_THAT ( Encode (request), ::testing::HasSubstr ("\r\nLast-Modified: "));
+    EXPECT_THAT ( Encode (request), ::testing::HasSubstr ("\r\nlast-modified: "));
 }
 
 TEST_P (HttpRequestEncoderTester, ContainsUserAgent) {
     HTTP::Request request (std::get<1> (GetParam ()), std::get<3> (GetParam ()), std::get<2> (GetParam ()));
-    EXPECT_THAT ( Encode (request), ::testing::HasSubstr ("\r\nUser-Agent: Unknown/0.0.1"));
+    EXPECT_THAT ( Encode (request), ::testing::HasSubstr ("\r\nuser-agent: Unknown/0.0.1"));
 }
