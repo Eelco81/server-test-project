@@ -1,11 +1,13 @@
 
 #include <iostream>
 #include <string>
+#include <csignal>
 
 #include "ServerApplication.h"
 
 #include "Log.h"
 #include "Socket.h"
+#include "ThreadBlocker.h"
 #include "HttpClient.h"
 #include "WebSockServer.h"
 #include "SseServer.h"
@@ -43,10 +45,10 @@ int ServerApplication::Run () {
     sseServer.Start ();
     service->GetStream ().Pipe (&sseServer, &SSE::Server::BroadCast);
     
-    std::string temp;
-    LOGMESSAGE (OS::Log::kInfo, "Quit the app using ENTER on the command line.");
-    std::getline (std::cin, temp);
-
+    // Block the main thread, wait for Ctrl-C
+    APP::ThreadBlocker (SIGINT);
+    LOGMESSAGE (OS::Log::kInfo, "Closing application...");
+    
     // Cannot rely on destructors to clean this up. The service is a shared_ptr
     // and will be cleaned up all the way at the end.
     if (service->IsRunning ()) service->Stop ();

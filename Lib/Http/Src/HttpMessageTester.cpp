@@ -36,7 +36,26 @@ TEST (HttpMessageTester, Bodies) {
 
 
 TEST (HttpMessageTester, Headers) {
+
+    HTTP::Message message;
+    ASSERT_EQ (1u, message.GetAllHeaders ().size ());
+    ASSERT_EQ (std::string ("0"), message.GetHeaders (HTTP::Header::CONTENT_LENGTH)[0].GetValue ());
     
+    message.SetHeader (HTTP::Header ("Key", "Value"));
+    ASSERT_EQ (2u, message.GetAllHeaders ().size ());
+    ASSERT_EQ (1u, message.GetHeaders ("key").size ());
+    ASSERT_EQ (std::string ("Value"), message.GetHeaderValue ("Key"));
     
+    ASSERT_EQ (0u, message.GetHeaders ("Different-Key").size ());
+    ASSERT_EQ ("", message.GetHeaderValue("Different-Key"));
     
+    message.SetHeader (HTTP::Header ("Key", "New-Value"));
+    ASSERT_EQ (1u, message.GetHeaders ("key").size ());
+    ASSERT_EQ (std::string ("New-Value"), message.GetHeaderValue ("Key"));
+    
+    message.AddHeader (HTTP::Header ("Key", "Added-Value"));
+    ASSERT_EQ (std::string ("New-Value"), message.GetHeaderValue ("Key"));
+    ASSERT_EQ (2u, message.GetHeaders ("key").size ());
+    ASSERT_EQ (std::string ("New-Value") , message.GetHeaders ("key")[0].GetValue ());
+    ASSERT_EQ (std::string ("Added-Value"), message.GetHeaders ("key")[1].GetValue ());
 }

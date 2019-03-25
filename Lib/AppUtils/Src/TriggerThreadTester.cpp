@@ -39,7 +39,7 @@ TEST_P (TriggerThreadTester, Trigger) {
     
     ASSERT_GE (object.mTicks.size (), 9u);
     for (std::size_t i (3u); i < object.mTicks.size (); i++) {
-        ASSERT_NEAR (object.mTicks[i] - object.mTicks[i-1], duration, 1000u);
+        ASSERT_NEAR (object.mTicks[i] - object.mTicks[i-1], duration, 5000u);
     }
     
 }

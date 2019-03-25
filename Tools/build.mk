@@ -42,8 +42,7 @@ DEFINES=\
 
 INCLUDES+=\
 	-I$(SOURCE_DIR) \
-	-I$(EXTERNAL_DIR)/nlohman \
-	-I$(EXTERNAL_DIR)/sha1 \
+	-I$(EXTERNAL_DIR)/include \
 	$(patsubst %, -I$(LIB_DIR)/%/Src, $(DEPENDENCIES)) 
 
 LIBPATHS=\
@@ -84,7 +83,7 @@ setup:
 	
 
 clean:
-	rm -rf debug release $(GMOCKOBJECTS)
+	rm -rf debug release
 
 distclean: clean
 	for lib in $(DEPENDENCIES) ; do \

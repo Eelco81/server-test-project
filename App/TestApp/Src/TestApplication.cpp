@@ -1,10 +1,12 @@
 
 #include <iostream>
 #include <string>
+#include <csignal>
 
 #include "TestApplication.h"
 
 #include "Log.h"
+#include "ThreadBlocker.h"
 #include "HttpClient.h"
 #include "WebSockServer.h"
 #include "SseServer.h"
@@ -40,9 +42,9 @@ int TEST::Application::Run () {
     sseServer.Start ();
     service->GetStringStream ().Pipe (&sseServer, &SSE::Server::BroadCast);
     
-    std::string temp;
-    LOGMESSAGE (OS::Log::kInfo, "Quit the app using ENTER on the command line.");
-    std::getline (std::cin, temp);
+    // Block the main thread, wait for Ctrl-C
+    APP::ThreadBlocker (SIGINT);
+    LOGMESSAGE (OS::Log::kInfo, "Closing application...");
 
     return 0;
 }
