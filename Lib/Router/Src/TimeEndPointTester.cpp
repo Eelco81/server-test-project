@@ -11,8 +11,8 @@ TEST (TimeEndPointTester, Get) {
     
     endPoint.Get (request, response);
     
-    EXPECT_EQ ("application/json", response.mHeaders[HTTP::Header::CONTENT_TYPE]);
+    EXPECT_EQ ("application/json", response.GetHeaderValue (HTTP::Header::CONTENT_TYPE));
     EXPECT_THAT (response.GetBody (), ::testing::HasSubstr ("\"unit\":\"ms\""));
-    EXPECT_EQ ("38", response.mHeaders[HTTP::Header::CONTENT_LENGTH]);
+    EXPECT_EQ ("38", response.GetHeaderValue (HTTP::Header::CONTENT_LENGTH));
 
 }

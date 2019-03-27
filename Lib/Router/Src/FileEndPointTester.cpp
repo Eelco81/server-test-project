@@ -42,5 +42,5 @@ TEST_P (FileEndPointTester, ResponseCodeAndHeader) {
     EXPECT_EQ (response.mCode, HTTP::Code::OK);
     EXPECT_EQ (std::get<1> (GetParam ()), response.GetHeaderValue (HTTP::Header::CONTENT_TYPE));
     EXPECT_EQ ("content of file", response.GetBody ());
-    EXPECT_EQ ("15", response.mHeaders[HTTP::Header::CONTENT_LENGTH]);
+    EXPECT_EQ ("15", response.GetHeaderValue (HTTP::Header::CONTENT_LENGTH));
 }
