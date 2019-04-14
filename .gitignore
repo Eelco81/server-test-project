@@ -1,10 +1,7 @@
 
-/Lib/*/Win32/*.sdf
-/Lib/*/Win32/*.user
-/Lib/*/Win32/*.suo
-/Lib/*/Win32/*.opensdf
-/Lib/*/Win32/Debug*
-/Lib/*/Win32/Release*
+/Lib/*/VS2017/*.user
+/Lib/*/VS2017/x64
+/Lib/*/VS2017/.vs
 /Lib/*/Make/debug
 /Lib/*/Make/release
 /Lib/*/Make/*.stackdump
@@ -20,6 +17,10 @@
 /App/*/Make/release
 /App/*/Make/debug
 /App/*/Make/*.xml
+
+/VS2017/*.user
+/VS2017/x64
+/VS2017/.vs
 
 /Web/node_modules
 /Web/package-lock.json

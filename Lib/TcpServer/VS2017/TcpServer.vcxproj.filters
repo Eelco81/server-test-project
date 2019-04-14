@@ -6,6 +6,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Src\TcpClient.h" />
+    <ClInclude Include="..\Src\TcpClientFactory.h" />
     <ClInclude Include="..\Src\TcpServer.h" />
   </ItemGroup>
 </Project>

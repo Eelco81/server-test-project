@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\src\CommandLine.cpp" />
+    <ClCompile Include="..\src\FileSystem.cpp" />
+    <ClCompile Include="..\src\Log.cpp" />
+    <ClCompile Include="..\src\Mutex.cpp" />
+    <ClCompile Include="..\src\Network.cpp" />
+    <ClCompile Include="..\src\OS.cpp" />
+    <ClCompile Include="..\src\Socket.cpp" />
+    <ClCompile Include="..\src\Thread.cpp" />
+    <ClCompile Include="..\src\Timing.cpp" />
+    <ClCompile Include="..\src\Version.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\src\CommandLine.h" />
+    <ClInclude Include="..\src\FileSystem.h" />
+    <ClInclude Include="..\src\Log.h" />
+    <ClInclude Include="..\src\Macros.h" />
+    <ClInclude Include="..\src\MessageStream.h" />
+    <ClInclude Include="..\src\Mutex.h" />
+    <ClInclude Include="..\src\Socket.h" />
+    <ClInclude Include="..\src\OS.h" />
+    <ClInclude Include="..\src\Network.h" />
+    <ClInclude Include="..\src\StringConverter.h" />
+    <ClInclude Include="..\src\Thread.h" />
+    <ClInclude Include="..\src\Timing.h" />
+    <ClInclude Include="..\src\Version.h" />
+  </ItemGroup>
+</Project>

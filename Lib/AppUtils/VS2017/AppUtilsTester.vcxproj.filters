@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\Src\TriggerThreadTester.cpp" />
+    <ClCompile Include="..\Src\ThreadBlockerTester.cpp" />
+    <ClCompile Include="..\Src\TaskTester.cpp" />
+    <ClCompile Include="..\Src\HoldingThreadTester.cpp" />
+    <ClCompile Include="..\Src\GMockMain.cpp" />
+    <ClCompile Include="..\Src\PeriodicThreadTester.cpp" />
+  </ItemGroup>
+</Project>
