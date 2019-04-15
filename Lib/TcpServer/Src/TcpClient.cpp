@@ -42,7 +42,7 @@ void TCP::Client::Stop () {
 
 void TCP::Client::Quit () {
     // This will exit holding thread WaitForData (), since it will cause
-    // the blocking Socket::Accept () to exit with a failure.
+    // the blocking Socket::Receive () to exit with a failure.
     mSocket->Close ();
 }
 

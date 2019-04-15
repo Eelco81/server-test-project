@@ -28,7 +28,7 @@ bool OS::FileSystem::Read (const std::string& inPath, std::string& outBuffer) {
         stream.seekg (0, stream.end);
         outBuffer.resize (static_cast<std::size_t> (stream.tellg ()));
         stream.seekg (0, stream.beg);
-        stream.read (outBuffer.data (), outBuffer.size ());
+        stream.read (const_cast<char*>(outBuffer.data ()), outBuffer.size ());
         stream.close ();
         return true;
     }
@@ -78,9 +78,9 @@ bool OS::FileSystem::ListDir (const std::string& inPath, std::vector<std::string
 }
 
 std::string OS::FileSystem::GetExtension (const std::string& inPath) {
-    return filesystem::path (inPath).extension ();
+    return filesystem::path (inPath).extension ().string ();
 }
 
 std::string OS::FileSystem::GetBasename (const std::string& inPath) {
-    return filesystem::path (inPath).stem ();
+    return filesystem::path (inPath).stem ().string();
 }

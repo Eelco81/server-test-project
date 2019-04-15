@@ -18,7 +18,6 @@ else
 	CFLAGS       += -fprofile-arcs -ftest-coverage
 	LINKS        += -lgcov
 	HTMLDIR      = $(BUILD_TARGET)/html
-	INCLUDES     += -I$(GMOCK_DIR)/include -I$(GTEST_DIR)/include 
 endif
 
 ifeq ($(OS_FAMILY), WINDOWS) 

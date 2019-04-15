@@ -61,6 +61,10 @@ void OS::Timing::Sleep (uint64_t inSleep) {
     struct timespec ts_sleep;
     ts_sleep.tv_sec = (milliseconds) / 1000;
     ts_sleep.tv_nsec = 1000*usec;
-    
+
+#if (defined _WIN32 || defined _WIN64) && !defined __CYGWIN__
+    std::this_thread::sleep_for (std::chrono::microseconds (inSleep));
+#else
     nanosleep (&ts_sleep, NULL);
+#endif
 }

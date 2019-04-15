@@ -67,7 +67,7 @@ TEST (FileSystemTester, CreateDirectory) {
     ASSERT_FALSE (OS::FileSystem::Exists (kTestDir));
     ASSERT_TRUE (OS::FileSystem::CreateDir (kTestDir));
     ASSERT_TRUE (OS::FileSystem::Exists (kTestDir));
-    ASSERT_TRUE (OS::FileSystem::Remove (kTestDir));
+    OS::FileSystem::Remove (kTestDir);
     ASSERT_FALSE (OS::FileSystem::Exists (kTestDir));
 }
 

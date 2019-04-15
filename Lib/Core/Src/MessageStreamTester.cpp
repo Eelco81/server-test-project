@@ -86,7 +86,7 @@ TEST (ForwardStreamTester, Forward) {
     
     uint16_t value (0x0000);
     OS::ForwardStream<uint16_t> stream;
-    stream.Pipe ([&](const double& newvalue) { value = newvalue;});
+    stream.Pipe ([&](const uint16_t& newvalue) { value = newvalue;});
     
     ASSERT_EQ (0x0000, value);
     stream.Write (0xFFFF);

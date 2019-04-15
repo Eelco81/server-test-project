@@ -16,6 +16,8 @@ gtest: setup-external
 	wget -P ${DOWNLOAD_DIR} https://github.com/google/googletest/archive/release-${GTEST_VERSION}.zip
 	mv ${DOWNLOAD_DIR}/release-${GTEST_VERSION}.zip ${DOWNLOAD_DIR}/${GTEST_LIB}.zip
 	unzip -u ${DOWNLOAD_DIR}/${GTEST_LIB}.zip -d ${EXTERNAL_DIR}
+	cp -r ${GMOCK_DIR}/include/gmock ${EXTERNAL_DIR}/include
+	cp -r ${GTEST_DIR}/include/gtest ${EXTERNAL_DIR}/include
 
 json: setup-external
 	wget -P ${DOWNLOAD_DIR} https://github.com/nlohmann/json/releases/download/v3.3.0/json.hpp
