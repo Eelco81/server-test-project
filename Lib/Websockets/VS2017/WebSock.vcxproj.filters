@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\Src\GMockMain.cpp" />
+    <ClCompile Include="..\Src\WebSockClient.cpp" />
+    <ClCompile Include="..\Src\WebSockFrame.cpp" />
+    <ClCompile Include="..\Src\WebSockFrameDecoder.cpp" />
+    <ClCompile Include="..\Src\WebSockFrameEncoder.cpp" />
+    <ClCompile Include="..\Src\WebSockFrameTester.cpp" />
+    <ClCompile Include="..\Src\WebSockPayloadDecoder.cpp" />
+    <ClCompile Include="..\Src\WebSockPayloadEncoder.cpp" />
+    <ClCompile Include="..\Src\WebSockRemoteClient.cpp" />
+    <ClCompile Include="..\Src\WebSockServer.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Src\WebSockClient.h" />
+    <ClInclude Include="..\Src\WebSockFrame.h" />
+    <ClInclude Include="..\Src\WebSockFrameDecoder.h" />
+    <ClInclude Include="..\Src\WebSockFrameEncoder.h" />
+    <ClInclude Include="..\Src\WebSockPayloadDecoder.h" />
+    <ClInclude Include="..\Src\WebSockPayloadEncoder.h" />
+    <ClInclude Include="..\Src\WebSockRemoteClient.h" />
+    <ClInclude Include="..\Src\WebSockServer.h" />
+  </ItemGroup>
+</Project>

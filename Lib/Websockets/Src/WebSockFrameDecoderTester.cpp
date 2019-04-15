@@ -25,7 +25,7 @@ TEST (WebSockFrameDecoderTester, ShortMessageFormatNoPayload) {
     
     TestFrameDecoder decoder;
     
-    std::vector<uint8_t> raw = { 
+    const std::vector<uint8_t> raw = { 
         0b10001111, 0b00000000 
     };
     

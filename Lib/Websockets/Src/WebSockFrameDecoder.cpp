@@ -19,7 +19,7 @@ void RFC6455::FrameDecoder::Write (const std::vector<uint8_t>& inBuffer) {
         return;
     }
     
-    while (1) {
+    while (!mBuffer.empty ()) {
         
         Frame frame;
     
