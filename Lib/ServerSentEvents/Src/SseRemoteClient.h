@@ -9,9 +9,9 @@
 #include <condition_variable>
 
 #include "TcpClient.h"
+#include "TcpPacketEncoders.h"
 #include "HttpRequestEncoder.h"
 #include "HttpResponseDecoder.h"
-#include "StringConverter.h"
 #include "SseEventDecoder.h"
 
 namespace HTTP {
@@ -39,10 +39,10 @@ public:
     virtual ~RemoteClient ();
     
     /**
-     * Get decoders for piping purposes
+     * This signal is emitted when a new event is available
      */
-    inline EventDecoder& GetEventDecoder () { return mEventDecoder; }
-    
+    OS::Signal<const std::string&> sEventAvailable;
+
 private:
     /**
      * Process an incoming handshake HTTP Response (from HTTP::ResponseDecoder)
@@ -53,8 +53,8 @@ private:
     /**
      * MessageStreams which link ReadStream to the WriteStream
      */
-    OS::PacketToStringConverter mToStringConverter;
-    OS::StringToPacketConverter mToPacketConverter;
+    TCP::Packet2StringEncoder mPacket2String;
+    TCP::String2PacketEncoder mString2Packet;
     HTTP::RequestEncoder mRequestEncoder;
     HTTP::ResponseDecoder mResponseDecoder;
     EventDecoder mEventDecoder;

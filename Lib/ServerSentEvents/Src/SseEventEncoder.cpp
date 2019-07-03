@@ -22,7 +22,7 @@ void SSE::EventEncoder::Write (const std::string& inPayload) {
     
     buffer += newLine;
     
-    Emit (buffer);
+    sNext.Emit (buffer);
 }
 
 void SSE::EventEncoder::SetLastId (uint64_t inLastId) {

@@ -17,6 +17,6 @@ void SSE::Server::BroadCast (const std::string& inPacket) {
     OS::SingleLock lock (*mMutex);
     
     for (auto& client : mClients) {
-        client->SendData (inPacket);
+        dynamic_cast<SSE::Client*> (client.get ())->SendPayload (inPacket);
     }
 }

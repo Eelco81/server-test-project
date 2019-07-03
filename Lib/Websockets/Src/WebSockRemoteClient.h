@@ -8,9 +8,9 @@
 #include <condition_variable>
 
 #include "TcpClient.h"
+#include "TcpPacketEncoders.h"
 #include "HttpRequestEncoder.h"
 #include "HttpResponseDecoder.h"
-#include "StringConverter.h"
 #include "WebSockFrameDecoder.h"
 #include "WebSockFrameEncoder.h"
 #include "WebSockPayloadDecoder.h"
@@ -43,12 +43,12 @@ public:
     /**
      * Send data over the RFC6455 connection
      */
-    virtual void SendData (const std::vector<uint8_t>& inData) override;
+    virtual void SendPayload (const std::vector<uint8_t>& inData);
 
     /**
      * Send data over the RFC6455 connection
      */
-    virtual void SendData (const std::string& inData) override;
+    virtual void SendPayload (const std::string& inData);
 
     /**
      * Get decoders for piping purposes
@@ -71,8 +71,9 @@ private:
     /**
      * MessageStreams which link ReadStream to the WriteStream
      */
-    OS::PacketToStringConverter mToStringConverter;
-    OS::StringToPacketConverter mToPacketConverter;
+    TCP::Packet2StringEncoder mPacket2String;
+    TCP::String2PacketEncoder mString2Packet;
+    TCP::RawPacket2PacketEncoder mRaw2Packet; 
     HTTP::RequestEncoder mRequestEncoder;
     HTTP::ResponseDecoder mResponseDecoder;
     FrameDecoder mFrameDecoder;

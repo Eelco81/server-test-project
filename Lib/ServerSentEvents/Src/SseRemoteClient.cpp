@@ -1,5 +1,4 @@
 
-
 #include <iostream>
 #include "Log.h"
 #include "HttpCodes.h"
@@ -10,8 +9,12 @@
 SSE::RemoteClient::RemoteClient (std::string inAddress, std::string inPort) :
     TCP::Client (inAddress, inPort)
 {
-    GetReadStream ().Pipe (mToStringConverter).Pipe (mResponseDecoder).Pipe (this, &RemoteClient::HandleHandshake);
-    mRequestEncoder.Pipe (mToPacketConverter).Pipe (GetWriteStream ());
+    Pipe (sDataAvailable, mPacket2String)
+        .Pipe (mResponseDecoder)
+        .Pipe (this, &RemoteClient::HandleHandshake);
+    
+    mRequestEncoder.Pipe (mString2Packet)
+        .Pipe<TCP::Client> (this, &TCP::Client::Send);
     
     // Start the listener thread
     TCP::Client::Start ();
@@ -41,12 +44,14 @@ void SSE::RemoteClient::HandleHandshake (const HTTP::Response& inResponse) {
     }
     else {
         // Clear the open stream
-        mToStringConverter.Clear();
+        mPacket2String.Clear ();
         mResponseDecoder.Clear ();
         mRequestEncoder.Clear ();
-        mToPacketConverter.Clear();
+        mString2Packet.Clear ();
         
         // Route the pipe through the event decoder.
-        GetReadStream ().Clear ().Pipe (mToStringConverter).Pipe (mEventDecoder);
+        Pipe (sDataAvailable, mPacket2String)
+            .Pipe (mEventDecoder)
+            .Pipe (sEventAvailable);
     }
 }

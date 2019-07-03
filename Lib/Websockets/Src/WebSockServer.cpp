@@ -17,7 +17,7 @@ void RFC6455::Server::BroadCast (const std::string& inPacket) {
     OS::SingleLock lock (*mMutex);
     
     for (auto& client : mClients) {
-        client->SendData (inPacket);
+        dynamic_cast<RFC6455::Client*> (client.get ())->SendPayload (inPacket);
     }
 }
 
@@ -26,6 +26,6 @@ void RFC6455::Server::BroadCast (const std::vector<uint8_t>& inPacket) {
     OS::SingleLock lock (*mMutex);
     
     for (auto& client : mClients) {
-        client->SendData (inPacket);
+        dynamic_cast<RFC6455::Client*> (client.get ())->SendPayload (inPacket);
     }
 }

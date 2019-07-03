@@ -5,12 +5,13 @@
 #include <vector>
 #include <cstdint>
 
+#include "TcpPacket.h"
 #include "MessageStream.h"
 #include "WebSockFrame.h"
 
 namespace RFC6455 {
 
-class FrameDecoder : public OS::MessageStream <std::vector<uint8_t>, Frame>{
+class FrameDecoder : public OS::MessageStream <TCP::Packet, Frame>{
     
 public:
     /**
@@ -21,7 +22,7 @@ public:
     /**
      * Write buffer to the decoder
      */
-    void Write (const std::vector<uint8_t>& inBuffer) override;
+    void Write (const TCP::Packet& inBuffer) override;
     
 protected:
     std::vector<uint8_t> mBuffer;

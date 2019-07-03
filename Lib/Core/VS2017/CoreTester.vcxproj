@@ -23,6 +23,7 @@
     <ClCompile Include="..\Src\FileSystemTester.cpp" />
     <ClCompile Include="..\Src\GMockMain.cpp" />
     <ClCompile Include="..\Src\MessageStreamTester.cpp" />
+    <ClCompile Include="..\Src\SignalTester.cpp" />
     <ClCompile Include="..\Src\SocketTester.cpp" />
     <ClCompile Include="..\Src\ThreadTester.cpp" />
     <ClCompile Include="..\Src\TimingTester.cpp" />

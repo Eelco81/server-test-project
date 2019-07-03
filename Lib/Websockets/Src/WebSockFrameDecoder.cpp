@@ -6,7 +6,7 @@
 
 RFC6455::FrameDecoder::~FrameDecoder () = default;
 
-void RFC6455::FrameDecoder::Write (const std::vector<uint8_t>& inBuffer) {
+void RFC6455::FrameDecoder::Write (const TCP::Packet& inBuffer) {
     
     // Copy the incoming buffer to the end of the cached buffer
     std::copy (inBuffer.begin (), inBuffer.end (), std::back_inserter (mBuffer));
@@ -81,7 +81,7 @@ void RFC6455::FrameDecoder::Write (const std::vector<uint8_t>& inBuffer) {
         
         // Handle the frame
         LOGMESSAGE (OS::Log::kTrace, std::string ("Decoded ") + frame.GetStatusMessage ());
-        Emit (frame);
+        sNext.Emit (frame);
         
         // Erase the data from the buffer (not needed anymore)
         mBuffer.erase (mBuffer.begin (), mBuffer.begin () + index + payloadSize);

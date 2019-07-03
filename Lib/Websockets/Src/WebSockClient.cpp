@@ -11,8 +11,12 @@
 RFC6455::Client::Client (std::unique_ptr <OS::Socket> inSocket) :
     TCP::Client (std::move (inSocket))
 {
-    GetReadStream ().Pipe (mToStringConverter).Pipe (mRequestDecoder).Pipe (this, &Client::HandleHandshake);
-    mResponseEncoder.Pipe (mToPacketConverter).Pipe (GetWriteStream ());
+    Pipe (sDataAvailable, mPacket2String)
+        .Pipe (mRequestDecoder)
+        .Pipe (this, &Client::HandleHandshake);
+    
+    mResponseEncoder.Pipe (mString2Packet)
+        .Pipe<TCP::Client> (this, &TCP::Client::Send);
 }
 
 RFC6455::Client::~Client () = default;
@@ -60,11 +64,16 @@ void RFC6455::Client::HandleHandshake (const HTTP::Request& inRequest) {
     }
     else {
         // Clear the stream, route the pipe through the frame decoder.
-        GetReadStream ().Clear ().Pipe (mFrameDecoder).Pipe (this, &Client::HandleReceivedFrame);
-        mResponseEncoder.Clear ();
+        sDataAvailable.DisconnectAll ();
+        mResponseEncoder.Clear();
+        Pipe (sDataAvailable, mRaw2Packet)
+            .Pipe (mFrameDecoder)
+            .Pipe (this, &Client::HandleReceivedFrame);
         
-        mPayloadStringEncoder.Pipe (mFrameEncoder).Pipe (GetWriteStream ());
+        // After the upgrade, start handling incoming payloads
         mPayloadBinaryEncoder.Pipe (mFrameEncoder);
+        mPayloadStringEncoder.Pipe (mFrameEncoder)
+            .Pipe<TCP::Client> (this, &TCP::Client::Send);
     }
 }
 
@@ -80,7 +89,7 @@ void RFC6455::Client::HandleReceivedFrame (const RFC6455::Frame& inFrame) {
         frame.mFin = true;
         frame.mOpCode = Frame::OpCode::CLOSE;
         mFrameEncoder.Write (frame);
-        GetReadStream ().Clear (); // do not process further messages
+        sDataAvailable.DisconnectAll (); // do not process further messages
         Quit ();
     }
     else {
@@ -89,11 +98,11 @@ void RFC6455::Client::HandleReceivedFrame (const RFC6455::Frame& inFrame) {
     }
 }
 
-void RFC6455::Client::SendData (const std::vector<uint8_t>& inData) {
+void RFC6455::Client::SendPayload (const std::vector<uint8_t>& inData) {
     mPayloadBinaryEncoder.Write (inData);
 }
 
-void RFC6455::Client::SendData (const std::string& inData) {
+void RFC6455::Client::SendPayload (const std::string& inData) {
     mPayloadStringEncoder.Write (inData);
 }
 

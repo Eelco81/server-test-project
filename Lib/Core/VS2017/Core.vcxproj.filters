@@ -11,6 +11,7 @@
     <ClCompile Include="..\src\Thread.cpp" />
     <ClCompile Include="..\src\Timing.cpp" />
     <ClCompile Include="..\src\Version.cpp" />
+    <ClCompile Include="..\Src\Signals.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\CommandLine.h" />
@@ -26,5 +27,10 @@
     <ClInclude Include="..\src\Thread.h" />
     <ClInclude Include="..\src\Timing.h" />
     <ClInclude Include="..\src\Version.h" />
+    <ClInclude Include="..\Src\Signals.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Src\MessageStream.tcc" />
+    <None Include="..\Src\Signals.tcc" />
   </ItemGroup>
 </Project>

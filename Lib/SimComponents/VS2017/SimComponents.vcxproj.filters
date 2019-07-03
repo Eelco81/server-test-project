@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\Src\SimComFactory.cpp" />
+    <ClCompile Include="..\Src\SimHeatEquation.cpp" />
+    <ClCompile Include="..\Src\SimOscillator.cpp" />
+    <ClCompile Include="..\Src\SimPidController.cpp" />
+    <ClCompile Include="..\Src\SimSource.cpp" />
+    <ClCompile Include="..\Src\SimWaveEquation.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Src\SimComFactory.h" />
+    <ClInclude Include="..\Src\SimHeatEquation.h" />
+    <ClInclude Include="..\Src\SimOscillator.h" />
+    <ClInclude Include="..\Src\SimPidController.h" />
+    <ClInclude Include="..\Src\SimSource.h" />
+    <ClInclude Include="..\Src\SimWaveEquation.h" />
+  </ItemGroup>
+</Project>

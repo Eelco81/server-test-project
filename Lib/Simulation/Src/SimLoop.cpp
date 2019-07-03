@@ -11,7 +11,6 @@
 #include <regex>
 
 SIM::Loop::Loop (uint64_t inTimeStep) : 
-    OS::ForwardStream<SIM::Event> (),
     mTimer (inTimeStep)
 {
 }
@@ -89,7 +88,7 @@ void SIM::Loop::AddSampler (const std::vector<std::string>& inPaths, SIM::Sample
             throw Exception (std:: string ("Cannot sample <") + path + std::string (">: ") + e.what ());
         }
     }
-    sampler->Pipe (*this);
+    sampler->Pipe (sEventAvailable);
     mSamplers.emplace_back (std::move (sampler));
 }
 

@@ -8,6 +8,7 @@
     <ClCompile Include="..\Src\GMockMain.cpp" />
     <ClCompile Include="..\Src\FileSystemTester.cpp" />
     <ClCompile Include="..\Src\CommandLineTester.cpp" />
+    <ClCompile Include="..\Src\SignalTester.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\TestMain.h" />

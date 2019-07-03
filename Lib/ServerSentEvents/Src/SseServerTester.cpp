@@ -55,7 +55,7 @@ TEST_F (SseServerTester, StringPayloads) {
     const std::string sendPayload ("HELLO");
     std::string receivedPayload;
     
-    client.GetEventDecoder ().Pipe ([&] (const std::string& payload) {
+    client.sEventAvailable.Connect ([&] (const std::string& payload) {
         receivedPayload = payload;
     });
     

@@ -1,10 +1,9 @@
 
-#include "SimSource.h"
-#include <cmath>
-#include "Log.h"
-
 #define _USE_MATH_DEFINES
 #include <cmath>
+
+#include "SimSource.h"
+#include "Log.h"
 
 using namespace SIM::COM; 
 

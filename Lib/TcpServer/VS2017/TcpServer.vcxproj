@@ -121,11 +121,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\Src\TcpClient.cpp" />
+    <ClCompile Include="..\Src\TcpPacket.h" />
     <ClCompile Include="..\Src\TcpServer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Src\TcpClient.h" />
     <ClInclude Include="..\Src\TcpClientFactory.h" />
+    <ClInclude Include="..\Src\TcpPacketEncoders.h" />
     <ClInclude Include="..\Src\TcpServer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

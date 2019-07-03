@@ -45,6 +45,24 @@ void TCP::Server::Stop () {
     mCleaner->Join ();
 }
 
+void TCP::Server::Broadcast (const TCP::Packet& inPacket) {
+    
+    OS::SingleLock lock (*mMutex);
+    
+    for (auto& client : mClients) {
+        client->Send (inPacket);
+    }
+}
+
+void TCP::Server::Broadcast (const TCP::RawPacket& inPacket) {
+    
+    OS::SingleLock lock (*mMutex);
+    
+    for (auto& client : mClients) {
+        client->Send (inPacket);
+    }
+}
+
 std::size_t TCP::Server::GetClientCount () const {
     return mClients.size ();
 }

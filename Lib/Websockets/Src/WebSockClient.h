@@ -7,9 +7,9 @@
 
 #include "TcpClient.h"
 #include "TcpClientFactory.h"
+#include "TcpPacketEncoders.h"
 #include "HttpRequestDecoder.h"
 #include "HttpResponseEncoder.h"
-#include "StringConverter.h"
 #include "WebSockFrameDecoder.h"
 #include "WebSockFrameEncoder.h"
 #include "WebSockPayloadDecoder.h"
@@ -48,12 +48,12 @@ public:
     /**
      * Send data over the RFC6455 connection
      */
-    virtual void SendData (const std::vector<uint8_t>& inData) override;
+    virtual void SendPayload (const std::vector<uint8_t>& inData);
 
     /**
      * Send data over the RFC6455 connection
      */
-    virtual void SendData (const std::string& inData) override;
+    virtual void SendPayload (const std::string& inData);
 
 private:
     /**
@@ -67,8 +67,9 @@ private:
     virtual void HandleReceivedFrame (const Frame& inFrame);
     
 private:
-    OS::PacketToStringConverter mToStringConverter;
-    OS::StringToPacketConverter mToPacketConverter;
+    TCP::Packet2StringEncoder mPacket2String;
+    TCP::String2PacketEncoder mString2Packet;
+    TCP::RawPacket2PacketEncoder mRaw2Packet;
     HTTP::RequestDecoder mRequestDecoder;
     HTTP::ResponseEncoder mResponseEncoder;
     FrameDecoder mFrameDecoder;

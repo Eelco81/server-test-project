@@ -6,13 +6,10 @@
 #include "ServerApplication.h"
 
 #include "Log.h"
-#include "Socket.h"
 #include "ThreadBlocker.h"
-#include "HttpClient.h"
 #include "WebSockServer.h"
+#include "HttpClient.h"
 #include "SseServer.h"
-#include "TcpServer.h"
-#include "SupportThread.h"
 #include "SimService.h"
 #include "SimComFactory.h"
 #include "Router.h"
@@ -39,11 +36,11 @@ int ServerApplication::Run () {
 
     RFC6455::Server websockServer (mCommandLine.GetOption ("ip"), mCommandLine.GetOption ("websockport"));
     websockServer.Start ();
-    service->GetStream ().Pipe (&websockServer, &RFC6455::Server::BroadCast);
+    auto websockConnection = service->sEventStrAvailable.Connect (&websockServer, &RFC6455::Server::BroadCast);
     
     SSE::Server sseServer (mCommandLine.GetOption ("ip"), mCommandLine.GetOption ("sseport"));
     sseServer.Start ();
-    service->GetStream ().Pipe (&sseServer, &SSE::Server::BroadCast);
+    auto sseConnection = service->sEventStrAvailable.Connect (&sseServer, &SSE::Server::BroadCast);
     
     // Block the main thread, wait for Ctrl-C
     APP::ThreadBlocker (SIGINT);
@@ -51,6 +48,8 @@ int ServerApplication::Run () {
     
     // Cannot rely on destructors to clean this up. The service is a shared_ptr
     // and will be cleaned up all the way at the end.
+    websockConnection.Close ();
+    sseConnection.Close ();
     if (service->IsRunning ()) service->Stop ();
     
     return 0;

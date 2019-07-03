@@ -7,10 +7,10 @@
 
 #include "Macros.h"
 #include "Mutex.h"
+#include "Signals.h"
 
 #include "SimValue.h"
 #include "SimPath.h"
-#include "SimEventStream.h"
 #include "SimSampler.h"
 
 #include <json.hpp>
@@ -110,16 +110,26 @@ public:
     bool Trigger ();
     
     /**
-     * Get sample stream
+     * Emitted when an Event is emitted
      */
-    inline EventStream& GetStream () { return mStream; }
+    OS::Signal<const Event&> sEventAvailable;
+    
+    /**
+     * Forwarded signal from sEventAvailable. Data in string format.
+     */
+    OS::Signal<const std::string&> sEventStrAvailable;
     
 private:
+
+    /**
+     * Utility function to connect sEventAvailable and sEventStrAvailable
+     */
+    void EventToString (const Event&);
+    
     std::unique_ptr<Factory> mFactory;
     std::unique_ptr<APP::PeriodicThread> mRunner;
     std::unique_ptr<Loop> mLoop;
     OS::Mutex mMutex;
-    EventStream mStream;
 };
 
 } // end namespace SIM

@@ -25,11 +25,12 @@ public:
      */
     void Transfer ();
     
-protected:
     /**
      * PImple idiom
      */
     class Implementation;
+
+protected:
     std::unique_ptr<Implementation> mImpl;
 
 };

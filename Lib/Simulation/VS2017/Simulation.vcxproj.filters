@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\Src\SimBlock.cpp" />
+    <ClCompile Include="..\Src\SimConnector.cpp" />
+    <ClCompile Include="..\Src\SimEvent.cpp" />
+    <ClCompile Include="..\Src\SimException.cpp" />
+    <ClCompile Include="..\Src\SimFactory.cpp" />
+    <ClCompile Include="..\Src\SimInitializer.cpp" />
+    <ClCompile Include="..\Src\SimLoop.cpp" />
+    <ClCompile Include="..\Src\SimPath.cpp" />
+    <ClCompile Include="..\Src\SimPort.cpp" />
+    <ClCompile Include="..\Src\SimSampler.cpp" />
+    <ClCompile Include="..\Src\SimService.cpp" />
+    <ClCompile Include="..\Src\SimTimer.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Src\SimBlock.h" />
+    <ClInclude Include="..\Src\SimConnector.h" />
+    <ClInclude Include="..\Src\SimEvent.h" />
+    <ClInclude Include="..\Src\SimException.h" />
+    <ClInclude Include="..\Src\SimFactory.h" />
+    <ClInclude Include="..\Src\SimInitializer.h" />
+    <ClInclude Include="..\Src\SimLoop.h" />
+    <ClInclude Include="..\Src\SimPath.h" />
+    <ClInclude Include="..\Src\SimPort.h" />
+    <ClInclude Include="..\Src\SimRecorder.h" />
+    <ClInclude Include="..\Src\SimSampler.h" />
+    <ClInclude Include="..\Src\SimService.h" />
+    <ClInclude Include="..\Src\SimTimer.h" />
+    <ClInclude Include="..\Src\SimTypedPort.h" />
+    <ClInclude Include="..\Src\SimValue.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Src\SimTypedPort.tcc" />
+  </ItemGroup>
+</Project>

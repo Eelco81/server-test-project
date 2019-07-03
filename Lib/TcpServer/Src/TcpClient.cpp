@@ -20,7 +20,6 @@ TCP::Client::Client (std::unique_ptr <OS::Socket> inSocket) :
     mThread (std::make_unique<APP::HoldingThread<Client>> ("TcpClient-" + std::to_string (inSocket->GetId ()), this, &TCP::Client::WaitForData)),
     mSocket (std::move (inSocket))
 {
-    GetWriteStream ().Pipe (this, &Client::Send);
 }
 
 TCP::Client::~Client () {
@@ -54,20 +53,30 @@ int TCP::Client::GetId () const {
     return mSocket->GetId ();
 }
 
-void TCP::Client::Send (const std::vector<uint8_t>& inBuffer) {
+void TCP::Client::Send (const TCP::Packet& inBuffer) {
     mSocket->Send (inBuffer);
+}
+
+void TCP::Client::Send (const TCP::RawPacket& inPacket) {
+    mSocket->Send (std::get<0> (inPacket), std::get<1> (inPacket));
 }
 
 void TCP::Client::WaitForData () {
     
+    Packet buffer (MAX_BUFFER_SIZE);
+
+    // handle data while the socket is alive
     while (mSocket->IsConnected ()) {
         
-        std::vector<uint8_t> buffer (MAX_BUFFER_SIZE);
-        const auto result (mSocket->Receive (buffer)); // blocking call
+        // blocking call
+        const auto result (mSocket->Receive (buffer.data (), buffer.size ())); 
+
+        // if there is data, emit it,
         if (result > 0) {
-            buffer.resize (result);
-            GetReadStream ().Write (buffer);
+            sDataAvailable.Emit (RawPacket (buffer.data (), static_cast<std::size_t> (result)));
         }
     }
-    
+
+    // the connection is closed
+    sClosed.Emit ();
 }

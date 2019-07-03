@@ -35,7 +35,7 @@ void SIM::Sampler::Write (const uint64_t& inTimeStamp) {
     if (!mPorts.empty ()) {
         mOutputs[0] =  static_cast<double> (inTimeStamp);
         std::transform (mPorts.begin (), mPorts.end (), mOutputs.begin () + 1u, sampleFunction);
-        Emit (Event (mId, mOutputs));
+        sNext.Emit (Event (mId, mOutputs));
     }
 }
 

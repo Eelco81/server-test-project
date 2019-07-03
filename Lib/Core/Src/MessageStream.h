@@ -5,6 +5,7 @@
 #include <cstdint>
 #include <vector>
 #include <functional>
+#include "Signals.h"
 
 namespace OS {
 
@@ -34,19 +35,19 @@ public:
      * Pipe the stream to a member function of an object
      */
     template <typename T>
-    void Pipe (T* inObject, void(T::*inMethod)(const Output_t&)) {
-        Pipe ([inObject, inMethod] (const Output_t& data) { (inObject->*inMethod) (data); });
-    }
+    void Pipe (T* inObject, void(T::*inMethod)(const Output_t&));
     
     /**
      * Pipe the stream to another stream.
      */
     template<typename T>
-    MessageStream<Output_t,T>& Pipe (MessageStream<Output_t,T>& inStream) {
-        Pipe ([&] (const Output_t& data) { inStream.Write (data); });
-        return inStream;
-    }
+    MessageStream<Output_t,T>& Pipe (MessageStream<Output_t,T>& inStream);
     
+    /**
+     * Pipe the stream to a signal
+     */
+    void Pipe (OS::Signal<const Output_t&>& inSignal);
+
     /**
      * Clear all the pipes
      */
@@ -57,27 +58,31 @@ public:
      */
     virtual void Write (const Input_t& inMessage) = 0;
     
-protected:
     /**
-     * In function Write (), call Emit () when a packet is done for 
+     * In function Write (), emit sigNext when a packet is done for 
      * further processing.
      */
-    void Emit (const Output_t& inMessage);
-    
-private:
-    std::vector<Callback> mCallbacks;
-
+    Signal<const Output_t&> sNext;
 };
 
 /**
- * The ForwardStream transforms the MessageStream in an EventEmitter.
+ * Pipe a signal to a MessageStream. All args are passed as a tuple.
  */
-template <typename T>
-class ForwardStream : public MessageStream<T,T> {
-public:
-    virtual ~ForwardStream () = default;
-    virtual void Write (const T& inMessage) override;
-};
+template<typename T, typename ...Args>
+OS::MessageStream<std::tuple<Args...>, T>& Pipe (OS::Signal<Args...>& inSignal, OS::MessageStream<std::tuple<Args...>, T>& inStream) {
+    inSignal.Connect([&](Args...args) { inStream.Write (std::tuple<Args...>(args...)); });
+    return inStream;
+}
+
+/**
+ * Pipe a signal to a MessageStream. The signal is assumed to adhere to the message stream
+ * signature.
+ */
+template <typename Input_t, typename Output_t>
+OS::MessageStream<Input_t, Output_t>& Pipe(OS::Signal<const Input_t&>& inSignal, OS::MessageStream<Input_t, Output_t>& inStream) {
+    inSignal.Connect ([&](const Input_t& inData) { inStream.Write (inData); });
+    return inStream;
+}
 
 } // end namespace OS
 

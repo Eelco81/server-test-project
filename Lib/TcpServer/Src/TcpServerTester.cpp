@@ -19,7 +19,7 @@ public:
     EchoClient (std::unique_ptr<OS::Socket> inSocket) :
        TCP::Client (std::move (inSocket)) 
     {
-        GetReadStream ().Pipe (GetWriteStream ());
+        sDataAvailable.Connect<TCP::Client> (this, &TCP::Client::Send);
     }
 };
 
@@ -28,12 +28,12 @@ public:
     HarvestClient (std::string inAddress, std::string inPort) :
        TCP::Client (inAddress, inPort) 
     {
-        GetReadStream ().Pipe (this, &HarvestClient::HandlePacket);
+        sDataAvailable.Connect<HarvestClient> (this, &HarvestClient::HandlePacket);
     }
-    void HandlePacket (const std::vector<uint8_t>& inBuffer) {
-        std::copy (inBuffer.begin (), inBuffer.end (), std::back_inserter (mData));
+    void HandlePacket (const TCP::RawPacket& inData) {
+        mData.assign (std::get<0> (inData), std::get<0> (inData) + std::get<1> (inData));
     }
-    std::vector<uint8_t> mData = {};
+    TCP::Packet mData = {};
 };
 
 class TestClientFactory : public TCP::ClientFactory {
@@ -56,7 +56,7 @@ TEST_F (TcpServerTester, DataTransfer) {
     auto factory (std::make_shared<TestClientFactory>());
     TCP::Server server (IP_FOR_TESTING, PORT_FOR_TESTING, std::move (factory));
     
-    server.Start();
+    server.Start ();
     OS::Timing::Sleep (100000u);
 
     HarvestClient client (IP_FOR_TESTING, PORT_FOR_TESTING);
@@ -64,14 +64,35 @@ TEST_F (TcpServerTester, DataTransfer) {
     
     OS::Timing::Sleep (100000u);
     
-    const std::vector<uint8_t> buffer (1000, 0xFF);
+    const TCP::Packet buffer (1000, 0xFF);
     client.Send (buffer);
     
     OS::Timing::Sleep (100000u);
     
     EXPECT_EQ (buffer.size (), client.mData.size ());
     EXPECT_TRUE (std::equal (buffer.begin (), buffer.end (), client.mData.begin ()));
+}
 
+TEST_F(TcpServerTester, Broadcasting) {
+
+    auto factory (std::make_shared<TestClientFactory> ());
+    TCP::Server server (IP_FOR_TESTING, PORT_FOR_TESTING, std::move (factory));
+
+    server.Start ();
+    OS::Timing::Sleep (100000u);
+
+    HarvestClient client (IP_FOR_TESTING, PORT_FOR_TESTING);
+    EXPECT_TRUE (client.Start());
+
+    OS::Timing::Sleep (100000u);
+
+    const TCP::Packet buffer (1000, 0xFF);
+    server.Broadcast (buffer);
+
+    OS::Timing::Sleep (100000u);
+
+    EXPECT_EQ (buffer.size (), client.mData.size ());
+    EXPECT_TRUE (std::equal (buffer.begin (), buffer.end (), client.mData.begin ()));
 }
 
 TEST_F (TcpServerTester, MultipleConnnections) {
@@ -79,7 +100,7 @@ TEST_F (TcpServerTester, MultipleConnnections) {
     auto factory (std::make_shared<TestClientFactory>());
     TCP::Server server (IP_FOR_TESTING, PORT_FOR_TESTING, std::move (factory));
     
-    server.Start();
+    server.Start ();
     
     OS::Timing::Sleep (100000u);
     EXPECT_EQ (0u, server.GetClientCount ());

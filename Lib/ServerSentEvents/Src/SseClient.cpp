@@ -9,8 +9,12 @@
 SSE::Client::Client (std::unique_ptr <OS::Socket> inSocket) :
     TCP::Client (std::move (inSocket))
 {
-    GetReadStream ().Pipe (mToStringConverter).Pipe (mRequestDecoder).Pipe (this, &Client::HandleHandshake);
-    mResponseEncoder.Pipe (mToPacketConverter).Pipe (GetWriteStream ());
+    Pipe (sDataAvailable, mPacket2String)
+        .Pipe (mRequestDecoder)
+        .Pipe (this, &Client::HandleHandshake);
+    
+    mResponseEncoder.Pipe (mString2Packet)
+        .Pipe<TCP::Client> (this, &TCP::Client::Send);
 }
 
 SSE::Client::~Client () = default;
@@ -75,17 +79,19 @@ void SSE::Client::HandleHandshake (const HTTP::Request& inRequest) {
     }
     else {
         // Clear the read stream (SSE only contains outgoing events)
-        GetReadStream ().Clear ();
+        sDataAvailable.DisconnectAll ();
         mResponseEncoder.Clear ();
-        mToStringConverter.Clear ();
-        mToPacketConverter.Clear ();
+        mPacket2String.Clear ();
+        mString2Packet.Clear ();
         mRequestDecoder.Clear ();
         mResponseEncoder.Clear ();
-        mEventEncoder.Pipe (mToPacketConverter).Pipe (GetWriteStream ());
+
+        mEventEncoder.Pipe (mString2Packet)
+            .Pipe<TCP::Client> (this, &TCP::Client::Send);
     }
 }
 
-void SSE::Client::SendData (const std::string& inData) {
+void SSE::Client::SendPayload (const std::string& inData) {
     mEventEncoder.Write (inData);
 }
 

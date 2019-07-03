@@ -113,6 +113,7 @@
     <ClCompile Include="..\src\Mutex.cpp" />
     <ClCompile Include="..\src\Network.cpp" />
     <ClCompile Include="..\src\OS.cpp" />
+    <ClCompile Include="..\Src\Signals.cpp" />
     <ClCompile Include="..\src\Socket.cpp" />
     <ClCompile Include="..\src\Thread.cpp" />
     <ClCompile Include="..\src\Timing.cpp" />
@@ -127,11 +128,26 @@
     <ClInclude Include="..\src\Mutex.h" />
     <ClInclude Include="..\src\Network.h" />
     <ClInclude Include="..\src\OS.h" />
+    <ClInclude Include="..\Src\Signals.h" />
     <ClInclude Include="..\src\Socket.h" />
     <ClInclude Include="..\src\StringConverter.h" />
     <ClInclude Include="..\src\Thread.h" />
     <ClInclude Include="..\src\Timing.h" />
     <ClInclude Include="..\src\Version.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Src\MessageStream.tcc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\Src\Signals.tcc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </None>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

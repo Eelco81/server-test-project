@@ -7,9 +7,9 @@
 
 #include "TcpClient.h"
 #include "TcpClientFactory.h"
+#include "TcpPacketEncoders.h"
 #include "HttpRequestDecoder.h"
 #include "HttpResponseEncoder.h"
-#include "StringConverter.h"
 #include "SseEventEncoder.h"
 
 namespace OS {
@@ -43,7 +43,7 @@ public:
     /**
      * Send data over the SSE connection
      */
-    virtual void SendData (const std::string& inData) override;
+    virtual void SendPayload (const std::string& inData);
 
 private:
     /**
@@ -52,8 +52,8 @@ private:
     virtual void HandleHandshake (const HTTP::Request& inRequest);
     
 private:
-    OS::PacketToStringConverter mToStringConverter;
-    OS::StringToPacketConverter mToPacketConverter;
+    TCP::Packet2StringEncoder mPacket2String;
+    TCP::String2PacketEncoder mString2Packet;
     HTTP::RequestDecoder mRequestDecoder;
     HTTP::ResponseEncoder mResponseEncoder;
     EventEncoder mEventEncoder;

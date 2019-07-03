@@ -4,7 +4,8 @@
 
 #include "Macros.h"
 #include "Thread.h"
-#include "MessageStream.h"
+#include "Signals.h"
+#include "TcpPacket.h"
 
 #include <cstdint>
 #include <memory>
@@ -22,12 +23,6 @@ class Client {
 
     NO_COPY_CONSTRUCTORS (Client);
 
-public:
-    /**
-     * Packet definition
-     */
-    using Packet = std::vector<uint8_t>;
-    
 public:
     /**
      * Deleted default constructor
@@ -75,8 +70,13 @@ public:
     /**
      * Send data over the socket.
      */
-    void Send (const Packet& inBuffer);
+    void Send (const Packet& inPacket);
     
+    /**
+     * Send data over the socket.
+     */
+    void Send (const RawPacket& inPacket);
+
     /**
      * Get the socket id.
      */
@@ -89,32 +89,19 @@ public:
     void WaitForData ();
     
     /**
-     * Virtual method. Used for broadcasting. 
+     * This signal is emitted when data is available on the TCP connection.
+     * It uses a RawPacket rather than a Packet to avoid resizing a buffer.
      */
-    virtual void SendData (const std::string& inPacket) {}
+    OS::Signal<const RawPacket&> sDataAvailable;
     
     /**
-     * Virtual method. Used for broadcasting. 
+     * This signal is emitted when the connection is closed
      */
-    virtual void SendData (const std::vector<uint8_t>& inPacket) {}
-    
-protected:
-    /**
-     * Message stream for received messages.
-     */
-    inline OS::ForwardStream<Packet>& GetReadStream () { return mReadStream; }
-    
-    /**
-     * Message stream for sending messages.
-     */
-    inline OS::ForwardStream<Packet>& GetWriteStream () { return mWriteStream; }
-    
+    OS::Signal<> sClosed;
+
 private:
-    
     std::unique_ptr <OS::Thread> mThread;
     std::shared_ptr <OS::Socket> mSocket;
-    OS::ForwardStream<Packet> mReadStream;
-    OS::ForwardStream<Packet> mWriteStream;
 };
 
 }

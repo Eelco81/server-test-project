@@ -9,13 +9,12 @@ HTTP::Client::Client (std::unique_ptr <OS::Socket> inSocket, const HTTP::Router&
     TCP::Client (std::move (inSocket)),
     mRouter (inRouter)
 {
-    GetReadStream ()
-        .Pipe (mToStringConverter)
+    Pipe (sDataAvailable, mPacket2String)
         .Pipe (mDecoder)
         .Pipe (mRouter)
         .Pipe (mEncoder)
-        .Pipe (mToPacketConverter)
-        .Pipe (GetWriteStream ());
+        .Pipe (mString2Packet)
+        .Pipe<TCP::Client> (this, &TCP::Client::Send);
 }
 
 HTTP::Client::~Client () = default;

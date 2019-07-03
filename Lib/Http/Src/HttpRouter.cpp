@@ -44,5 +44,5 @@ void HTTP::Router::Write (const HTTP::Request& inRequest) {
     LOGINFO << "HTTP/" << VersionToString (response.mVersion) << " " << MethodToString (inRequest.mMethod) 
             << " " << inRequest.mPath << " - " << response.mCode << " " << CodeToString (response.mCode);
 
-    Emit (response);
+    sNext.Emit (response);
 }

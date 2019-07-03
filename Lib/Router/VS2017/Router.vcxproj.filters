@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\Src\ApiUtils.cpp" />
+    <ClCompile Include="..\Src\DirEndPoint.cpp" />
+    <ClCompile Include="..\Src\EchoEndPoint.cpp" />
+    <ClCompile Include="..\Src\FileEndPoint.cpp" />
+    <ClCompile Include="..\Src\ListDirEndPoint.cpp" />
+    <ClCompile Include="..\Src\SimEndPoint.cpp" />
+    <ClCompile Include="..\Src\SimExecEndPoint.cpp" />
+    <ClCompile Include="..\Src\SimPortEndPoint.cpp" />
+    <ClCompile Include="..\Src\SimPortsEndPoint.cpp" />
+    <ClCompile Include="..\Src\SimSamplersEndPoint.cpp" />
+    <ClCompile Include="..\Src\TimeEndPoint.cpp" />
+    <ClCompile Include="..\Src\VersionEndPoint.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Src\ApiUtils.h" />
+    <ClInclude Include="..\Src\DirEndPoint.h" />
+    <ClInclude Include="..\Src\EchoEndPoint.h" />
+    <ClInclude Include="..\Src\FileEndPoint.h" />
+    <ClInclude Include="..\Src\ListDirEndPoint.h" />
+    <ClInclude Include="..\Src\MockSimService.h" />
+    <ClInclude Include="..\Src\SimEndPoint.h" />
+    <ClInclude Include="..\Src\SimExecEndPoint.h" />
+    <ClInclude Include="..\Src\SimPortEndPoint.h" />
+    <ClInclude Include="..\Src\SimPortsEndPoint.h" />
+    <ClInclude Include="..\Src\SimSamplersEndPoint.h" />
+    <ClInclude Include="..\Src\TimeEndPoint.h" />
+    <ClInclude Include="..\Src\VersionEndPoint.h" />
+  </ItemGroup>
+</Project>

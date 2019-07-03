@@ -3,10 +3,12 @@
   <ItemGroup>
     <ClCompile Include="..\Src\TcpClient.cpp" />
     <ClCompile Include="..\Src\TcpServer.cpp" />
+    <ClCompile Include="..\Src\TcpPacket.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Src\TcpClient.h" />
     <ClInclude Include="..\Src\TcpClientFactory.h" />
     <ClInclude Include="..\Src\TcpServer.h" />
+    <ClInclude Include="..\Src\TcpPacketEncoders.h" />
   </ItemGroup>
 </Project>

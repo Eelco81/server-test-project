@@ -11,7 +11,7 @@ public:
     void Write (const std::vector<char>& inMessage) override {
         std::string data;
         data.assign (inMessage.data (), inMessage.data () + inMessage.size ());
-        Emit (data);
+        sNext.Emit (data);
     }
 };
 
@@ -20,7 +20,16 @@ public:
     void Write (const std::string& inMessage) override {
         std::vector<char> data;
         data.assign (inMessage.data (), inMessage.data () + inMessage.size ());
-        Emit (data);
+        sNext.Emit (data);
+    }
+};
+
+class ConvStream : public OS::MessageStream<std::tuple<const char*, std::size_t>, std::vector<char>> {
+public:
+    void Write (const std::tuple<const char*, std::size_t>& inMessage) override {
+        std::vector<char> data;
+        data.assign (std::get<0> (inMessage), std::get<0> (inMessage) + std::get<1> (inMessage));
+        sNext.Emit (data);
     }
 };
 
@@ -82,13 +91,24 @@ TEST (MessageStreamTester, PipeToStream) {
     ASSERT_EQ (std::string ("hello"), target);
 }
 
-TEST (ForwardStreamTester, Forward) {
+
+TEST(MessageStreamTester, PipeSignalToStream) {
     
-    uint16_t value (0x0000);
-    OS::ForwardStream<uint16_t> stream;
-    stream.Pipe ([&](const uint16_t& newvalue) { value = newvalue;});
+    std::string target;
+
+    auto callback = [&](const std::string& newdata) {
+        target = newdata;
+    };
+
     
-    ASSERT_EQ (0x0000, value);
-    stream.Write (0xFFFF);
-    ASSERT_EQ (0xFFFF, value);
+    OS::Signal<const char*, std::size_t> signal;
+    ConvStream convStream;
+    RevStream revStream;
+    Stream stream;
+
+    Pipe (signal, convStream).Pipe (stream).Pipe (callback);
+
+    signal.Emit ("hello", 5u);
+
+    ASSERT_EQ(std::string("hello"), target);
 }

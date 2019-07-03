@@ -20,7 +20,7 @@ class Block;
 class Connector;
 class Initializer;
 
-class Loop : public OS::ForwardStream<Event> {
+class Loop {
 
 public:
     /**
@@ -102,6 +102,11 @@ public:
      * Get the loops time step
      */
     uint64_t GetTimeStep () const;
+    
+    /**
+     * Emits Events from within the loop.
+     */
+    OS::Signal<const Event&> sEventAvailable;
     
 private:
     /**

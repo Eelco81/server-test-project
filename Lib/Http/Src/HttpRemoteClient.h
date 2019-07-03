@@ -8,9 +8,9 @@
 #include <condition_variable>
 
 #include "TcpClient.h"
+#include "TcpPacketEncoders.h"
 #include "HttpRequestEncoder.h"
 #include "HttpResponseDecoder.h"
-#include "StringConverter.h"
 
 namespace HTTP {
 
@@ -49,8 +49,8 @@ protected:
     /**
      * MessageStreams which link ReadStream to the WriteStream
      */
-    OS::PacketToStringConverter mToStringConverter;
-    OS::StringToPacketConverter mToPacketConverter;
+    TCP::Packet2StringEncoder mPacket2String;
+    TCP::String2PacketEncoder mString2Packet;
     RequestEncoder mEncoder;
     ResponseDecoder mDecoder;
     

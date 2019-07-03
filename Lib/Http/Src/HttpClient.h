@@ -7,10 +7,10 @@
 
 #include "TcpClient.h"
 #include "TcpClientFactory.h"
+#include "TcpPacketEncoders.h"
 #include "HttpRequestDecoder.h"
 #include "HttpResponseEncoder.h"
 #include "HttpRouter.h"
-#include "StringConverter.h"
 
 namespace OS {
     class Socket;
@@ -43,8 +43,8 @@ protected:
      * MessageStreams which link ReadStream to the WriteStream
      */
     Router mRouter;
-    OS::PacketToStringConverter mToStringConverter;
-    OS::StringToPacketConverter mToPacketConverter;
+    TCP::Packet2StringEncoder mPacket2String;
+    TCP::String2PacketEncoder mString2Packet;
     RequestDecoder mDecoder;
     ResponseEncoder mEncoder;
 };

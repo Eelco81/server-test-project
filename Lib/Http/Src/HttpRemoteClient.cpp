@@ -10,10 +10,13 @@ HTTP::RemoteClient::RemoteClient (std::string inAddress, std::string inPort) :
     mResponse (nullptr)
 {
     // Forward raw TCP messages to the decoder
-    GetReadStream ().Pipe (mToStringConverter).Pipe (mDecoder).Pipe (this, &HTTP::RemoteClient::HandleResponse);
+    Pipe (sDataAvailable, mPacket2String)
+        .Pipe (mDecoder)
+        .Pipe (this, &HTTP::RemoteClient::HandleResponse);
     
     // Forward HTTP Requests as raw TCP messages through the encoder
-    mEncoder.Pipe (mToPacketConverter).Pipe (GetWriteStream ());
+    mEncoder.Pipe (mString2Packet)
+        .Pipe<TCP::Client>(this, &TCP::Client::Send);
     
     // Start the listener thread
     TCP::Client::Start ();

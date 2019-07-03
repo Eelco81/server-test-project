@@ -5,7 +5,7 @@
 
 void RFC6455::FrameEncoder::Write (const RFC6455::Frame& inFrame) {
     
-    std::vector<uint8_t> buffer (2u, 0u);
+    TCP::Packet buffer (2u, 0u);
     
     buffer[0] = 0b10000000 * inFrame.mFin;
     buffer[0] += inFrame.mOpCode;
@@ -34,7 +34,7 @@ void RFC6455::FrameEncoder::Write (const RFC6455::Frame& inFrame) {
     
     std::copy (inFrame.mPayload.begin (), inFrame.mPayload.end (), std::back_inserter (buffer));
     
-    Emit (buffer);
+    sNext.Emit (buffer);
     
     LOGMESSAGE (OS::Log::kTrace, std::string ("Encoded ") + inFrame.GetStatusMessage ());
 }

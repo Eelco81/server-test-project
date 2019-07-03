@@ -9,8 +9,13 @@
 RFC6455::RemoteClient::RemoteClient (std::string inAddress, std::string inPort) :
     TCP::Client (inAddress, inPort)
 {
-    GetReadStream ().Pipe (mToStringConverter).Pipe (mResponseDecoder).Pipe (this, &RemoteClient::HandleHandshake);
-    mRequestEncoder.Pipe (mToPacketConverter).Pipe (GetWriteStream ());
+    Pipe (sDataAvailable, mPacket2String)
+        .Pipe (mResponseDecoder)
+        .Pipe (this, &RemoteClient::HandleHandshake);
+    
+    mRequestEncoder
+        .Pipe (mString2Packet)
+        .Pipe<TCP::Client> (this, &TCP::Client::Send);
     
     // Start the listener thread
     TCP::Client::Start ();
@@ -44,11 +49,15 @@ void RFC6455::RemoteClient::HandleHandshake (const HTTP::Response& inResponse) {
     }
     else {
         // Clear the stream, route the pipe through the frame decoder.
-        GetReadStream ().Clear ().Pipe (mFrameDecoder).Pipe (this, &RemoteClient::HandleReceivedFrame);
+        sDataAvailable.DisconnectAll ();
         mRequestEncoder.Clear ();
-        
-        mPayloadStringEncoder.Pipe (mFrameEncoder).Pipe (GetWriteStream ());
+        Pipe (sDataAvailable, mRaw2Packet)
+            .Pipe (mFrameDecoder)
+            .Pipe (this, &RemoteClient::HandleReceivedFrame);
+
         mPayloadBinaryEncoder.Pipe (mFrameEncoder);
+        mPayloadStringEncoder.Pipe (mFrameEncoder)
+            .Pipe<TCP::Client> (this, &TCP::Client::Send);
     }
 }
 
@@ -64,7 +73,7 @@ void RFC6455::RemoteClient::HandleReceivedFrame (const RFC6455::Frame& inFrame) 
         frame.mFin = true;
         frame.mOpCode = Frame::OpCode::CLOSE;
         mFrameEncoder.Write (frame);
-        GetReadStream ().Clear (); // do not process further messages
+        sDataAvailable.DisconnectAll (); // do not process further messages
         Quit ();
     }
     else {
@@ -73,10 +82,10 @@ void RFC6455::RemoteClient::HandleReceivedFrame (const RFC6455::Frame& inFrame) 
     }
 }
 
-void RFC6455::RemoteClient::SendData (const std::vector<uint8_t>& inData) {
+void RFC6455::RemoteClient::SendPayload (const std::vector<uint8_t>& inData) {
     mPayloadBinaryEncoder.Write (inData);
 }
 
-void RFC6455::RemoteClient::SendData (const std::string& inData) {
+void RFC6455::RemoteClient::SendPayload (const std::string& inData) {
     mPayloadStringEncoder.Write (inData);
 }

@@ -13,6 +13,7 @@ SIM::Service::Service (std::unique_ptr<Factory> inFactory) :
     mRunner (nullptr),
     mLoop (nullptr)
 {
+    sEventAvailable.Connect (this, &Service::EventToString);
 }
 
 SIM::Service::~Service () = default;
@@ -26,7 +27,7 @@ void SIM::Service::Load (const json& inConfig) {
     OS::SingleLock lock (mMutex);
     try {
         mLoop = mFactory->Create (inConfig);
-        mLoop->Pipe (mStream);
+        mLoop->sEventAvailable.Forward (sEventAvailable);
     }
     catch (Exception& e) {
         mLoop.reset (nullptr);
@@ -34,7 +35,7 @@ void SIM::Service::Load (const json& inConfig) {
         throw e;
     }
     
-    mStream.Write (Event ("sim-loaded"));
+    sEventAvailable.Emit (Event ("sim-loaded"));
     LOGMESSAGE (OS::Log::kInfo, "Loaded simulation...");
 }
 
@@ -54,7 +55,7 @@ void SIM::Service::Start () {
     mLoop->Initialize ();
     mRunner->Spawn ();
     
-    mStream.Write (Event ("sim-started"));
+    sEventAvailable.Emit (Event ("sim-started"));
 }
 
 void SIM::Service::Stop () {
@@ -72,7 +73,7 @@ void SIM::Service::Stop () {
     mRunner.reset (nullptr);
     mLoop.reset (nullptr);
     
-    mStream.Write (Event ("sim-stopped"));
+    sEventAvailable.Emit (Event ("sim-stopped"));
 }
 
 std::vector<SIM::Value> SIM::Service::GetValues () {
@@ -138,4 +139,8 @@ bool SIM::Service::IsLoaded () const {
 
 bool SIM::Service::IsRunning () const {
     return mRunner.get () != nullptr;
+}
+
+void SIM::Service::EventToString (const SIM::Event& inEvent) {
+    sEventStrAvailable.Emit (inEvent.ToString ());
 }

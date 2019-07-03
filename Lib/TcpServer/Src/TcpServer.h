@@ -6,6 +6,7 @@
 #include <memory>
 #include "Macros.h"
 #include "Socket.h"
+#include "TcpPacket.h"
 
 namespace OS {
     class Thread;
@@ -47,6 +48,16 @@ public:
      * Stop the server (this will kill and join the listening thread).
      */
     void Stop ();
+
+    /**
+     * Broadcast a Packet to all connected clients
+     */
+    void Broadcast (const Packet& inPacket);
+
+    /**
+     * Broadcast a RawPacket to all connected clients
+     */
+    void Broadcast (const RawPacket& inPacket);
 
     /**
      * Get the number of connected clients

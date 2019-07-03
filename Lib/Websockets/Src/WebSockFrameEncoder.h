@@ -5,12 +5,16 @@
 #include <vector>
 #include <cstdint>
 
+#include "TcpPacket.h"
 #include "MessageStream.h"
 #include "WebSockFrame.h"
 
 namespace RFC6455 {
-    
-class FrameEncoder : public OS::MessageStream <Frame, std::vector<uint8_t>>{
+
+/**
+ * The FrameEncoder streams Websocket Frames to TCP::Packets.
+ */
+class FrameEncoder : public OS::MessageStream <Frame, TCP::Packet> {
 
 public:
     /**
